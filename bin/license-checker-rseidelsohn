@@ -1,0 +1,123 @@
+#!/usr/bin/env node
+
+/*
+Copyright (c) 2013, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://yuilibrary.com/license/
+*/
+
+const licenseChecker = require('../lib/index');
+const args = require('../lib/args').parse();
+const mkdirp = require('mkdirp');
+const path = require('path');
+const chalk = require('chalk');
+const fs = require('fs');
+const hasFailingArg = args.failOn || args.onlyAllow;
+
+if (args.help) {
+    console.error(`license-checker-rseidelsohn@${require('../package.json').version}`);
+    const usage = [
+        '',
+        '   --production only show production dependencies.',
+        '   --development only show development dependencies.',
+        '   --unknown report guessed licenses as unknown licenses.',
+        '   --start [filepath] path of the initial json to look for',
+        '   --onlyunknown only list packages with unknown or guessed licenses.',
+        '   --markdown output in markdown format.',
+        '   --json output in json format.',
+        '   --csv output in csv format.',
+        '   --csvComponentPrefix column prefix for components in csv file',
+        '   --out [filepath] write the data to a specific file.',
+        '   --files [path] copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.',
+        '   --customPath to add a custom Format file in JSON',
+        '   --excludeLicenses [list] exclude modules which licenses are in the comma-separated list from the output',
+        '   --includeLicenses [list] include only modules which licenses are in the comma-separated list from the output',
+        '   --relativeLicensePath output the location of the license files as relative paths',
+        '   --summary output a summary of the license usage',
+        '   --failOn [list] fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list',
+        '   --onlyAllow [list] fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list',
+        '   --direct look for direct dependencies only',
+        '   --includePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list',
+        '   --excludePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list',
+        '   --excludePrivatePackages restrict output to not include any package marked as private',
+        '',
+        '   --version The current version',
+        '   --help  The text you are reading right now :)',
+        ''
+    ];
+    console.error(usage.join('\n'), '\n');
+    process.exit(0);
+}
+
+if (args.version) {
+    console.error(require('../package.json').version);
+    process.exit(1);
+}
+
+if (args.failOn && args.onlyAllow) {
+    console.error('--failOn and --onlyAllow can not be used at the same time. Choose one or the other.');
+    process.exit(1);
+}
+
+if (hasFailingArg && hasFailingArg.indexOf(',') >= 0) {
+    const argName = args.failOn ? 'failOn' : 'onlyAllow';
+    console.warn(`Warning: As of v17 the --${argName} argument takes semicolons as delimeters instead of commas (some license names can contain commas)`);
+}
+
+licenseChecker.init(args, function(err, json) {
+    if (Boolean(err)) {
+        console.error('An error has occurred:');
+        console.error(err);
+    }
+
+    if (shouldColorizeOutput(args)) {
+        colorizeOutput(json);
+    }
+
+    const formattedOutput = getFormattedOutput(json, args);
+
+    if (args.files) {
+        licenseChecker.asFiles(json, args.files);
+    } else if (args.out) {
+        const dir = path.dirname(args.out);
+
+        mkdirp.sync(dir);
+        fs.writeFileSync(args.out, formattedOutput, 'utf8');
+    } else {
+        console.log(formattedOutput);
+    }
+});
+
+function shouldColorizeOutput(args) {
+    return args.color && !args.out && !args.files && !(args.csv || args.json || args.markdown);
+}
+
+function colorizeOutput(json) {
+    Object.keys(json).forEach((key) => {
+        const index = key.lastIndexOf('@');
+        const colorizedKey = chalk.white.bgKeyword('darkslategrey')(key.substr(0, index)) + chalk.dim('@') + chalk.white.bgKeyword('green')(key.substr(index + 1));
+        json[colorizedKey] = json[key];
+
+        delete json[key];
+    });
+}
+
+function getFormattedOutput(json, args) {
+    if (args.json) {
+        return JSON.stringify(json, null, 4) + '\n';
+    }
+
+    if (args.csv) {
+        return licenseChecker.asCSV(json, args.customFormat, args.csvComponentPrefix);
+    }
+
+    if (args.markdown){
+        return licenseChecker.asMarkDown(json, args.customFormat) + '\n';
+    }
+
+    if (args.summary) {
+        return licenseChecker.asSummary(json);
+    }
+
+    return licenseChecker.asTree(json);
+}
