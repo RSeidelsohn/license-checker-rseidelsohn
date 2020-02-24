@@ -4,11 +4,9 @@
 
 _Due to legal issues I - for now - had to remove the `--relativeModulePath` option again. I hope I can bring it back soon._
 
-_This is a fork of davglass' `license-checker v.25.0.1` - I simply added a new option `--relativeModulePath` for stripping the local absolute path portions from modules (`--relativeLicensePath` already does this for the license file paths). Since that module doesn't seem to be updated regularly, I created this module for use in our workplace. A pull request has also been created for bringing that new option into the original module (see https://github.com/davglass/license-checker/pull/223). Also, I upgraded several node modules for this fork that are not upgraded in the original module. The latter is not part of my pull request._
+_This is a fork of davglass' `license-checker v.25.0.1` - Since that code doesn't seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
 
-_As of v26.0.0 the `exclude` argument has been changed into `excludeLicenses` in order to prevent confusion and better align it with the `excludePackages` argument. Also, the argument `includeLicenses` has been added for listing only packages that include the licenses listed._
-
-_As of v17.0.0 the `failOn` and `onlyAllow` arguments take semicolons as delimeters instead of commas. Some license names contain commas and it messed with the parsing._
+_I changed the original `exclude` argument to `excludeLicenses` in order to prevent confusion and better align it with the `excludePackages` argument. Also, the argument `includeLicenses` has been added for listing only packages that include the licenses listed._
 
 Ever needed to see all the license info for a module and its dependencies?
 
