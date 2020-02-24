@@ -1,6 +1,6 @@
 # NPM License Checker
 
-[![Build Status](https://www.travis-ci.org/davglass/license-checker.svg?branch=master)](https://www.travis-ci.org/davglass/license-checker)
+[![Build Status](https://www.travis-ci.org/rseidelsohn/license-checker-rseidelsohn.svg?branch=master)](https://www.travis-ci.org/rseidelsohn/license-checker-rseidelsohn)
 
 _This is a fork of davglass' `license-checker v.25.0.1` - Since that code doesn't seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
 
