@@ -85,6 +85,7 @@ You could see something like this:
 - `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
 - `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
 - `--relativeLicensePath` output the location of the license files as relative paths
+- `--relativeModulePath` output the location of the module files as relative paths
 - `--summary` output a summary of the license usage',
 - `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
 - `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
