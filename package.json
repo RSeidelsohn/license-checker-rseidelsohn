@@ -71,9 +71,8 @@
         "treeify": "^1.1.0"
     },
     "devDependencies": {
-        "@types/node": "^13.7.4",
-        "babel-eslint": "^10.0.3",
-        "camden.jshint": "github:cfjedimaster/brackets-jshint",
+        "@types/node": "^13.7.7",
+        "babel-eslint": "^10.1.0",
         "detectionizr": "*",
         "eslint": "^6.8.0",
         "format-package-json": "^0.2.0",
