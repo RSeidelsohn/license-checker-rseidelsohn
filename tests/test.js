@@ -550,12 +550,12 @@ describe('main tests', function() {
         it('using only relative paths if the option relativeModulePath is being used', function(done) {
             checker.init(
                 {
-                    start: path.join(__dirname, '../node_modules/'),
+                    start: path.join(__dirname, '../'),
                     relativeModulePath: true,
                 },
                 function(err, output) {
                     Object.keys(output).map(function(key) {
-                        var expectedPath = 'node_modules/';
+                        var expectedPath = path.join(__dirname, '..');
                         var actualPath = output[key].path.substr(0, expectedPath.length);
                         assert.equal(actualPath, expectedPath);
                     });
