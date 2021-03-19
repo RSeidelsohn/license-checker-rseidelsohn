@@ -81,6 +81,7 @@
         "istanbul": "^0.4.3",
         "jenkins-mocha": "^8.0.0",
         "locale": "^0.1.0",
+        "prettier": "^2.2.1",
         "queue": "^6.0.1",
         "request": "^2.88.2",
         "rimraf": "^3.0.2"
