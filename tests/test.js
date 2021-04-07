@@ -1,10 +1,10 @@
-var assert = require('assert'),
-    path = require('path'),
-    util = require('util'),
-    checker = require('../lib/index'),
-    args = require('../lib/args'),
-    chalk = require('chalk'),
-    fs = require('fs');
+const assert = require('assert');
+const path = require('path');
+const util = require('util');
+const checker = require('../lib/index');
+let args = require('../lib/args');
+const chalk = require('chalk');
+const fs = require('fs');
 
 describe('main tests', function() {
     it('should load init', function() {
@@ -16,9 +16,11 @@ describe('main tests', function() {
     });
 
     describe('should parse local with unknown', function() {
-        var output;
+        let output;
+
         before(function(done) {
             this.timeout(5000);
+
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
@@ -26,36 +28,32 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
         it('and give us results', function() {
-            assert.equal(Object.keys(output).length > 70, true);
+            assert.ok(Object.keys(output).length > 70);
             assert.equal(output['abbrev@1.0.9'].licenses, 'ISC');
         });
 
         it('and convert to CSV', function() {
-            var str = checker.asCSV(output);
-            assert.equal('"module name","license","repository"', str.split('\n')[0]);
-            assert.equal(
-                '"@babel/code-frame@7.8.3","MIT","https://github.com/babel/babel/tree/master/packages/babel-code-frame"',
-                str.split('\n')[1]
-            );
+            const str = checker.asCSV(output);
+            assert.equal(str.split('\n')[0], '"module name","license","repository"');
+            assert.equal(str.split('\n')[1], '"@babel/code-frame@7.12.11","MIT","https://github.com/babel/babel"');
         });
+
         it('and convert to MarkDown', function() {
-            var str = checker.asMarkDown(output);
-            assert.equal(
-                '[@babel/code-frame@7.8.3](https://github.com/babel/babel/tree/master/packages/babel-code-frame) - MIT',
-                str.split('\n')[0]
-            );
+            const str = checker.asMarkDown(output);
+            assert.equal(str.split('\n')[0], '[@babel/code-frame@7.12.11](https://github.com/babel/babel) - MIT');
         });
     });
 
     describe('should parse local with unknown and custom format', function() {
-        var output;
+        let output;
+
         before(function(done) {
-            var format = {
+            const format = {
                 name: '<<Default Name>>',
                 description: '<<Default Description>>',
                 pewpew: '<<Should Never be set>>',
@@ -69,7 +67,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -79,52 +77,50 @@ describe('main tests', function() {
         });
 
         it('and convert to CSV', function() {
-            var format = {
+            const format = {
                 name: '<<Default Name>>',
                 description: '<<Default Description>>',
                 pewpew: '<<Should Never be set>>',
             };
 
-            var str = checker.asCSV(output, format);
-            assert.equal('"module name","name","description","pewpew"', str.split('\n')[0]);
+            const str = checker.asCSV(output, format);
+            assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
             assert.equal(
-                '"@babel/code-frame@7.8.3","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
-                str.split('\n')[1]
+                str.split('\n')[1],
+                '"@babel/code-frame@7.12.11","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
         it('and convert to CSV with component prefix', function() {
-            var format = {
+            const format = {
                 name: '<<Default Name>>',
                 description: '<<Default Description>>',
                 pewpew: '<<Should Never be set>>',
             };
 
-            var str = checker.asCSV(output, format, 'main-module');
-            assert.equal('"component","module name","name","description","pewpew"', str.split('\n')[0]);
+            const str = checker.asCSV(output, format, 'main-module');
+            assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
             assert.equal(
-                '"main-module","@babel/code-frame@7.8.3","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
-                str.split('\n')[1]
+                str.split('\n')[1],
+                '"main-module","@babel/code-frame@7.12.11","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
         it('and convert to MarkDown', function() {
-            var format = {
+            const format = {
                 name: '<<Default Name>>',
                 description: '<<Default Description>>',
                 pewpew: '<<Should Never be set>>',
             };
 
-            var str = checker.asMarkDown(output, format);
-            assert.equal(
-                ' - **[@babel/code-frame@7.8.3](https://github.com/babel/babel/tree/master/packages/babel-code-frame)**',
-                str.split('\n')[0]
-            );
+            const str = checker.asMarkDown(output, format);
+            assert.equal(str.split('\n')[0], ' - **[@babel/code-frame@7.12.11](https://github.com/babel/babel)**');
         });
     });
 
     describe('should parse local without unknown', function() {
-        var output;
+        let output;
+
         before(function(done) {
             checker.init(
                 {
@@ -134,7 +130,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -154,18 +150,19 @@ describe('main tests', function() {
                 function(err, filtered) {
                     result.output = filtered;
                     done();
-                }
+                },
             );
         };
     }
 
     describe('should parse local with unknown and excludes', function() {
-        var result = {};
+        let result = {};
+
         before(parseAndExclude('../', 'MIT, ISC', result));
 
         it('should exclude MIT and ISC licensed modules from results', function() {
-            var excluded = true;
-            var output = result.output;
+            let excluded = true;
+            const output = result.output;
             Object.keys(output).forEach(function(item) {
                 if (output[item].licenses && (output[item].licenses === 'MIT' || output[item].licenses === 'ISC'))
                     excluded = false;
@@ -175,56 +172,64 @@ describe('main tests', function() {
     });
 
     describe('should parse local with excludes containing commas', function() {
-        var result = {};
+        let result = {};
         before(parseAndExclude('./fixtures/excludeWithComma', 'Apache License\\, Version 2.0', result));
 
         it('should exclude a license with a comma from the list', function() {
-            var excluded = true;
-            var output = result.output;
+            let excluded = true;
+            let output = result.output;
             Object.keys(output).forEach(function(item) {
-                if (output[item].licenses && output[item].licenses === 'Apache License, Version 2.0') excluded = false;
+                if (output[item].licenses && output[item].licenses === 'Apache License, Version 2.0') {
+                    excluded = false;
+                }
             });
             assert.ok(excluded);
         });
     });
 
     describe('should parse local with BSD excludes', function() {
-        var result = {};
+        let result = {};
         before(parseAndExclude('./fixtures/excludeBSD', 'BSD', result));
 
         it('should exclude BSD-3-Clause', function() {
-            var excluded = true;
-            var output = result.output;
+            let excluded = true;
+            const output = result.output;
             Object.keys(output).forEach(function(item) {
-                if (output[item].licenses && output[item].licenses === 'BSD-3-Clause') excluded = false;
+                if (output[item].licenses && output[item].licenses === 'BSD-3-Clause') {
+                    excluded = false;
+                }
             });
             assert.ok(excluded);
         });
     });
 
     describe('should parse local with Public Domain excludes', function() {
-        var result = {};
+        let result = {};
         before(parseAndExclude('./fixtures/excludePublicDomain', 'Public Domain', result));
 
         it('should exclude Public Domain', function() {
-            var excluded = true;
-            var output = result.output;
+            let excluded = true;
+            const output = result.output;
             Object.keys(output).forEach(function(item) {
-                if (output[item].licenses && output[item].licenses === 'Public Domain') excluded = false;
+                if (output[item].licenses && output[item].licenses === 'Public Domain') {
+                    excluded = false;
+                }
             });
             assert.ok(excluded);
         });
     });
 
     describe('should not exclude Custom if not specified in excludes', function() {
-        var result = {};
+        let result = {};
         before(parseAndExclude('./fixtures/custom-license-file', 'MIT', result));
 
         it('should exclude Public Domain', function() {
-            var excluded = true;
-            var output = result.output;
+            let excluded = true;
+            const output = result.output;
             Object.keys(output).forEach(function(item) {
-                if (output[item].licenses && output[item].licenses === 'Custom: MY-LICENSE.md') excluded = false;
+                if (output[item].licenses && output[item].licenses === 'Custom: MY-LICENSE.md') {
+                    excluded = false;
+                }
             });
             assert.ok(!excluded);
         });
@@ -232,11 +237,11 @@ describe('main tests', function() {
 
     function parseAndFailOn(key, parsePath, licenses, result) {
         return function(done) {
-            var exitCode = 0;
+            let exitCode = 0;
             process.exit = function(code) {
                 exitCode = code;
             };
-            var config = {
+            const config = {
                 start: path.join(__dirname, parsePath),
             };
             config[key] = licenses;
@@ -249,7 +254,7 @@ describe('main tests', function() {
     }
 
     describe('should exit on given list of onlyAllow licenses', function() {
-        var result = {};
+        let result = {};
         before(parseAndFailOn('onlyAllow', '../', 'MIT; ISC', result));
 
         it('should exit on non MIT and ISC licensed modules from results', function() {
@@ -258,7 +263,7 @@ describe('main tests', function() {
     });
 
     describe('should exit on single onlyAllow license', function() {
-        var result = {};
+        let result = {};
         before(parseAndFailOn('onlyAllow', '../', 'ISC', result));
 
         it('should exit on non ISC licensed modules from results', function() {
@@ -267,7 +272,7 @@ describe('main tests', function() {
     });
 
     describe('should not exit on complete list', function() {
-        var result = {};
+        let result = {};
         before(
             parseAndFailOn(
                 'onlyAllow',
@@ -277,8 +282,8 @@ describe('main tests', function() {
                     'Public Domain;Custom: http://i.imgur.com/goJdO.png;WTFPL*;Apache License, Version 2.0;' +
                     'WTFPL;(MIT AND CC-BY-3.0);Custom: https://github.com/substack/node-browserify;' +
                     'BSD-3-Clause OR MIT;(WTFPL OR MIT)',
-                result
-            )
+                result,
+            ),
         );
 
         it('should not exist if list is complete', function() {
@@ -287,7 +292,7 @@ describe('main tests', function() {
     });
 
     describe('should exit on given list of failOn licenses', function() {
-        var result = {};
+        let result = {};
         before(parseAndFailOn('failOn', '../', 'MIT; ISC', result));
 
         it('should exit on MIT and ISC licensed modules from results', function() {
@@ -296,7 +301,7 @@ describe('main tests', function() {
     });
 
     describe('should exit on single failOn license', function() {
-        var result = {};
+        let result = {};
         before(parseAndFailOn('failOn', '../', 'ISC', result));
 
         it('should exit on ISC licensed modules from results', function() {
@@ -305,7 +310,7 @@ describe('main tests', function() {
     });
 
     describe('should parse local and handle private modules', function() {
-        var output;
+        let output;
         before(function(done) {
             checker.init(
                 {
@@ -314,17 +319,19 @@ describe('main tests', function() {
                 function(err, filtered) {
                     output = filtered;
                     done();
-                }
+                },
             );
         });
 
         it('should reconise private modules', function() {
-            var privateModule = false;
+            let privateModule = false;
+
             Object.keys(output).forEach(function(item) {
                 if (output[item].licenses && output[item].licenses.indexOf('UNLICENSED') >= 0) {
                     privateModule = true;
                 }
             });
+
             assert.ok(privateModule);
         });
     });
@@ -336,16 +343,16 @@ describe('main tests', function() {
                     start: path.join(__dirname, '../node_modules/locale'),
                 },
                 function(err, output) {
-                    var item = output[Object.keys(output)[0]];
+                    const item = output[Object.keys(output)[0]];
                     assert.equal(item.licenses, 'MIT*');
                     done();
-                }
+                },
             );
         });
     });
 
     describe('should treat URLs as custom licenses', function() {
-        var output;
+        let output;
         before(function(done) {
             checker.init(
                 {
@@ -354,12 +361,12 @@ describe('main tests', function() {
                 function(err, filtered) {
                     output = filtered;
                     done();
-                }
+                },
             );
         });
 
         it('should recognise a custom license at a url', function() {
-            var foundCustomLicense = false;
+            let foundCustomLicense = false;
             Object.keys(output).forEach(function(item) {
                 if (output[item].licenses && output[item].licenses === 'Custom: http://example.com/dummy-license')
                     foundCustomLicense = true;
@@ -369,7 +376,7 @@ describe('main tests', function() {
     });
 
     describe('should treat file references as custom licenses', function() {
-        var output;
+        let output;
         before(function(done) {
             checker.init(
                 {
@@ -378,12 +385,12 @@ describe('main tests', function() {
                 function(err, filtered) {
                     output = filtered;
                     done();
-                }
+                },
             );
         });
 
         it('should recognise a custom license in a file', function() {
-            var foundCustomLicense = false;
+            let foundCustomLicense = false;
             Object.keys(output).forEach(function(item) {
                 if (output[item].licenses && output[item].licenses === 'Custom: MY-LICENSE.md')
                     foundCustomLicense = true;
@@ -402,7 +409,7 @@ describe('main tests', function() {
                 function(err) {
                     assert.equal(err, null);
                     done();
-                }
+                },
             );
         });
 
@@ -414,46 +421,46 @@ describe('main tests', function() {
                 function(err) {
                     assert.ok(util.isError(err));
                     done();
-                }
+                },
             );
         });
     });
 
     describe('should parse with args', function() {
-        var args = require('../lib/args.js');
+        let args = require('../lib/args.js');
 
         it('should handle undefined', function() {
-            var result = args.defaults(undefined);
+            const result = args.defaults(undefined);
             assert.equal(result.color, chalk.supportsColor);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should handle color undefined', function() {
-            var result = args.defaults({ color: undefined, start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.defaults({ color: undefined, start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.color, chalk.supportsColor);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should handle direct undefined', function() {
-            var result = args.defaults({ direct: undefined, start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.defaults({ direct: undefined, start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.direct, Infinity);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should handle direct true', function() {
-            var result = args.defaults({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.defaults({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.direct, 0);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         ['json', 'markdown', 'csv', 'summary'].forEach(function(type) {
             it('should disable color on ' + type, function() {
-                var def = {
+                let def = {
                     color: undefined,
                     start: path.resolve(path.join(__dirname, '../')),
                 };
                 def[type] = true;
-                var result = args.defaults(def);
+                const result = args.defaults(def);
                 assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
             });
         });
@@ -478,7 +485,7 @@ describe('main tests', function() {
                         assert.equal(d[item].pewpew, '<<Should Never be set>>');
                     });
                     done();
-                }
+                },
             );
         });
 
@@ -495,7 +502,7 @@ describe('main tests', function() {
             checker.init(args, function(err, filtered) {
                 var customFormatContent = fs.readFileSync(
                     path.join(__dirname, './../customFormatExample.json'),
-                    'utf8'
+                    'utf8',
                 );
 
                 assert.notEqual(customFormatContent, undefined);
@@ -525,7 +532,7 @@ describe('main tests', function() {
                     assert.equal(Object.keys(filtered).length, 1);
                     assert.equal(filtered['license-checker-rseidelsohn@0.0.0'].publisher, 'Roman Seidelsohn');
                     done();
-                }
+                },
             );
         });
     });
@@ -538,29 +545,29 @@ describe('main tests', function() {
                 },
                 function(err, output) {
                     Object.keys(output).map(function(key) {
-                        var expectedPath = path.join(__dirname, '../');
-                        var actualPath = output[key].path.substr(0, expectedPath.length);
+                        const expectedPath = path.join(__dirname, '../');
+                        const actualPath = output[key].path.substr(0, expectedPath.length);
                         assert.equal(actualPath, expectedPath);
                     });
                     done();
-                }
+                },
             );
         });
 
         it('using only relative paths if the option relativeModulePath is being used', function(done) {
             checker.init(
                 {
-                    start: path.join(__dirname, '../node_modules/'),
+                    start: path.join(__dirname, '../'),
                     relativeModulePath: true,
                 },
                 function(err, output) {
                     Object.keys(output).map(function(key) {
-                        var expectedPath = 'node_modules/';
-                        var actualPath = output[key].path.substr(0, expectedPath.length);
+                        const expectedPath = path.join(__dirname, '..');
+                        const actualPath = output[key].path.substr(0, expectedPath.length);
                         assert.equal(actualPath, expectedPath);
                     });
                     done();
-                }
+                },
             );
         });
     });
@@ -580,12 +587,12 @@ describe('main tests', function() {
                             return dep.licenseFile !== undefined;
                         })
                         .forEach(function(dep) {
-                            var expectedPath = path.join(__dirname, '../');
-                            var actualPath = dep.licenseFile.substr(0, expectedPath.length);
+                            const expectedPath = path.join(__dirname, '../');
+                            const actualPath = dep.licenseFile.substr(0, expectedPath.length);
                             assert.equal(actualPath, expectedPath);
                         });
                     done();
-                }
+                },
             );
         });
 
@@ -607,7 +614,7 @@ describe('main tests', function() {
                             assert.notEqual(dep.licenseFile.substr(0, 1), '/');
                         });
                     done();
-                }
+                },
             );
         });
     });
@@ -629,13 +636,13 @@ describe('main tests', function() {
                     assert(output['abbrev@1.0.9'] !== undefined, 'Check if the expected package still exists.');
                     assert.equal(output['abbrev@1.0.9'].copyright, 'Copyright (c) Isaac Z. Schlueter and Contributors');
                     done();
-                }
+                },
             );
         });
     });
 
     describe('should only list UNKNOWN or guessed licenses successful', function() {
-        var output;
+        let output;
         before(function(done) {
             checker.init(
                 {
@@ -645,12 +652,12 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
         it('so we check if there is no license with a star or UNKNOWN found', function() {
-            var onlyStarsFound = true;
+            let onlyStarsFound = true;
             Object.keys(output).forEach(function(item) {
                 if (output[item].licenses && output[item].licenses.indexOf('UNKNOWN') !== -1) {
                     //Okay
@@ -674,33 +681,33 @@ describe('main tests', function() {
                 function(err, filtered) {
                     result.output = filtered;
                     done();
-                }
+                },
             );
         };
     }
 
     describe('should list given packages', function() {
-        var result = {};
+        let result = {};
         before(parseAndInclude('./fixtures/includeBSD', 'BSD', result));
 
         it('should include only Apache', function() {
-            var output = result.output;
+            const output = result.output;
             assert.ok(Object.keys(output).length === 1);
         });
     });
 
     describe('should not list not given packages', function() {
-        var result = {};
+        let result = {};
         before(parseAndInclude('./fixtures/includeApache', 'BSD', result));
 
         it('should not include Apache', function() {
-            var output = result.output;
+            const output = result.output;
             assert.ok(Object.keys(output).length === 0);
         });
     });
 
     describe('should only list UNKNOWN or guessed licenses with errors (argument missing)', function() {
-        var output;
+        let output;
         before(function(done) {
             checker.init(
                 {
@@ -710,12 +717,13 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
         it('so we check if there is no license with a star or UNKNOWN found', function() {
-            var onlyStarsFound = true;
+            let onlyStarsFound = true;
+
             Object.keys(output).forEach(function(item) {
                 if (output[item].licenses && output[item].licenses.indexOf('UNKNOWN') !== -1) {
                     //Okay
@@ -731,7 +739,7 @@ describe('main tests', function() {
 
     describe('should export', function() {
         it('print a tree', function() {
-            var log = console.log;
+            const log = console.log;
             console.log = function(data) {
                 assert.ok(data);
                 assert.ok(data.indexOf('└─') > -1);
@@ -741,13 +749,13 @@ describe('main tests', function() {
         });
 
         it('as tree', function() {
-            var data = checker.asTree([{}]);
+            const data = checker.asTree([{}]);
             assert.ok(data);
             assert.ok(data.indexOf('└─') > -1);
         });
 
         it('as csv', function() {
-            var data = checker.asCSV({
+            const data = checker.asCSV({
                 foo: {
                     licenses: 'MIT',
                     repository: '/path/to/foo',
@@ -758,7 +766,7 @@ describe('main tests', function() {
         });
 
         it('as csv with partial data', function() {
-            var data = checker.asCSV({
+            const data = checker.asCSV({
                 foo: {},
             });
             assert.ok(data);
@@ -766,7 +774,7 @@ describe('main tests', function() {
         });
 
         it('as markdown', function() {
-            var data = checker.asMarkDown({
+            const data = checker.asMarkDown({
                 foo: {
                     licenses: 'MIT',
                     repository: '/path/to/foo',
@@ -777,7 +785,7 @@ describe('main tests', function() {
         });
 
         it('as summary', function() {
-            var data = checker.asSummary({
+            const data = checker.asSummary({
                 foo: {
                     licenses: 'MIT',
                     repository: '/path/to/foo',
@@ -788,8 +796,8 @@ describe('main tests', function() {
         });
 
         it('as files', function() {
-            var out = path.join(require('os').tmpdir(), 'lc'),
-                files;
+            const out = path.join(require('os').tmpdir(), 'lc');
+            let files = null;
             checker.asFiles(
                 {
                     foo: {
@@ -801,7 +809,7 @@ describe('main tests', function() {
                         licenses: 'MIT',
                     },
                 },
-                out
+                out,
             );
 
             files = fs.readdirSync(out);
@@ -812,8 +820,8 @@ describe('main tests', function() {
 
     describe('json parsing', function() {
         it('should parse json successfully (File exists + was json)', function() {
-            var path = './tests/config/custom_format_correct.json';
-            var json = checker.parseJson(path);
+            const path = './tests/config/custom_format_correct.json';
+            const json = checker.parseJson(path);
             assert.notEqual(json, undefined);
             assert.notEqual(json, null);
             assert.equal(json.licenseModified, 'no');
@@ -821,19 +829,19 @@ describe('main tests', function() {
         });
 
         it('should parse json with errors (File exists + no json)', function() {
-            var path = './tests/config/custom_format_broken.json';
-            var json = checker.parseJson(path);
+            const path = './tests/config/custom_format_broken.json';
+            const json = checker.parseJson(path);
             assert.ok(json instanceof Error);
         });
 
         it('should parse json with errors (File not found)', function() {
-            var path = './NotExitingFile.json';
-            var json = checker.parseJson(path);
+            const path = './NotExitingFile.json';
+            const json = checker.parseJson(path);
             assert.ok(json instanceof Error);
         });
 
         it('should parse json with errors (null passed)', function() {
-            var json = checker.parseJson(null);
+            const json = checker.parseJson(null);
             assert.ok(json instanceof Error);
         });
     });
