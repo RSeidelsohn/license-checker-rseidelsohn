@@ -41,6 +41,7 @@ if (args.help) {
         '   --includePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list',
         '   --excludePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list',
         '   --excludePrivatePackages restrict output to not include any package marked as private',
+        '   --plainVertical output in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)',
         '',
         '   --version The current version',
         '   --help  The text you are reading right now :)',
@@ -90,7 +91,7 @@ licenseChecker.init(args, function(err, json) {
 });
 
 function shouldColorizeOutput(args) {
-    return args.color && !args.out && !args.files && !(args.csv || args.json || args.markdown);
+    return args.color && !args.out && !args.files && !(args.csv || args.json || args.markdown || args.plainVertical);
 }
 
 function colorizeOutput(json) {
@@ -118,6 +119,10 @@ function getFormattedOutput(json, args) {
 
     if (args.summary) {
         return licenseChecker.asSummary(json);
+    }
+
+    if (args.plainVertical) {
+        return licenseChecker.asPlainVertical(json);
     }
 
     return licenseChecker.asTree(json);
