@@ -1,12 +1,12 @@
-var assert = require('assert'),
-    path = require('path'),
-    spawn = require('child_process').spawnSync;
+const assert = require('assert');
+const path = require('path');
+const spawn = require('child_process').spawnSync;
 
 describe('bin/license-checker-rseidelsohn', function() {
     this.timeout(8000);
 
     it('should restrict the output to the provided packages', function() {
-        var restrictedPackages = ['readable-stream@1.1.14'];
+        var restrictedPackages = ['nopt@5.0.0'];
         var output = spawn(
             'node',
             [
@@ -17,7 +17,7 @@ describe('bin/license-checker-rseidelsohn', function() {
             ],
             {
                 cwd: path.join(__dirname, '../'),
-            }
+            },
         );
 
         assert.deepEqual(Object.keys(JSON.parse(output.stdout.toString())), restrictedPackages);
@@ -35,7 +35,7 @@ describe('bin/license-checker-rseidelsohn', function() {
             ],
             {
                 cwd: path.join(__dirname, '../'),
-            }
+            },
         );
 
         var packages = Object.keys(JSON.parse(output.stdout.toString()));
@@ -50,7 +50,7 @@ describe('bin/license-checker-rseidelsohn', function() {
             [path.join(__dirname, '../bin/license-checker-rseidelsohn'), '--json', '--excludePrivatePackages'],
             {
                 cwd: path.join(__dirname, 'fixtures', 'privateModule'),
-            }
+            },
         );
 
         var packages = Object.keys(JSON.parse(output.stdout.toString()));
