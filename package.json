@@ -117,9 +117,9 @@
         "exclude": [
             "**/tests/*.js"
         ],
-        "lines": 98,
-        "statements": 98,
-        "functions": 98,
-        "branches": 95
+        "lines": 96,
+        "statements": 96,
+        "functions": 95,
+        "branches": 89
     }
 }
