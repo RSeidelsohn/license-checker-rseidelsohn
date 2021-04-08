@@ -42,6 +42,7 @@ if (args.help) {
         '   --excludePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list',
         '   --excludePrivatePackages restrict output to not include any package marked as private',
         '   --plainVertical output in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)',
+        '   --angularCli is just a synonym for --plainVertical',
         '',
         '   --version The current version',
         '   --help  The text you are reading right now :)',
@@ -121,7 +122,7 @@ function getFormattedOutput(json, args) {
         return licenseChecker.asSummary(json);
     }
 
-    if (args.plainVertical) {
+    if (args.plainVertical || args.angluarCli) {
         return licenseChecker.asPlainVertical(json);
     }
 
