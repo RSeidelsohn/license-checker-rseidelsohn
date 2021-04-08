@@ -68,29 +68,31 @@ You could see something like this:
 
 ## Options
 
-- `--production` only show production dependencies.
-- `--development` only show development dependencies.
-- `--start [filepath]` path of the initial json to look for
-- `--unknown` report guessed licenses as unknown licenses.
-- `--onlyunknown` only list packages with unknown or guessed licenses.
-- `--markdown` output in markdown format.
-- `--json` output in json format.
-- `--csv` output in csv format.
-- `--csvComponentPrefix` prefix column for component in csv format.
-- `--out [filepath]` write the data to a specific file.
-- `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
-- `--customPath` to add a custom Format file in JSON
-- `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
-- `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
-- `--relativeLicensePath` output the location of the license files as relative paths
-- `--relativeModulePath` output the location of the module files as relative paths
-- `--summary` output a summary of the license usage',
-- `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
-- `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
-- `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
-- `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
-- `--excludePrivatePackages` restrict output to not include any package marked as private
-- `--direct` look for direct dependencies only
+-   `--production` only show production dependencies.
+-   `--development` only show development dependencies.
+-   `--start [filepath]` path of the initial json to look for
+-   `--unknown` report guessed licenses as unknown licenses.
+-   `--onlyunknown` only list packages with unknown or guessed licenses.
+-   `--markdown` output in markdown format.
+-   `--json` output in json format.
+-   `--csv` output in csv format.
+-   `--csvComponentPrefix` prefix column for component in csv format.
+-   `--out [filepath]` write the data to a specific file.
+-   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
+-   `--customPath` to add a custom Format file in JSON
+-   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
+-   `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
+-   `--relativeLicensePath` output the location of the license files as relative paths
+-   `--relativeModulePath` output the location of the module files as relative paths
+-   `--summary` output a summary of the license usage',
+-   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
+-   `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
+-   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
+-   `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
+-   `--excludePrivatePackages` restrict output to not include any package marked as private
+-   `--direct` look for direct dependencies only
+-   `--plainVertical` output license info in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)
+-   `--angularCli` is just a synonym for `--plainVertical`
 
 ## Exclusions
 
@@ -123,17 +125,17 @@ When used with JSON format, it will add the specified items to the usual ones.
 
 The available items are the following:
 
-- name
-- version
-- description
-- repository
-- publisher
-- email
-- url
-- licenses
-- licenseFile
-- licenseText
-- licenseModified
+-   name
+-   version
+-   description
+-   repository
+-   publisher
+-   email
+-   url
+-   licenses
+-   licenseFile
+-   licenseText
+-   licenseModified
 
 You can also give default values for each item.
 See an example in [customFormatExample.json](customFormatExample.json).
@@ -144,17 +146,18 @@ See an example in [customFormatExample.json](customFormatExample.json).
 var checker = require('license-checker');
 
 checker.init(
-  {
-    start: '/path/to/start/looking',
-  },
-  function(err, packages) {
-    if (err) {
-      //Handle error
-    } else {
-      //The sorted package data
-      //as an Object
-    }
-  }
+    {
+        start: '/path/to/start/looking',
+    },
+    // eslint-disable-next-line no-unused-vars
+    function (err, packages) {
+        if (err) {
+            //Handle error
+        } else {
+            //The sorted package data
+            //as an Object
+        }
+    },
 );
 ```
 
@@ -162,8 +165,8 @@ checker.init(
 
 license-checker uses [debug](https://www.npmjs.com/package/debug) for internal logging. There’s two internal markers:
 
-- `license-checker-rseidelsohn:error` for errors
-- `license-checker-rseidelsohn:log` for non-errors
+-   `license-checker-rseidelsohn:error` for errors
+-   `license-checker-rseidelsohn:log` for non-errors
 
 Set the `DEBUG` environment variable to one of these to see debug output:
 

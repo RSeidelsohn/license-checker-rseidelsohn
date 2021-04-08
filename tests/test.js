@@ -323,7 +323,7 @@ describe('main tests', function() {
             );
         });
 
-        it('should reconise private modules', function() {
+        it('should recognise private modules', function() {
             let privateModule = false;
 
             Object.keys(output).forEach(function(item) {
@@ -815,6 +815,35 @@ describe('main tests', function() {
             files = fs.readdirSync(out);
             assert.equal('foo-LICENSE.txt', files[0]);
             require('rimraf').sync(out);
+        });
+    });
+
+    describe('should export', function() {
+        let output;
+
+        before(function(done) {
+            this.timeout(5000);
+
+            checker.init(
+                {
+                    start: path.join(__dirname, './fixtures/includeBSD'),
+                },
+                function(err, sorted) {
+                    output = sorted;
+                    done();
+                },
+            );
+        });
+
+        it('an Angular CLI like plain vertical format', function() {
+            const data = checker.asPlainVertical(output);
+            assert.ok(data);
+            assert.equal(
+                data,
+                `bsd-3-module 0.0.0
+BSD-3-Clause
+`,
+            );
         });
     });
 

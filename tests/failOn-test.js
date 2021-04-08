@@ -1,6 +1,6 @@
-var assert = require('assert'),
-    path = require('path'),
-    spawn = require('child_process').spawn;
+const assert = require('assert');
+const path = require('path');
+const spawn = require('child_process').spawn;
 
 describe('bin/license-checker-rseidelsohn', function() {
     this.timeout(8000);
@@ -37,7 +37,7 @@ describe('bin/license-checker-rseidelsohn', function() {
         proc.on('close', function() {
             assert.equal(
                 stderr.indexOf('--failOn argument takes semicolons as delimeters instead of commas') >= 0,
-                true
+                true,
             );
             done();
         });
