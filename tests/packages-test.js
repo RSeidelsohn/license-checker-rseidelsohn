@@ -6,7 +6,7 @@ describe('bin/license-checker-rseidelsohn', function() {
     this.timeout(8000);
 
     it('should restrict the output to the provided packages', function() {
-        var restrictedPackages = ['nopt@5.0.0'];
+        var restrictedPackages = ['@types/node@14.14.41'];
         var output = spawn(
             'node',
             [
@@ -24,7 +24,7 @@ describe('bin/license-checker-rseidelsohn', function() {
     });
 
     it('should exclude provided excludedPackages from the output', function() {
-        var excludedPackages = ['readable-stream@1.1.14', 'spdx-satisfies@4.0.0', 'y18n@3.2.1'];
+        var excludedPackages = ['@types/node@14.14.41', 'spdx-satisfies@4.0.0', 'y18n@3.2.1'];
         var output = spawn(
             'node',
             [

@@ -813,7 +813,7 @@ describe('main tests', function() {
             );
 
             files = fs.readdirSync(out);
-            assert.equal('foo-LICENSE.txt', files[0]);
+            assert.equal(files[0], 'foo-LICENSE.txt');
             require('rimraf').sync(out);
         });
     });
