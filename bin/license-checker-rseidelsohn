@@ -66,7 +66,7 @@ if (hasFailingArg && hasFailingArg.indexOf(',') >= 0) {
 }
 
 licenseChecker.init(args, function(err, json) {
-    if (Boolean(err)) {
+    if (err) {
         console.error('An error has occurred:');
         console.error(err);
     }
@@ -113,7 +113,7 @@ function getFormattedOutput(json, args) {
     }
 
     if (args.markdown){
-        return licenseChecker.asMarkDown(json, args.customFormat) + '\n';
+        return licenseChecker.asMarkDown(json, args.customFormat) + "\n";
     }
 
     if (args.summary) {
