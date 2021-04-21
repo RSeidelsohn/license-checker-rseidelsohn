@@ -6,7 +6,7 @@ describe('bin/license-checker-rseidelsohn', function() {
     this.timeout(8000);
 
     it('should restrict the output to the provided packages', function() {
-        var restrictedPackages = ['readable-stream@1.1.14'];
+        var restrictedPackages = ['@types/node@14.14.41'];
         var output = spawn(
             'node',
             [
@@ -17,14 +17,14 @@ describe('bin/license-checker-rseidelsohn', function() {
             ],
             {
                 cwd: path.join(__dirname, '../'),
-            }
+            },
         );
 
         assert.deepEqual(Object.keys(JSON.parse(output.stdout.toString())), restrictedPackages);
     });
 
     it('should exclude provided excludedPackages from the output', function() {
-        var excludedPackages = ['readable-stream@1.1.14', 'spdx-satisfies@4.0.0', 'y18n@3.2.1'];
+        var excludedPackages = ['@types/node@14.14.41', 'spdx-satisfies@4.0.0', 'y18n@3.2.1'];
         var output = spawn(
             'node',
             [
@@ -35,7 +35,7 @@ describe('bin/license-checker-rseidelsohn', function() {
             ],
             {
                 cwd: path.join(__dirname, '../'),
-            }
+            },
         );
 
         var packages = Object.keys(JSON.parse(output.stdout.toString()));
@@ -50,7 +50,7 @@ describe('bin/license-checker-rseidelsohn', function() {
             [path.join(__dirname, '../bin/license-checker-rseidelsohn'), '--json', '--excludePrivatePackages'],
             {
                 cwd: path.join(__dirname, 'fixtures', 'privateModule'),
-            }
+            },
         );
 
         var packages = Object.keys(JSON.parse(output.stdout.toString()));

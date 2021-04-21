@@ -26,7 +26,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -37,18 +37,12 @@ describe('main tests', function() {
 
         it('and convert to CSV', function() {
             var str = checker.asCSV(output);
-            assert.equal('"module name","license","repository"', str.split('\n')[0]);
-            assert.equal(
-                '"@babel/code-frame@7.8.3","MIT","https://github.com/babel/babel/tree/master/packages/babel-code-frame"',
-                str.split('\n')[1]
-            );
+            assert.equal(str.split('\n')[0], '"module name","license","repository"');
+            assert.equal(str.split('\n')[1], '"@babel/code-frame@7.12.11","MIT","https://github.com/babel/babel"');
         });
         it('and convert to MarkDown', function() {
             var str = checker.asMarkDown(output);
-            assert.equal(
-                '[@babel/code-frame@7.8.3](https://github.com/babel/babel/tree/master/packages/babel-code-frame) - MIT',
-                str.split('\n')[0]
-            );
+            assert.equal(str.split('\n')[0], '[@babel/code-frame@7.12.11](https://github.com/babel/babel) - MIT');
         });
     });
 
@@ -69,7 +63,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -86,10 +80,10 @@ describe('main tests', function() {
             };
 
             var str = checker.asCSV(output, format);
-            assert.equal('"module name","name","description","pewpew"', str.split('\n')[0]);
+            assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
             assert.equal(
-                '"@babel/code-frame@7.8.3","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
-                str.split('\n')[1]
+                str.split('\n')[1],
+                '"@babel/code-frame@7.12.11","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
@@ -101,10 +95,10 @@ describe('main tests', function() {
             };
 
             var str = checker.asCSV(output, format, 'main-module');
-            assert.equal('"component","module name","name","description","pewpew"', str.split('\n')[0]);
+            assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
             assert.equal(
-                '"main-module","@babel/code-frame@7.8.3","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
-                str.split('\n')[1]
+                str.split('\n')[1],
+                '"main-module","@babel/code-frame@7.12.11","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
@@ -116,10 +110,7 @@ describe('main tests', function() {
             };
 
             var str = checker.asMarkDown(output, format);
-            assert.equal(
-                ' - **[@babel/code-frame@7.8.3](https://github.com/babel/babel/tree/master/packages/babel-code-frame)**',
-                str.split('\n')[0]
-            );
+            assert.equal(str.split('\n')[0], ' - **[@babel/code-frame@7.12.11](https://github.com/babel/babel)**');
         });
     });
 
@@ -134,7 +125,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -154,7 +145,7 @@ describe('main tests', function() {
                 function(err, filtered) {
                     result.output = filtered;
                     done();
-                }
+                },
             );
         };
     }
@@ -277,8 +268,8 @@ describe('main tests', function() {
                     'Public Domain;Custom: http://i.imgur.com/goJdO.png;WTFPL*;Apache License, Version 2.0;' +
                     'WTFPL;(MIT AND CC-BY-3.0);Custom: https://github.com/substack/node-browserify;' +
                     'BSD-3-Clause OR MIT;(WTFPL OR MIT)',
-                result
-            )
+                result,
+            ),
         );
 
         it('should not exist if list is complete', function() {
@@ -314,7 +305,7 @@ describe('main tests', function() {
                 function(err, filtered) {
                     output = filtered;
                     done();
-                }
+                },
             );
         });
 
@@ -339,7 +330,7 @@ describe('main tests', function() {
                     var item = output[Object.keys(output)[0]];
                     assert.equal(item.licenses, 'MIT*');
                     done();
-                }
+                },
             );
         });
     });
@@ -354,7 +345,7 @@ describe('main tests', function() {
                 function(err, filtered) {
                     output = filtered;
                     done();
-                }
+                },
             );
         });
 
@@ -378,7 +369,7 @@ describe('main tests', function() {
                 function(err, filtered) {
                     output = filtered;
                     done();
-                }
+                },
             );
         });
 
@@ -402,7 +393,7 @@ describe('main tests', function() {
                 function(err) {
                     assert.equal(err, null);
                     done();
-                }
+                },
             );
         });
 
@@ -414,7 +405,7 @@ describe('main tests', function() {
                 function(err) {
                     assert.ok(util.isError(err));
                     done();
-                }
+                },
             );
         });
     });
@@ -478,7 +469,7 @@ describe('main tests', function() {
                         assert.equal(d[item].pewpew, '<<Should Never be set>>');
                     });
                     done();
-                }
+                },
             );
         });
 
@@ -495,7 +486,7 @@ describe('main tests', function() {
             checker.init(args, function(err, filtered) {
                 var customFormatContent = fs.readFileSync(
                     path.join(__dirname, './../customFormatExample.json'),
-                    'utf8'
+                    'utf8',
                 );
 
                 assert.notEqual(customFormatContent, undefined);
@@ -525,7 +516,7 @@ describe('main tests', function() {
                     assert.equal(Object.keys(filtered).length, 1);
                     assert.equal(filtered['license-checker-rseidelsohn@0.0.0'].publisher, 'Roman Seidelsohn');
                     done();
-                }
+                },
             );
         });
     });
@@ -543,7 +534,7 @@ describe('main tests', function() {
                         assert.equal(actualPath, expectedPath);
                     });
                     done();
-                }
+                },
             );
         });
 
@@ -560,7 +551,7 @@ describe('main tests', function() {
                         assert.equal(actualPath, expectedPath);
                     });
                     done();
-                }
+                },
             );
         });
     });
@@ -585,7 +576,7 @@ describe('main tests', function() {
                             assert.equal(actualPath, expectedPath);
                         });
                     done();
-                }
+                },
             );
         });
 
@@ -607,7 +598,7 @@ describe('main tests', function() {
                             assert.notEqual(dep.licenseFile.substr(0, 1), '/');
                         });
                     done();
-                }
+                },
             );
         });
     });
@@ -629,7 +620,7 @@ describe('main tests', function() {
                     assert(output['abbrev@1.0.9'] !== undefined, 'Check if the expected package still exists.');
                     assert.equal(output['abbrev@1.0.9'].copyright, 'Copyright (c) Isaac Z. Schlueter and Contributors');
                     done();
-                }
+                },
             );
         });
     });
@@ -645,7 +636,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -674,7 +665,7 @@ describe('main tests', function() {
                 function(err, filtered) {
                     result.output = filtered;
                     done();
-                }
+                },
             );
         };
     }
@@ -710,7 +701,7 @@ describe('main tests', function() {
                 function(err, sorted) {
                     output = sorted;
                     done();
-                }
+                },
             );
         });
 
@@ -801,11 +792,11 @@ describe('main tests', function() {
                         licenses: 'MIT',
                     },
                 },
-                out
+                out,
             );
 
             files = fs.readdirSync(out);
-            assert.equal('foo-LICENSE.txt', files[0]);
+            assert.equal(files[0], 'foo-LICENSE.txt');
             require('rimraf').sync(out);
         });
     });
