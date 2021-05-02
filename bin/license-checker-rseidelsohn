@@ -14,41 +14,57 @@ const chalk = require('chalk');
 const fs = require('fs');
 const hasFailingArg = args.failOn || args.onlyAllow;
 
-if (args.help) {
+const usageEntries = [
+    '',
+    '   --production only show production dependencies.',
+    '   --development only show development dependencies.',
+    '   --unknown report guessed licenses as unknown licenses.',
+    '   --start [filepath] path of the initial json to look for',
+    '   --onlyunknown only list packages with unknown or guessed licenses.',
+    '   --markdown output in markdown format.',
+    '   --json output in json format.',
+    '   --csv output in csv format.',
+    '   --csvComponentPrefix column prefix for components in csv file',
+    '   --out [filepath] write the data to a specific file.',
+    '   --files [path] copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.',
+    '   --customPath to add a custom Format file in JSON',
+    '   --excludeLicenses [list] exclude modules which licenses are in the comma-separated list from the output',
+    '   --includeLicenses [list] include only modules which licenses are in the comma-separated list from the output',
+    '   --relativeLicensePath output the location of the license files as relative paths',
+    '   --relativeModulePath output the location of the module files as relative paths',
+    '   --summary output a summary of the license usage',
+    '   --failOn [list] fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list',
+    '   --onlyAllow [list] fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list',
+    '   --direct look for direct dependencies only',
+    '   --includePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list',
+    '   --excludePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list',
+    '   --excludePrivatePackages restrict output to not include any package marked as private',
+    '   --plainVertical output in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)',
+    '   --angularCli is just a synonym for --plainVertical',
+    '',
+    '   --version The current version',
+    '   --help  The text you are reading right now :)',
+    ''
+];
+
+const kownOptions = usageEntries
+    .map((entry) => { return entry.trim().replace('--', ''); })
+    .filter((entry) => { return entry.length > 0; })
+    .map((entry) => { return entry.split(' ').shift(); })
+    .concat(['color']);
+const usageMessage = usageEntries.join('\n');
+const unknownArgs = Object.keys(args).filter((arg) => { return !kownOptions.includes(arg); });
+
+if (unknownArgs.length) {
+    console.error(`license-checker-rseidelsohn@${require('../package.json').version}`, '\n');
+    console.error(`Warning: Unknown option${unknownArgs.length > 1 ? 's' : ''}: ${unknownArgs.map((unknownArg) => { return `'${unknownArg}'`; }).join(', ')}`);
+    console.error(`         Possibly a typo? Currently known options are:`);
+    console.error(usageMessage, '\n');
+}
+
+if (!unknownArgs.length && args.help) {
     console.error(`license-checker-rseidelsohn@${require('../package.json').version}`);
-    const usage = [
-        '',
-        '   --production only show production dependencies.',
-        '   --development only show development dependencies.',
-        '   --unknown report guessed licenses as unknown licenses.',
-        '   --start [filepath] path of the initial json to look for',
-        '   --onlyunknown only list packages with unknown or guessed licenses.',
-        '   --markdown output in markdown format.',
-        '   --json output in json format.',
-        '   --csv output in csv format.',
-        '   --csvComponentPrefix column prefix for components in csv file',
-        '   --out [filepath] write the data to a specific file.',
-        '   --files [path] copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.',
-        '   --customPath to add a custom Format file in JSON',
-        '   --excludeLicenses [list] exclude modules which licenses are in the comma-separated list from the output',
-        '   --includeLicenses [list] include only modules which licenses are in the comma-separated list from the output',
-        '   --relativeLicensePath output the location of the license files as relative paths',
-        '   --relativeModulePath output the location of the module files as relative paths',
-        '   --summary output a summary of the license usage',
-        '   --failOn [list] fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list',
-        '   --onlyAllow [list] fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list',
-        '   --direct look for direct dependencies only',
-        '   --includePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list',
-        '   --excludePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list',
-        '   --excludePrivatePackages restrict output to not include any package marked as private',
-        '   --plainVertical output in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)',
-        '   --angularCli is just a synonym for --plainVertical',
-        '',
-        '   --version The current version',
-        '   --help  The text you are reading right now :)',
-        ''
-    ];
-    console.error(usage.join('\n'), '\n');
+    console.error(usageMessage, '\n');
     process.exit(0);
 }
 
