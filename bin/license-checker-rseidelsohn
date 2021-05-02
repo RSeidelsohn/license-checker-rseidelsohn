@@ -54,13 +54,14 @@ const kownOptions = usageEntries
     .concat(['color']);
 const usageMessage = usageEntries.join('\n');
 const unknownArgs = Object.keys(args).filter((arg) => { return !kownOptions.includes(arg); });
-
+// console.log('args: ', args);
 if (unknownArgs.length) {
     console.error(`license-checker-rseidelsohn@${require('../package.json').version}`, '\n');
     console.error(`Warning: Unknown option${unknownArgs.length > 1 ? 's' : ''}: ${unknownArgs.map((unknownArg) => { return `'${unknownArg}'`; }).join(', ')}`);
     console.error(`         Possibly a typo? Currently known options are:`);
     console.error(usageMessage, '\n');
 }
+// process.exit(1);
 
 if (!unknownArgs.length && args.help) {
     console.error(`license-checker-rseidelsohn@${require('../package.json').version}`);
