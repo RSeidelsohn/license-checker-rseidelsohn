@@ -96,13 +96,17 @@ licenseChecker.init(args, function(err, json) {
 
     const formattedOutput = getFormattedOutput(json, args);
 
-    if (args.files) {
-        licenseChecker.asFiles(json, args.files);
-    } else if (args.out) {
-        const dir = path.dirname(args.out);
+    if (args.files || args.out) {
+        if (args.files) {
+            licenseChecker.asFiles(json, args.files);
+        }
 
-        mkdirp.sync(dir);
-        fs.writeFileSync(args.out, formattedOutput, 'utf8');
+        if (args.out) {
+            const dir = path.dirname(args.out);
+
+            mkdirp.sync(dir);
+            fs.writeFileSync(args.out, formattedOutput, 'utf8');
+        }
     } else {
         console.log(formattedOutput);
     }
