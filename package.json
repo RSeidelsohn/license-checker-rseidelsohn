@@ -32,6 +32,7 @@
         "Mark Tse <mark.tse@d2l.com>",
         "Mark Tse <neverendingqs@users.noreply.github.com>",
         "Mattias Amnefelt <mattiasa@cantemo.com>",
+        "Mehmet Baker <mehmet@mehmetbaker.dev>",
         "Michael Kühnel <mail@michael-kuehnel.de>",
         "Michael Williamson <mike@zwobble.org>",
         "Paul Mandel <paul.mand3l@gmail.com>",
@@ -101,7 +102,7 @@
     },
     "scripts": {
         "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
-        "contrib": "./scripts/contrib.js",
+        "contrib": "node ./scripts/contrib.js",
         "pretest": "eslint --fix .",
         "test": "jenkins-mocha ./tests/*.js",
         "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary"

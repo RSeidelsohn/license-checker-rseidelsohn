@@ -41,7 +41,6 @@ json.contributors = [
     'Peter Uithoven <peter@peteruithoven.nl>',
     'Philipp Tusch <philipp.tusch@huf-group.com>',
     'Rogier Schouten <github@workingcode.nl>',
-    'Roman Seidelsohn <rseidelsohn@gmail.com>',
     'Stan Senotrusov <stan@senotrusov.com>',
     'Stoyan Revov <st.revov@gmail.com>',
     'Tero Keski-Valkama <tero.keski-valkama@cybercom.com>',
