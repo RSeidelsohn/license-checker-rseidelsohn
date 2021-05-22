@@ -561,10 +561,14 @@ describe('main tests', function() {
                     relativeModulePath: true,
                 },
                 function(err, output) {
-                    Object.keys(output).map(function(key) {
-                        const expectedPath = path.join(__dirname, '..');
-                        const actualPath = output[key].path.substr(0, expectedPath.length);
-                        assert.equal(actualPath, expectedPath);
+                    const rootPath = path.join(__dirname, '../');
+                    Object.keys(output).forEach(function(key) {
+                        const outputPath = output[key].path;
+                        assert.strictEqual(
+                            outputPath.startsWith(rootPath),
+                            false,
+                            `Output path is not a relative path: ${outputPath}`
+                        );
                     });
                     done();
                 },
