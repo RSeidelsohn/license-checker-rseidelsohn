@@ -6,7 +6,7 @@ describe('bin/license-checker-rseidelsohn', function() {
     this.timeout(8000);
 
     it('should restrict the output to the provided packages', function() {
-        var restrictedPackages = ['@types/node@15.0.1'];
+        var restrictedPackages = ['@types/mssql@6.0.8'];
         var output = spawn(
             'node',
             [
@@ -20,6 +20,7 @@ describe('bin/license-checker-rseidelsohn', function() {
             },
         );
 
+        console.log(output.stderr.toString());
         assert.deepEqual(Object.keys(JSON.parse(output.stdout.toString())), restrictedPackages);
     });
 
