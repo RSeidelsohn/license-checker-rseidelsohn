@@ -74,7 +74,6 @@
     },
     "devDependencies": {
         "@types/node": "^15.0.1",
-        "babel-eslint": "^10.1.0",
         "detectionizr": "*",
         "eslint": "^7.25.0",
         "format-package-json": "^0.2.0",
