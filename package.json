@@ -2,7 +2,7 @@
     "name": "license-checker-rseidelsohn",
     "description": "Feature enhanced version of the original license-checker v25.0.1",
     "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
-    "version": "1.2.2",
+    "version": "2.1.0",
     "contributors": [
         "Adam Weber <adamweber01@gmail.com>",
         "Andrew Couch <andy@couchand.com>",
@@ -74,8 +74,8 @@
         "treeify": "^1.1.0"
     },
     "devDependencies": {
+        "@types/mssql": "6.0.8",
         "@types/node": "^15.0.1",
-        "babel-eslint": "^10.1.0",
         "detectionizr": "*",
         "eslint": "^7.25.0",
         "format-package-json": "^0.2.0",
@@ -101,7 +101,7 @@
     },
     "scripts": {
         "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
-        "contrib": "./scripts/contrib.js",
+        "contrib": "node ./scripts/contrib.js",
         "pretest": "eslint --fix .",
         "test": "jenkins-mocha ./tests/*.js",
         "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary"

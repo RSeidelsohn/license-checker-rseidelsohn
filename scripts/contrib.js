@@ -41,7 +41,6 @@ json.contributors = [
     'Peter Uithoven <peter@peteruithoven.nl>',
     'Philipp Tusch <philipp.tusch@huf-group.com>',
     'Rogier Schouten <github@workingcode.nl>',
-    'Roman Seidelsohn <rseidelsohn@gmail.com>',
     'Stan Senotrusov <stan@senotrusov.com>',
     'Stoyan Revov <st.revov@gmail.com>',
     'Tero Keski-Valkama <tero.keski-valkama@cybercom.com>',
@@ -62,14 +61,14 @@ json.contributors = [
     'zodiac403 <zodiac403@gmx.de>',
 ]; //clear it
 
-GitContributors.list(opts, function(err, result) {
-    result.forEach(function(item) {
+GitContributors.list(opts, function (err, result) {
+    result.forEach(function (item) {
         json.contributors.push([item.name, `<${item.email}>`].join(' '));
     });
 
     json.contributors.sort();
 
-    format(pkg, json, function() {
+    format(pkg, json, function () {
         console.log(`Wrote ${result.length} contributors to: ${pkg}`);
     });
 });

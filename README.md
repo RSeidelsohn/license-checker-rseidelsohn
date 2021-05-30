@@ -53,7 +53,7 @@ You should see something like this:
 │  └─ licenses: UNKNOWN
 └─ yui-lint@0.1.1
    ├─ licenses: BSD
-      └─ repository: http://github.com/yui/yui-lint
+   └─ repository: http://github.com/yui/yui-lint
 ```
 
 An asterisk next to a license name means that it was deduced from
@@ -66,33 +66,35 @@ You could see something like this:
    └─ licenses: MIT*
 ```
 
-## Options
+## All options in alphabetical order:
 
--   `--production` only show production dependencies.
--   `--development` only show development dependencies.
--   `--start [filepath]` path of the initial json to look for
--   `--unknown` report guessed licenses as unknown licenses.
--   `--onlyunknown` only list packages with unknown or guessed licenses.
--   `--markdown` output in markdown format.
--   `--json` output in json format.
+-   `--angularCli` is just a synonym for `--plainVertical`
 -   `--csv` output in csv format.
 -   `--csvComponentPrefix` prefix column for component in csv format.
--   `--out [filepath]` write the data to a specific file.
--   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
 -   `--customPath` to add a custom Format file in JSON
+-   `--development` only show development dependencies.
+-   `--direct` look for direct dependencies only
 -   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
--   `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
--   `--relativeLicensePath` output the location of the license files as relative paths
--   `--relativeModulePath` output the location of the module files as relative paths
--   `--summary` output a summary of the license usage',
--   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
--   `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
--   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
 -   `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
 -   `--excludePrivatePackages` restrict output to not include any package marked as private
--   `--direct` look for direct dependencies only
+-   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
+-   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
+-   `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
+-   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
+-   `--json` output in json format.
+-   `--markdown` output in markdown format.
+-   `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
+-   `--onlyunknown` only list packages with unknown or guessed licenses.
+-   `--out [filepath]` write the data to a specific file.
 -   `--plainVertical` output license info in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)
--   `--angularCli` is just a synonym for `--plainVertical`
+-   `--production` only show production dependencies.
+-   `--relativeLicensePath` output the location of the license files as relative paths
+-   `--relativeModulePath` output the location of the module files as relative paths
+-   `--start [filepath]` path of the initial json to look for
+-   `--summary` output a summary of the license usage',
+-   `--unknown` report guessed licenses as unknown licenses.
+-   `--version` The current version
+-   `--help` The text you are reading right now :)
 
 ## Exclusions
 
