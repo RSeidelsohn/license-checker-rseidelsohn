@@ -20,6 +20,7 @@ describe('bin/license-checker-rseidelsohn', function () {
             },
         );
 
+        console.log(output.stderr.toString());
         assert.deepEqual(Object.keys(JSON.parse(output.stdout.toString())), restrictedPackages);
     });
 
