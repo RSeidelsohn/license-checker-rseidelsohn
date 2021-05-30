@@ -7,12 +7,13 @@ http://yuilibrary.com/license/
 */
 
 const licenseChecker = require('../lib/index');
-const args = require('../lib/args').parse();
+const args = require('../lib/args');
+const parsedArgs = args.parse();
 const mkdirp = require('mkdirp');
 const path = require('path');
 const chalk = require('chalk');
 const fs = require('fs');
-const hasFailingArg = args.failOn || args.onlyAllow;
+const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
 
 const usageMessage = [
     'All options in alphabetical order:',
@@ -49,7 +50,7 @@ const usageMessage = [
 ].join('\n');
 
 const kownOptions = Object.keys(args.knownOpts);
-const unknownArgs = Object.keys(args).filter((arg) => !kownOptions.includes(arg));
+const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.includes(arg));
 
 if (unknownArgs.length) {
     console.error(`license-checker-rseidelsohn@${require('../package.json').version}`, '\n');
@@ -59,49 +60,49 @@ if (unknownArgs.length) {
     process.exit(1);
 }
 
-if (!unknownArgs.length && args.help) {
+if (!unknownArgs.length && parsedArgs.help) {
     console.error(`license-checker-rseidelsohn@${require('../package.json').version}`);
     console.error(usageMessage, '\n');
     process.exit(0);
 }
 
-if (args.version) {
+if (parsedArgs.version) {
     console.error(require('../package.json').version);
     process.exit(1);
 }
 
-if (args.failOn && args.onlyAllow) {
+if (parsedArgs.failOn && parsedArgs.onlyAllow) {
     console.error('Error: --failOn and --onlyAllow can not be used at the same time. Choose one or the other.');
     process.exit(1);
 }
 
 if (hasFailingArg && hasFailingArg.indexOf(',') >= 0) {
-    const argName = args.failOn ? 'failOn' : 'onlyAllow';
+    const argName = parsedArgs.failOn ? 'failOn' : 'onlyAllow';
     console.warn(`Warning: As of v17 the --${argName} argument takes semicolons as delimeters instead of commas (some license names can contain commas)`);
 }
 
-licenseChecker.init(args, function (err, json) {
+licenseChecker.init(parsedArgs, function (err, json) {
     if (err) {
         console.error('An error has occurred:');
         console.error(err);
     }
 
-    if (shouldColorizeOutput(args)) {
+    if (shouldColorizeOutput(parsedArgs)) {
         colorizeOutput(json);
     }
 
-    const formattedOutput = getFormattedOutput(json, args);
+    const formattedOutput = getFormattedOutput(json, parsedArgs);
 
-    if (args.files || args.out) {
-        if (args.files) {
-            licenseChecker.asFiles(json, args.files);
+    if (parsedArgs.files || parsedArgs.out) {
+        if (parsedArgs.files) {
+            licenseChecker.asFiles(json, parsedArgs.files);
         }
 
-        if (args.out) {
-            const dir = path.dirname(args.out);
+        if (parsedArgs.out) {
+            const dir = path.dirname(parsedArgs.out);
 
             mkdirp.sync(dir);
-            fs.writeFileSync(args.out, formattedOutput, 'utf8');
+            fs.writeFileSync(parsedArgs.out, formattedOutput, 'utf8');
         }
     } else {
         console.log(formattedOutput);

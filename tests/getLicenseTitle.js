@@ -4,7 +4,7 @@ const getLicenseTitle = require('../lib/getLicenseTitle');
 
 describe('license parser', function () {
     it('should export a function', function () {
-        assert.equal(typeof license, 'function');
+        assert.equal(typeof getLicenseTitle, 'function');
     });
 
     it('should throw an error when called with a non-string argument', function (done) {
