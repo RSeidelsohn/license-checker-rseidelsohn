@@ -61,14 +61,14 @@ json.contributors = [
     'zodiac403 <zodiac403@gmx.de>',
 ]; //clear it
 
-GitContributors.list(opts, function(err, result) {
-    result.forEach(function(item) {
+GitContributors.list(opts, function (err, result) {
+    result.forEach(function (item) {
         json.contributors.push([item.name, `<${item.email}>`].join(' '));
     });
 
     json.contributors.sort();
 
-    format(pkg, json, function() {
+    format(pkg, json, function () {
         console.log(`Wrote ${result.length} contributors to: ${pkg}`);
     });
 });
