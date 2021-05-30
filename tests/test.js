@@ -560,9 +560,9 @@ describe('main tests', function () {
                     start: path.join(__dirname, '../'),
                     relativeModulePath: true,
                 },
-                function(err, output) {
+                function (err, output) {
                     const rootPath = path.join(__dirname, '../');
-                    Object.keys(output).forEach(function(key) {
+                    Object.keys(output).forEach(function (key) {
                         const outputPath = output[key].path;
                         assert.strictEqual(
                             outputPath.startsWith(rootPath),
