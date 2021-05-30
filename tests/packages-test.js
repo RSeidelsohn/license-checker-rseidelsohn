@@ -2,10 +2,10 @@ const assert = require('assert');
 const path = require('path');
 const spawn = require('child_process').spawnSync;
 
-describe('bin/license-checker-rseidelsohn', function() {
+describe('bin/license-checker-rseidelsohn', function () {
     this.timeout(8000);
 
-    it('should restrict the output to the provided packages', function() {
+    it('should restrict the output to the provided packages', function () {
         var restrictedPackages = ['@types/node@15.0.1'];
         var output = spawn(
             'node',
@@ -23,7 +23,7 @@ describe('bin/license-checker-rseidelsohn', function() {
         assert.deepEqual(Object.keys(JSON.parse(output.stdout.toString())), restrictedPackages);
     });
 
-    it('should exclude provided excludedPackages from the output', function() {
+    it('should exclude provided excludedPackages from the output', function () {
         var excludedPackages = ['@types/node@15.0.1', 'spdx-satisfies@5.0.0', 'y18n@3.2.1'];
         var output = spawn(
             'node',
@@ -39,12 +39,12 @@ describe('bin/license-checker-rseidelsohn', function() {
         );
 
         var packages = Object.keys(JSON.parse(output.stdout.toString()));
-        excludedPackages.forEach(function(pkg) {
+        excludedPackages.forEach(function (pkg) {
             assert.ok(!packages.includes(pkg));
         });
     });
 
-    it('should exclude private packages from the output', function() {
+    it('should exclude private packages from the output', function () {
         var output = spawn(
             'node',
             [path.join(__dirname, '../bin/license-checker-rseidelsohn'), '--json', '--excludePrivatePackages'],
