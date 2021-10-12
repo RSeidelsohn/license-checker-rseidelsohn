@@ -567,7 +567,7 @@ describe('main tests', function () {
                         assert.strictEqual(
                             outputPath.startsWith(rootPath),
                             false,
-                            `Output path is not a relative path: ${outputPath}`
+                            `Output path is not a relative path: ${outputPath}`,
                         );
                     });
                     done();
@@ -694,7 +694,7 @@ describe('main tests', function () {
         let result = {};
         before(parseAndInclude('./fixtures/includeBSD', 'BSD', result));
 
-        it('should include only Apache', function () {
+        it('should include only BSD', function () {
             const output = result.output;
             assert.ok(Object.keys(output).length === 1);
         });
