@@ -4,6 +4,8 @@ _This is a fork of davglass' [license-checker v.25.0.1](https://github.com/davgl
 
 _I changed the original `exclude` argument to `excludeLicenses` in order to prevent confusion and better align it with the `excludePackages` argument. Also, the argument `includeLicenses` has been added for listing only packages that include the licenses listed._
 
+**Please notice:** Version 1.2.2 is the last version working fine on node v12. From Version 2 on, you will need at least Node v14 to run this NPM license checker. Thanks to @daniel-schulz for pointing this out!
+
 Ever needed to see all the license info for a module and its dependencies?
 
 It's this easy:
