@@ -120,5 +120,8 @@
         "statements": 96,
         "functions": 95,
         "branches": 85
+    },
+    "engines": {
+      "node": ">=14"
     }
 }
