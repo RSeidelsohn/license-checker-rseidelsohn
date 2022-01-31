@@ -12,5 +12,4 @@ artifacts
 coverage/
 CVS/
 node_modules/
-package-lock.json
 tmp/
