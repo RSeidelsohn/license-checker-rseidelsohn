@@ -40,18 +40,12 @@ describe('main tests', function () {
         it('and convert to CSV', function () {
             const str = checker.asCSV(output);
             assert.equal(str.split('\n')[0], '"module name","license","repository"');
-            assert.equal(
-                str.split('\n')[1],
-                '"@babel/code-frame@7.8.3","MIT","https://github.com/babel/babel.git#master"',
-            );
+            assert.equal(str.split('\n')[1], '"@babel/code-frame@7.16.7","MIT","https://github.com/babel/babel"');
         });
 
         it('and convert to MarkDown', function () {
             const str = checker.asMarkDown(output);
-            assert.equal(
-                str.split('\n')[0],
-                '[@babel/code-frame@7.8.3](https://github.com/babel/babel.git#master) - MIT',
-            );
+            assert.equal(str.split('\n')[0], '[@babel/code-frame@7.16.7](https://github.com/babel/babel) - MIT');
         });
     });
 
@@ -93,7 +87,7 @@ describe('main tests', function () {
             assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
             assert.equal(
                 str.split('\n')[1],
-                '"@babel/code-frame@7.8.3","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
+                '"@babel/code-frame@7.16.7","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
@@ -108,7 +102,7 @@ describe('main tests', function () {
             assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
             assert.equal(
                 str.split('\n')[1],
-                '"main-module","@babel/code-frame@7.8.3","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
+                '"main-module","@babel/code-frame@7.16.7","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
@@ -120,10 +114,7 @@ describe('main tests', function () {
             };
 
             const str = checker.asMarkDown(output, format);
-            assert.equal(
-                str.split('\n')[0],
-                ' - **[@babel/code-frame@7.8.3](https://github.com/babel/babel.git#master)**',
-            );
+            assert.equal(str.split('\n')[0], ' - **[@babel/code-frame@7.16.7](https://github.com/babel/babel)**');
         });
     });
 
