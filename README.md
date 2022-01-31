@@ -83,6 +83,7 @@ You could see something like this:
 -   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
 -   `--json` output in json format.
 -   `--markdown` output in markdown format.
+-   `--nopeer` skip peer dependencies in output.
 -   `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
 -   `--onlyunknown` only list packages with unknown or guessed licenses.
 -   `--out [filepath]` write the data to a specific file.
