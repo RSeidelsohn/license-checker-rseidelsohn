@@ -13,6 +13,7 @@ const mkdirp = require('mkdirp');
 const path = require('path');
 const chalk = require('chalk');
 const fs = require('fs');
+const cloneDeep = require('lodash.clonedeep');
 const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
 
 const usageMessage = [
@@ -47,7 +48,7 @@ const usageMessage = [
     '',
     '   --version The current version',
     '   --help The text you are reading right now :)',
-    ''
+    '',
 ].join('\n');
 
 const kownOptions = Object.keys(args.knownOpts);
@@ -55,7 +56,11 @@ const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.include
 
 if (unknownArgs.length) {
     console.error(`license-checker-rseidelsohn@${require('../package.json').version}`, '\n');
-    console.error(`Error: Unknown option${unknownArgs.length > 1 ? 's' : ''}: ${unknownArgs.map((unknownArg) => `'${unknownArg}'`).join(', ')}`);
+    console.error(
+        `Error: Unknown option${unknownArgs.length > 1 ? 's' : ''}: ${unknownArgs
+            .map((unknownArg) => `'${unknownArg}'`)
+            .join(', ')}`,
+    );
     console.error(`       Possibly a typo? Currently known options are:`);
     console.error(usageMessage, '\n');
     process.exit(1);
@@ -79,7 +84,9 @@ if (parsedArgs.failOn && parsedArgs.onlyAllow) {
 
 if (hasFailingArg && hasFailingArg.indexOf(',') >= 0) {
     const argName = parsedArgs.failOn ? 'failOn' : 'onlyAllow';
-    console.warn(`Warning: As of v17 the --${argName} argument takes semicolons as delimeters instead of commas (some license names can contain commas)`);
+    console.warn(
+        `Warning: As of v17 the --${argName} argument takes semicolons as delimeters instead of commas (some license names can contain commas)`,
+    );
 }
 
 licenseChecker.init(parsedArgs, function (err, json) {
@@ -105,7 +112,9 @@ licenseChecker.init(parsedArgs, function (err, json) {
             mkdirp.sync(dir);
             fs.writeFileSync(parsedArgs.out, formattedOutput, 'utf8');
         }
-    } else {
+    }
+
+    if (!parsedArgs.out) {
         console.log(formattedOutput);
     }
 });
@@ -117,7 +126,10 @@ function shouldColorizeOutput(args) {
 function colorizeOutput(json) {
     Object.keys(json).forEach((key) => {
         const index = key.lastIndexOf('@');
-        const colorizedKey = chalk.white.bgKeyword('darkslategrey')(key.substr(0, index)) + chalk.dim('@') + chalk.white.bgKeyword('green')(key.substr(index + 1));
+        const colorizedKey =
+            chalk.white.bgKeyword('darkslategrey')(key.substr(0, index)) +
+            chalk.dim('@') +
+            chalk.white.bgKeyword('green')(key.substr(index + 1));
         json[colorizedKey] = json[key];
 
         delete json[key];
@@ -125,25 +137,46 @@ function colorizeOutput(json) {
 }
 
 function getFormattedOutput(json, args) {
+    const jsonCopy = cloneDeep(json);
+
+    if (args.files) {
+        Object.keys(jsonCopy).forEach((moduleName) => {
+            const outPath = path.join(args.files, `${moduleName}-LICENSE.txt`);
+            const originalLicenseFile = jsonCopy[moduleName].licenseFile;
+
+            if (originalLicenseFile && fs.existsSync(originalLicenseFile)) {
+                if (args.relativeLicensePath) {
+                    if (args.out) {
+                        jsonCopy[moduleName].licenseFile = path.relative(args.out, outPath);
+                    } else {
+                        jsonCopy[moduleName].licenseFile = path.relative(process.cwd(), outPath);
+                    }
+                } else {
+                    jsonCopy[moduleName].licenseFile = outPath;
+                }
+            }
+        });
+    }
+
     if (args.json) {
-        return JSON.stringify(json, null, 4) + '\n';
+        return JSON.stringify(jsonCopy, null, 4) + '\n';
     }
 
     if (args.csv) {
-        return licenseChecker.asCSV(json, args.customFormat, args.csvComponentPrefix);
+        return licenseChecker.asCSV(jsonCopy, args.customFormat, args.csvComponentPrefix);
     }
 
-    if (args.markdown){
-        return licenseChecker.asMarkDown(json, args.customFormat) + "\n";
+    if (args.markdown) {
+        return licenseChecker.asMarkDown(jsonCopy, args.customFormat) + '\n';
     }
 
     if (args.summary) {
-        return licenseChecker.asSummary(json);
+        return licenseChecker.asSummary(jsonCopy);
     }
 
     if (args.plainVertical || args.angluarCli) {
-        return licenseChecker.asPlainVertical(json);
+        return licenseChecker.asPlainVertical(jsonCopy);
     }
 
-    return licenseChecker.asTree(json);
+    return licenseChecker.asTree(jsonCopy);
 }
