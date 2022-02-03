@@ -33,6 +33,7 @@ const usageMessage = [
     '   --includeLicenses [list] include only modules which licenses are in the comma-separated list from the output',
     '   --includePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list',
     '   --json output in json format.',
+    '   --limitAttributes [list] limit the attributes to be output.',
     '   --markdown output in markdown format.',
     '   --nopeer skip peer dependencies in output.',
     '   --onlyAllow [list] fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list',
