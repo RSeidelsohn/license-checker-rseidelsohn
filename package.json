@@ -1,6 +1,6 @@
 {
   "name": "license-checker-rseidelsohn",
-  "description": "Feature enhanced version of the original license-checker v25.0.1",
+  "description": "Extract NPM package licenses - Feature enhanced version of the original license-checker v25.0.1",
   "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
   "version": "3.0.1",
   "license": "BSD-3-Clause",
