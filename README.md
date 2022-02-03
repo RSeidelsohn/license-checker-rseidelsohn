@@ -72,6 +72,14 @@ You could see something like this:
 
 ## Changes
 
+### Version 3.1.0
+
+Add new option `--limitAttributes`. Example usage: `node bin/license-checker-rseidelsohn --limitAttributes publisher,email` will only list the `publisher` and `email` attributes for every dependency.
+
+### Version 3.0.1
+
+Fix the `--direct` option.
+
 ### Version 3.0.0
 
 From now on, when you give the `--files` option, this tool outputs the path to the _copied_ license files rather than to
