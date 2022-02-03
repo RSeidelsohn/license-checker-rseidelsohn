@@ -152,7 +152,9 @@ function filterJson(limitAttributes, json) {
 }
 
 function getFormattedOutput(json, args) {
-    const jsonCopy = cloneDeep(json);
+    let filteredJson = filterJson(args.limitAttributes, json);
+    const jsonCopy = cloneDeep(filteredJson);
+    filteredJson = null;
 
     if (args.files) {
         Object.keys(jsonCopy).forEach((moduleName) => {
