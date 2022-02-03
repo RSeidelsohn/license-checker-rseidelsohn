@@ -136,6 +136,21 @@ function colorizeOutput(json) {
     });
 }
 
+function filterJson(limitAttributes, json) {
+    let filteredJson = json;
+
+    if (limitAttributes) {
+        filteredJson = {};
+        const attributes = limitAttributes.split(',').map((attribute) => attribute.trim());
+
+        Object.keys(json).forEach((dependency) => {
+            filteredJson[dependency] = licenseChecker.filterAttributes(attributes, json[dependency]);
+        });
+    }
+
+    return filteredJson;
+}
+
 function getFormattedOutput(json, args) {
     const jsonCopy = cloneDeep(json);
 
