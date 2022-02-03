@@ -33,6 +33,7 @@ const usageMessage = [
     '   --includeLicenses [list] include only modules which licenses are in the comma-separated list from the output',
     '   --includePackages [list] restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list',
     '   --json output in json format.',
+    '   --limitAttributes [list] limit the attributes to be output.',
     '   --markdown output in markdown format.',
     '   --nopeer skip peer dependencies in output.',
     '   --onlyAllow [list] fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list',
@@ -136,8 +137,25 @@ function colorizeOutput(json) {
     });
 }
 
+function filterJson(limitAttributes, json) {
+    let filteredJson = json;
+
+    if (limitAttributes) {
+        filteredJson = {};
+        const attributes = limitAttributes.split(',').map((attribute) => attribute.trim());
+
+        Object.keys(json).forEach((dependency) => {
+            filteredJson[dependency] = licenseChecker.filterAttributes(attributes, json[dependency]);
+        });
+    }
+
+    return filteredJson;
+}
+
 function getFormattedOutput(json, args) {
-    const jsonCopy = cloneDeep(json);
+    let filteredJson = filterJson(args.limitAttributes, json);
+    const jsonCopy = cloneDeep(filteredJson);
+    filteredJson = null;
 
     if (args.files) {
         Object.keys(jsonCopy).forEach((moduleName) => {

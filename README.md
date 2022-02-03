@@ -72,6 +72,14 @@ You could see something like this:
 
 ## Changes
 
+### Version 3.1.0
+
+Add new option `--limitAttributes`. Example usage: `node bin/license-checker-rseidelsohn --limitAttributes publisher,email` will only list the `publisher` and `email` attributes for every dependency.
+
+### Version 3.0.1
+
+Fix the `--direct` option.
+
 ### Version 3.0.0
 
 From now on, when you give the `--files` option, this tool outputs the path to the _copied_ license files rather than to
@@ -98,6 +106,7 @@ before.
 -   `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
 -   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
 -   `--json` output in json format.
+-   `--limitAttributes [list]` limit the attributes to be output.
 -   `--markdown` output in markdown format.
 -   `--nopeer` skip peer dependencies in output.
 -   `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
@@ -144,17 +153,18 @@ When used with JSON format, it will add the specified items to the usual ones.
 
 The available items are the following:
 
--   name
--   version
+-   copyright
 -   description
--   repository
--   publisher
 -   email
--   url
--   licenses
 -   licenseFile
--   licenseText
 -   licenseModified
+-   licenses
+-   licenseText
+-   name
+-   publisher
+-   repository
+-   url
+-   version
 
 You can also give default values for each item.
 See an example in [customFormatExample.json](customFormatExample.json).

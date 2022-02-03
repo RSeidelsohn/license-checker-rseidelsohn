@@ -1,8 +1,8 @@
 {
   "name": "license-checker-rseidelsohn",
-  "description": "Feature enhanced version of the original license-checker v25.0.1",
+  "description": "Extract NPM package licenses - Feature enhanced version of the original license-checker v25.0.1",
   "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "license": "BSD-3-Clause",
   "contributors": [
     "Adam Weber <adamweber01@gmail.com>",
@@ -124,9 +124,9 @@
     "exclude": [
       "**/tests/*.js"
     ],
-    "lines": 95,
-    "statements": 95,
-    "functions": 95,
+    "lines": 93,
+    "statements": 93,
+    "functions": 92,
     "branches": 85
   },
   "engines": {

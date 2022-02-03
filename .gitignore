@@ -11,5 +11,6 @@
 artifacts
 coverage/
 CVS/
+dist/
 node_modules/
 tmp/
