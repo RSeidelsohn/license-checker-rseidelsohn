@@ -878,4 +878,36 @@ BSD-3-Clause
             assert.ok(json instanceof Error);
         });
     });
+
+    describe('limit attributes', function () {
+        it('should filter attributes based on limitAttributes defined', function () {
+            const path = './tests/config/custom_format_correct.json';
+            const json = checker.parseJson(path);
+
+            const filteredJson = checker.filterAttributes(['version', 'name'], json);
+
+            assert.notStrictEqual(filteredJson.version, undefined);
+            assert.notStrictEqual(filteredJson.name, undefined);
+            assert.strictEqual(filteredJson.description, undefined);
+            assert.strictEqual(filteredJson.licenses, undefined);
+            assert.strictEqual(filteredJson.licenseFile, undefined);
+            assert.strictEqual(filteredJson.licenseText, undefined);
+            assert.strictEqual(filteredJson.licenseModified, undefined);
+        });
+
+        it('should keep json as is if no outputColumns defined', function () {
+            const path = './tests/config/custom_format_correct.json';
+            const json = checker.parseJson(path);
+
+            const filteredJson = checker.filterAttributes(null, json);
+
+            assert.notStrictEqual(filteredJson.version, undefined);
+            assert.notStrictEqual(filteredJson.name, undefined);
+            assert.notStrictEqual(filteredJson.description, undefined);
+            assert.notStrictEqual(filteredJson.licenses, undefined);
+            assert.notStrictEqual(filteredJson.licenseFile, undefined);
+            assert.notStrictEqual(filteredJson.licenseText, undefined);
+            assert.notStrictEqual(filteredJson.licenseModified, undefined);
+        });
+    });
 });
