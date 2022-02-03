@@ -144,17 +144,18 @@ When used with JSON format, it will add the specified items to the usual ones.
 
 The available items are the following:
 
--   name
--   version
+-   copyright
 -   description
--   repository
--   publisher
 -   email
--   url
--   licenses
 -   licenseFile
--   licenseText
 -   licenseModified
+-   licenses
+-   licenseText
+-   name
+-   publisher
+-   repository
+-   url
+-   version
 
 You can also give default values for each item.
 See an example in [customFormatExample.json](customFormatExample.json).
