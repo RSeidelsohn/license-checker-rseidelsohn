@@ -217,4 +217,4 @@ If one of the those files are found (in that order) we will attempt to parse the
 ## Related information sources on the internet
 
 - [ChooseALicense.com](https://choosealicense.com/) - aims at helping you in choosing an open source license for your project
-- [TLDRLegal.com](https://tldrlegal.com/ - aims at exlaining complicated legal details of software licenses in easy to understand english
+- [TLDRLegal.com](https://tldrlegal.com/) - aims at exlaining complicated legal details of software licenses in easy to understand english
