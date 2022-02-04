@@ -17,6 +17,7 @@
 - [Related information sources on the internet](#all_options_in_alphabetical_order)
 
 <a name="introduction"/>
+
 ## Introduction
 _This is a fork of davglass' [license-checker v.25.0.1](https://github.com/davglass/license-checker/releases/tag/v25.0.1) - Since that code doesn't seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
 
