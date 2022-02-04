@@ -86,6 +86,7 @@ You could see something like this:
 ```
 
 <a name="changes"/>
+
 ## Changes
 
 ### Version 3.1.0
@@ -107,6 +108,7 @@ When using the `--out` option, you will not see output in the console, as the ou
 before.
 
 <a name="all_options_in_alphabetical_order"/>
+
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
@@ -140,6 +142,7 @@ before.
 -   `--help` The text you are reading right now :)
 
 <a name="exclusions"/>
+
 ## Exclusions
 
 A list of licenses is the simplest way to describe what you want to exclude.
@@ -150,6 +153,7 @@ You can use non-valid SPDX identifiers, like `Public Domain`, since `npm` does
 support some license strings that are not SPDX identifiers.
 
 <a name="examples"/>
+
 ## Examples
 
 ```
@@ -164,6 +168,7 @@ license-checker-rseidelsohn --onlyunknown
 ```
 
 <a name="custom_format"/>
+
 ## Custom format
 
 The `--customPath` option can be used with CSV to specify the columns. Note that
@@ -190,6 +195,7 @@ You can also give default values for each item.
 See an example in [customFormatExample.json](customFormatExample.json).
 
 <a name="requiring"/>
+
 ## Requiring
 
 ```js
@@ -212,6 +218,7 @@ checker.init(
 ```
 
 <a name="debugging"/>
+
 ## Debugging
 
 license-checker uses [debug](https://www.npmjs.com/package/debug) for internal logging. There’s two internal markers:
@@ -231,6 +238,7 @@ scanning ./yui-lint
 ```
 
 <a name="all_options_in_alphabetical_order"/>
+
 ## How Licenses are Found
 
 We walk through the `node_modules` directory with the [`read-installed-packages`](https://www.npmjs.org/package/read-installed-packages) module. Once we gathered a list of modules we walk through them and look at all of their `package.json`'s, We try to identify the license with the [`spdx`](https://www.npmjs.com/package/spdx) module to see if it has a valid SPDX license attached. If that fails, we then look into the module for the following files: `LICENSE`, `LICENCE`, `COPYING`, & `README`.
@@ -238,6 +246,7 @@ We walk through the `node_modules` directory with the [`read-installed-packages`
 If one of the those files are found (in that order) we will attempt to parse the license data from it with a list of known license texts. This will be shown with the `*` next to the name of the license to show that we "guessed" at it.
 
 <a name="related_information_sources_on_the_internet"/>
+
 ## Related information sources on the internet
 
 -   [ChooseALicense.com](https://choosealicense.com/) - aims at helping you in choosing an open source license for your project
