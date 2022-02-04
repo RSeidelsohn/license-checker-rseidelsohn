@@ -4,6 +4,20 @@
 
 # NPM License Checker
 
+## Table of Contents
+
+[Introduction](#introduction)
+[Changes](#changes)
+[All options in alphabetical order](#all_options_in_alphabetical_order)
+[Exclusions](#exclusions)
+[Examples](#examples)
+[Custom format](#custom_format)
+[Requiring](#requiring)
+[Debugging](#debugging)
+[Related information sources on the internet](#all_options_in_alphabetical_order)
+
+<a name="introduction"/>
+## Introduction
 _This is a fork of davglass' [license-checker v.25.0.1](https://github.com/davglass/license-checker/releases/tag/v25.0.1) - Since that code doesn't seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
 
 _I changed the original `exclude` argument to `excludeLicenses` in order to prevent confusion and better align it with the `excludePackages` argument. Also, the argument `includeLicenses` has been added for listing only packages that include the licenses listed._
@@ -70,6 +84,7 @@ You could see something like this:
    └─ licenses: MIT*
 ```
 
+<a name="changes"/>
 ## Changes
 
 ### Version 3.1.0
@@ -90,6 +105,7 @@ When using the `--out` option, you will not see output in the console, as the ou
 `--out`. When using the `--files` option without `--out` option, you will now get console output, which was not the case
 before.
 
+<a name="all_options_in_alphabetical_order"/>
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
@@ -109,7 +125,7 @@ before.
 -   `--limitAttributes [list]` limit the attributes to be output.
 -   `--markdown` output in markdown format.
 -   `--nopeer` skip peer dependencies in output.
--   `--onlyAllow [list]` fail (exit with code 1) on the first occurrence of the licenses not in the semicolon-seperated list
+-   `--onlyAllow [list]` fail (exit with codexclusionse 1) on the first occurrence of the licenses not in the semicolon-seperated list
 -   `--onlyunknown` only list packages with unknown or guessed licenses.
 -   `--out [filepath]` write the data to a specific file.
 -   `--plainVertical` output license info in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)
@@ -122,6 +138,7 @@ before.
 -   `--version` The current version
 -   `--help` The text you are reading right now :)
 
+<a name="exclusions"/>
 ## Exclusions
 
 A list of licenses is the simplest way to describe what you want to exclude.
@@ -131,6 +148,7 @@ You can use valid SPDX expressions like `MIT OR X11`.
 You can use non-valid SPDX identifiers, like `Public Domain`, since `npm` does
 support some license strings that are not SPDX identifiers.
 
+<a name="examples"/>
 ## Examples
 
 ```
@@ -144,6 +162,7 @@ license-checker-rseidelsohn --excludePackages 'internal-1;internal-2'
 license-checker-rseidelsohn --onlyunknown
 ```
 
+<a name="custom_format"/>
 ## Custom format
 
 The `--customPath` option can be used with CSV to specify the columns. Note that
@@ -169,6 +188,7 @@ The available items are the following:
 You can also give default values for each item.
 See an example in [customFormatExample.json](customFormatExample.json).
 
+<a name="requiring"/>
 ## Requiring
 
 ```js
@@ -190,6 +210,7 @@ checker.init(
 );
 ```
 
+<a name="debugging"/>
 ## Debugging
 
 license-checker uses [debug](https://www.npmjs.com/package/debug) for internal logging. There’s two internal markers:
@@ -208,13 +229,15 @@ scanning ./yui-lint
 # ...
 ```
 
+<a name="all_options_in_alphabetical_order"/>
 ## How Licenses are Found
 
 We walk through the `node_modules` directory with the [`read-installed-packages`](https://www.npmjs.org/package/read-installed-packages) module. Once we gathered a list of modules we walk through them and look at all of their `package.json`'s, We try to identify the license with the [`spdx`](https://www.npmjs.com/package/spdx) module to see if it has a valid SPDX license attached. If that fails, we then look into the module for the following files: `LICENSE`, `LICENCE`, `COPYING`, & `README`.
 
 If one of the those files are found (in that order) we will attempt to parse the license data from it with a list of known license texts. This will be shown with the `*` next to the name of the license to show that we "guessed" at it.
 
+<a name="related_information_sources_on_the_internet"/>
 ## Related information sources on the internet
 
-- [ChooseALicense.com](https://choosealicense.com/) - aims at helping you in choosing an open source license for your project
-- [TLDRLegal.com](https://tldrlegal.com/) - aims at exlaining complicated legal details of software licenses in easy to understand english
+-   [ChooseALicense.com](https://choosealicense.com/) - aims at helping you in choosing an open source license for your project
+-   [TLDRLegal.com](https://tldrlegal.com/) - aims at exlaining complicated legal details of software licenses in easy to understand english
