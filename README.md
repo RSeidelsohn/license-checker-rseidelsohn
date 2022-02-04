@@ -213,3 +213,8 @@ scanning ./yui-lint
 We walk through the `node_modules` directory with the [`read-installed-packages`](https://www.npmjs.org/package/read-installed-packages) module. Once we gathered a list of modules we walk through them and look at all of their `package.json`'s, We try to identify the license with the [`spdx`](https://www.npmjs.com/package/spdx) module to see if it has a valid SPDX license attached. If that fails, we then look into the module for the following files: `LICENSE`, `LICENCE`, `COPYING`, & `README`.
 
 If one of the those files are found (in that order) we will attempt to parse the license data from it with a list of known license texts. This will be shown with the `*` next to the name of the license to show that we "guessed" at it.
+
+## Related information sources on the internet
+
+- [ChooseALicense.com](https://choosealicense.com/) - aims at helping you in choosing an open source license for your project
+- [TLDRLegal.com](https://tldrlegal.com/ - aims at exlaining complicated legal details of software licenses in easy to understand english
