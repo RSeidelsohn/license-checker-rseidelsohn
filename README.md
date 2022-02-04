@@ -6,15 +6,15 @@
 
 ## Table of Contents
 
-[Introduction](#introduction)
-[Changes](#changes)
-[All options in alphabetical order](#all_options_in_alphabetical_order)
-[Exclusions](#exclusions)
-[Examples](#examples)
-[Custom format](#custom_format)
-[Requiring](#requiring)
-[Debugging](#debugging)
-[Related information sources on the internet](#all_options_in_alphabetical_order)
+- [Introduction](#introduction)
+- [Changes](#changes)
+- [All options in alphabetical order](#all_options_in_alphabetical_order)
+- [Exclusions](#exclusions)
+- [Examples](#examples)
+- [Custom format](#custom_format)
+- [Requiring](#requiring)
+- [Debugging](#debugging)
+- [Related information sources on the internet](#all_options_in_alphabetical_order)
 
 <a name="introduction"/>
 ## Introduction
