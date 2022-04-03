@@ -161,7 +161,7 @@ license-checker-rseidelsohn --json > /path/to/licenses.json
 license-checker-rseidelsohn --csv --out /path/to/licenses.csv
 license-checker-rseidelsohn --unknown
 license-checker-rseidelsohn --customPath customFormatExample.json
-license-checker-rseidelsohn --excludeModules 'MIT, MIT OR X11, BSD, ISC'
+license-checker-rseidelsohn --excludeLicenses 'MIT, MIT OR X11, BSD, ISC'
 license-checker-rseidelsohn --includePackages 'react@16.3.0;react-dom@16.3.0;lodash@4.3.1'
 license-checker-rseidelsohn --excludePackages 'internal-1;internal-2'
 license-checker-rseidelsohn --onlyunknown
