@@ -199,7 +199,7 @@ See an example in [customFormatExample.json](customFormatExample.json).
 ## Requiring
 
 ```js
-var checker = require('license-checker');
+var checker = require('license-checker-rseidelsohn');
 
 checker.init(
     {
