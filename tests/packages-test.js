@@ -64,8 +64,6 @@ describe('bin/license-checker-rseidelsohn', function () {
 
         let illegalPackageFound = false;
 
-        console.log(packages);
-
         // Loop through all packages and check if they start with one of the excluded packages
         packages.forEach(function (p) {
             excludedPackages.forEach(function (excludedPackage) {
