@@ -75,6 +75,10 @@
      */
     excludePrivatePackages?: boolean | undefined;
     /**
+     * Exclude modules matching a given regex 
+     */
+    excludeRegex?: string | undefined;
+    /**
      * Look for direct dependencies only
      */
     direct?: boolean | undefined;
