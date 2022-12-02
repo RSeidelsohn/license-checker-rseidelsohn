@@ -45,6 +45,38 @@ describe('bin/license-checker-rseidelsohn', function () {
         });
     });
 
+    it('should exclude packages starting with', function () {
+        const excludedPackages = ['@types', 'spdx'];
+        const output = spawn(
+            'node',
+            [
+                path.join(__dirname, '../bin/license-checker-rseidelsohn'),
+                '--json',
+                '--excludePackagesStartingWith',
+                excludedPackages.join(';'),
+            ],
+            {
+                cwd: path.join(__dirname, '../'),
+            },
+        );
+
+        const packages = Object.keys(JSON.parse(output.stdout.toString()));
+
+        let illegalPackageFound = false;
+
+        // Loop through all packages and check if they start with one of the excluded packages
+        packages.forEach(function (p) {
+            excludedPackages.forEach(function (excludedPackage) {
+                if (p.startsWith(excludedPackage)) {
+                    illegalPackageFound = true;
+                }
+            });
+        });
+
+        // If an illegal package was found, the test fails
+        assert.ok(!illegalPackageFound);
+    });
+
     it('should exclude private packages from the output', function () {
         var output = spawn(
             'node',
