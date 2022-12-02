@@ -1,7 +1,7 @@
 /**
  * Options struct for the init() function
  */
- export interface InitOpts {
+export interface InitOpts {
     /**
      * Path to start checking dependencies from
      */
@@ -74,6 +74,10 @@
      * Restrict output to not include any package marked as private
      */
     excludePrivatePackages?: boolean | undefined;
+    /**
+     * Exclude modules starting with a specific string
+     */
+    excludePackagesStartingWith?: string | undefined;
     /**
      * Look for direct dependencies only
      */
@@ -167,7 +171,4 @@ export interface ModuleInfos {
  * Run the license check
  * @param opts specifies the path to the module to check dependencies of
  */
-export function init(
-    opts: InitOpts,
-    callback: (err: Error, ret: ModuleInfos) => void
-): void;
+export function init(opts: InitOpts, callback: (err: Error, ret: ModuleInfos) => void): void;

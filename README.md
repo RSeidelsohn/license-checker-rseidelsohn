@@ -6,15 +6,21 @@
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Changes](#changes)
-- [All options in alphabetical order](#all_options_in_alphabetical_order)
-- [Exclusions](#exclusions)
-- [Examples](#examples)
-- [Custom format](#custom_format)
-- [Requiring](#requiring)
-- [Debugging](#debugging)
-- [Related information sources on the internet](#all_options_in_alphabetical_order)
+- [NPM License Checker](#npm-license-checker)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Changes](#changes)
+    - [Version 3.1.0](#version-310)
+    - [Version 3.0.1](#version-301)
+    - [Version 3.0.0](#version-300)
+  - [All options in alphabetical order:](#all-options-in-alphabetical-order)
+  - [Exclusions](#exclusions)
+  - [Examples](#examples)
+  - [Custom format](#custom-format)
+  - [Requiring](#requiring)
+  - [Debugging](#debugging)
+  - [How Licenses are Found](#how-licenses-are-found)
+  - [Related information sources on the internet](#related-information-sources-on-the-internet)
 
 <a name="introduction"/>
 
@@ -119,6 +125,7 @@ before.
 -   `--direct` look for direct dependencies only
 -   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
 -   `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
+-   `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output (useful for excluding modules from a specific vendor and such). Example: `--excludePackagesStartingWith "webpack;@types;@babel"`
 -   `--excludePrivatePackages` restrict output to not include any package marked as private
 -   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
 -   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
