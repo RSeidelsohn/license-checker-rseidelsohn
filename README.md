@@ -125,6 +125,7 @@ before.
 -   `--direct` look for direct dependencies only
 -   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
 -   `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
+-   `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output (useful for excluding modules from a specific vendor and such). Example: `--excludePackagesStartingWith "webpack;@types;@babel"`
 -   `--excludePrivatePackages` restrict output to not include any package marked as private
 -   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
 -   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
