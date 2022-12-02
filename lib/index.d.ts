@@ -75,10 +75,9 @@ export interface InitOpts {
      */
     excludePrivatePackages?: boolean | undefined;
     /**
-     * Exclude modules starting or ending with a specific string
+     * Exclude modules starting with a specific string
      */
     excludePackagesStartingWith?: string | undefined;
-    excludePackagesEndingWith?: string | undefined;
     /**
      * Look for direct dependencies only
      */
