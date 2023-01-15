@@ -70,8 +70,8 @@
     "zodiac403 <zodiac403@gmx.de>"
   ],
   "dependencies": {
-    "chalk": "^4.1.2",
-    "debug": "^4.3.2",
+    "chalk": "4.1.2",
+    "debug": "^4.3.4",
     "lodash.clonedeep": "^4.5.0",
     "mkdirp": "^1.0.4",
     "nopt": "^5.0.0",
@@ -83,17 +83,17 @@
     "treeify": "^1.1.0"
   },
   "devDependencies": {
-    "@types/mssql": "6.0.8",
-    "@types/node": "^16.10.3",
+    "@types/mssql": "8.1.1",
+    "@types/node": "^16.18.11",
     "detectionizr": "*",
-    "eslint": "^8.0.0",
+    "eslint": "^8.32.0",
     "format-package-json": "^0.2.0",
-    "git-contributors": "^0.2.3",
+    "git-contributors": "^0.2.5",
     "github-changes": "^2.0.3",
     "istanbul": "^0.4.5",
     "jenkins-mocha": "^8.0.0",
     "locale": "^0.1.0",
-    "prettier": "^2.4.1",
+    "prettier": "^2.8.3",
     "queue": "^6.0.2",
     "request": "^2.88.2",
     "rimraf": "^3.0.2"
