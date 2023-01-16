@@ -6,7 +6,7 @@ describe('bin/license-checker-rseidelsohn', function () {
     this.timeout(8000);
 
     it('should restrict the output to the provided packages', function () {
-        var restrictedPackages = ['@types/node@16.11.21'];
+        var restrictedPackages = ['@types/node@16.18.11'];
         var output = spawn(
             'node',
             [
