@@ -77,6 +77,48 @@ describe('bin/license-checker-rseidelsohn', function () {
         assert.ok(!illegalPackageFound);
     });
 
+
+    it('should combine various types of inclusion and exclusions', function () {
+        const excludedPrefix = ['@types', 'spdx'];
+        const excludedNames = ['rimraf'];
+        const output = spawn(
+            'node',
+            [
+                path.join(__dirname, '../bin/license-checker-rseidelsohn'),
+                '--json',
+                '--excludePackages',
+                excludedNames.join(';'),
+                '--excludePackagesStartingWith',
+                excludedPrefix.join(';'),
+            ],
+            {
+                cwd: path.join(__dirname, '../'),
+            },
+        );
+        const packages = Object.keys(JSON.parse(output.stdout.toString()));
+
+        let illegalPackageFound = false;
+
+        packages.forEach(function (p) {
+            excludedNames.forEach(function (pkgName) {
+                if(pkgName.indexOf('@')>1){
+                    // check for the exact version
+                    if(p === pkgName) illegalPackageFound = true;
+                } else if (p.startsWith(`${pkgName}@`)) {
+                    illegalPackageFound = true;
+                }
+            });
+            excludedPrefix.forEach(function (prefix) {
+                if (p.startsWith(prefix)) {
+                    illegalPackageFound = true;
+                }
+            });
+        });
+
+        // If an illegal package was found, the test fails
+        assert.ok(!illegalPackageFound);
+    });
+
     it('should exclude private packages from the output', function () {
         var output = spawn(
             'node',
