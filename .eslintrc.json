@@ -8,7 +8,8 @@
     "parserOptions": {
         "ecmaVersion": 2020
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "prettier"],
+    "plugins": ["prettier"],
     "rules": {
         "no-unused-vars": ["error", { "args": "after-used" }],
         "semi": 2,
@@ -29,6 +30,7 @@
         "arrow-body-style": [2, "as-needed"],
         "array-bracket-spacing": [2, "never"],
         "object-curly-spacing": [2, "always"],
+        "prettier/prettier": ["error"],
         "key-spacing": ["error", { "beforeColon": false }]
     },
     "env": {
