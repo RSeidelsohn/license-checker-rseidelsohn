@@ -32,7 +32,8 @@
     "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn --check && npx prettier scripts --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "format:dry": "npm run prettier && npm run lint"
+    "format:dry": "npm run prettier && npm run lint",
+    "prepare": "husky install"
   },
   "preferGlobal": true,
   "bugs": {
@@ -140,6 +141,7 @@
     "format-package-json": "^0.2.0",
     "git-contributors": "^0.2.5",
     "github-changes": "^2.0.3",
+    "husky": "^8.0.0",
     "istanbul": "^0.4.5",
     "jenkins-mocha": "^8.0.0",
     "lint-staged": "^13.1.0",
