@@ -1,4 +1,9 @@
 *.min.js
-node_modules/
 package-lock.json
 package.json
+artifacts/
+build/
+coverage/
+node_modules/
+node_modules/
+tests/

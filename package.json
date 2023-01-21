@@ -2,8 +2,57 @@
   "name": "license-checker-rseidelsohn",
   "description": "Extract NPM package licenses - Feature enhanced version of the original license-checker v25.0.1",
   "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
-  "version": "3.3.0",
+  "version": "4.0.0",
   "license": "BSD-3-Clause",
+  "private": false,
+  "engines": {
+    "npm": "^8",
+    "node": ">=18"
+  },
+  "engine-strict": true,
+  "keywords": [
+    "license",
+    "cli",
+    "checker",
+    "oss"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "bin": {
+    "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn"
+  },
+  "scripts": {
+    "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
+    "contrib": "node ./scripts/contrib.js",
+    "pretest": "eslint --fix .",
+    "test": "jenkins-mocha ./tests/*.js",
+    "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary",
+    "lint": "npx eslint --ext js .",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn --check && npx prettier scripts --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "format:dry": "npm run prettier && npm run lint",
+    "prepare": "husky install"
+  },
+  "preferGlobal": true,
+  "bugs": {
+    "url": "http://github.com/RSeidelsohn/license-checker-rseidelsohn/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RSeidelsohn/license-checker-rseidelsohn.git"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "exclude": [
+      "**/tests/*.js"
+    ],
+    "lines": 93,
+    "statements": 93,
+    "functions": 92,
+    "branches": 85
+  },
   "contributors": [
     "Adam Weber <adamweber01@gmail.com>",
     "Andrew Couch <andy@couchand.com>",
@@ -87,54 +136,19 @@
     "@types/node": "^16.18.11",
     "detectionizr": "*",
     "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "format-package-json": "^0.2.0",
     "git-contributors": "^0.2.5",
     "github-changes": "^2.0.3",
+    "husky": "^8.0.0",
     "istanbul": "^0.4.5",
     "jenkins-mocha": "^8.0.0",
+    "lint-staged": "^13.1.0",
     "locale": "^0.1.0",
     "prettier": "^2.8.3",
     "queue": "^6.0.2",
     "request": "^2.88.2",
     "rimraf": "^3.0.2"
-  },
-  "keywords": [
-    "license",
-    "cli",
-    "checker",
-    "oss"
-  ],
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "bin": {
-    "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn"
-  },
-  "scripts": {
-    "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
-    "contrib": "node ./scripts/contrib.js",
-    "pretest": "eslint --fix .",
-    "test": "jenkins-mocha ./tests/*.js",
-    "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary"
-  },
-  "preferGlobal": true,
-  "bugs": {
-    "url": "http://github.com/RSeidelsohn/license-checker-rseidelsohn/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RSeidelsohn/license-checker-rseidelsohn.git"
-  },
-  "nyc": {
-    "check-coverage": true,
-    "exclude": [
-      "**/tests/*.js"
-    ],
-    "lines": 93,
-    "statements": 93,
-    "functions": 92,
-    "branches": 85
-  },
-  "engines": {
-    "node": ">=14"
   }
 }
