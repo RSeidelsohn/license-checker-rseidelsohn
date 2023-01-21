@@ -4,6 +4,48 @@
   "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
   "version": "4.0.0",
   "license": "BSD-3-Clause",
+  "private": false,
+  "engines": {
+    "npm": "^8",
+    "node": ">=18"
+  },
+  "engine-strict": true,
+  "keywords": [
+    "license",
+    "cli",
+    "checker",
+    "oss"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "bin": {
+    "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn"
+  },
+  "scripts": {
+    "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
+    "contrib": "node ./scripts/contrib.js",
+    "pretest": "eslint --fix .",
+    "test": "jenkins-mocha ./tests/*.js",
+    "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary"
+  },
+  "preferGlobal": true,
+  "bugs": {
+    "url": "http://github.com/RSeidelsohn/license-checker-rseidelsohn/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RSeidelsohn/license-checker-rseidelsohn.git"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "exclude": [
+      "**/tests/*.js"
+    ],
+    "lines": 93,
+    "statements": 93,
+    "functions": 92,
+    "branches": 85
+  },
   "contributors": [
     "Adam Weber <adamweber01@gmail.com>",
     "Andrew Couch <andy@couchand.com>",
@@ -97,44 +139,5 @@
     "queue": "^6.0.2",
     "request": "^2.88.2",
     "rimraf": "^3.0.2"
-  },
-  "keywords": [
-    "license",
-    "cli",
-    "checker",
-    "oss"
-  ],
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "bin": {
-    "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn"
-  },
-  "scripts": {
-    "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
-    "contrib": "node ./scripts/contrib.js",
-    "pretest": "eslint --fix .",
-    "test": "jenkins-mocha ./tests/*.js",
-    "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary"
-  },
-  "preferGlobal": true,
-  "bugs": {
-    "url": "http://github.com/RSeidelsohn/license-checker-rseidelsohn/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RSeidelsohn/license-checker-rseidelsohn.git"
-  },
-  "nyc": {
-    "check-coverage": true,
-    "exclude": [
-      "**/tests/*.js"
-    ],
-    "lines": 93,
-    "statements": 93,
-    "functions": 92,
-    "branches": 85
-  },
-  "engines": {
-    "node": ">=14"
   }
 }
