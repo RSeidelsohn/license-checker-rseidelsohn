@@ -93,7 +93,33 @@ You could see something like this:
 
 <a name="changes"/>
 
-## Changes
+## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
+
+### Version 4.0.0
+
+Due to [end of service for NodeJS' security updates](https://endoflife.date/nodejs), I decided to from now on use a current LTS-version, which is NodeJS v18.
+
+This of course doesn't necessarily mean that older Node versions will not be able to run this license-checker-rseidelsohn, but one day this will mosrt likely happen, I guess.
+
+Should there be any need for security updates or new features supported by older NodeJS versions, [please tell me so] (mailto:rseidelsohn@gmail.com?subject=Support%20request%20for%20old%20license-checker-rseidelsohn%20-%20version). I can not promise that I will take the time to fulfill the request, but if you do not ask me, I certainly won't.
+
+This being said, the only change with 4.0.0 is a switch in the `.ncmrc` file of the project (for developers working on this module only) from NodeJS v14 to NodeJS v18 - which again is a LTS version, a version with long tiome support - and some minor updates to the README file, adding stuff that was missing in the past due to a lack of regular maintenance from my side.
+
+That then being said, I really want to invite you to add pull requests to this project. If you feel like, please ask me to give you higher-level access to this repo. I am not keen on mainaining it on my own - I just took it over in order to add my own feature request after the original author stopped finding the time to further support it. Now, I am not using this module for work any more (which might change in the future), but I see my responsibility to at least taking care of pull requests and releasing them, and from time to time working on feature requests as a kind of kata for me.
+
+### Version 3.3.0
+
+Allow combining the options `--excludePackages` and `--excludePackagesStartingWith`
+
+### Version 3.2.1
+
+Bugfix for `--excludePackagesStartingWith`
+
+
+### Version 3.2.0
+
+ Add flag `--excludePackagesStartingWith [list]` and add detection of `Hippocratic License 2.1`
+
 
 ### Version 3.1.0
 
