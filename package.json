@@ -26,7 +26,13 @@
     "contrib": "node ./scripts/contrib.js",
     "pretest": "eslint --fix .",
     "test": "jenkins-mocha ./tests/*.js",
-    "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary"
+    "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary",
+    "lint": "npx eslint --ext js .",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn --check && npx prettier scripts --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "format:dry": "npm run prettier && npm run lint"
   },
   "preferGlobal": true,
   "bugs": {
