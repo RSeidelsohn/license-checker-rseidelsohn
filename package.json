@@ -6,7 +6,7 @@
   "license": "BSD-3-Clause",
   "private": false,
   "engines": {
-    "npm": "^8",
+    "npm": ">=8",
     "node": ">=18"
   },
   "engine-strict": true,
