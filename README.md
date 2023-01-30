@@ -227,6 +227,8 @@ The available items are the following:
 You can also give default values for each item.
 See an example in [customFormatExample.json](customFormatExample.json).
 
+Note that outputting the license text is not recommended with Markdown formatting, as it can be very long and does not work well with Markdown lists.
+
 <a name="requiring"/>
 
 ## Requiring
