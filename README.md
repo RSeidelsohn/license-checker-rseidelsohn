@@ -95,6 +95,18 @@ You could see something like this:
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
+### Version 4.1.1
+
+Fix list format when outputting markdown format
+
+### Version 4.1.0
+
+Change config that required the major npm version to be 8. This led to code not compiling for some users and was done for no good reason. Now it is required to be >= 8.
+
+### Version 4.0.1
+
+Fix some typos in the README file.
+
 ### Version 4.0.0
 
 Due to [end of service for NodeJS' security updates](https://endoflife.date/nodejs), I decided to from now on use a current LTS-version, which is NodeJS v18.
