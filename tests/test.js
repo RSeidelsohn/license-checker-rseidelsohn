@@ -45,7 +45,7 @@ describe('main tests', function () {
 
         it('and convert to MarkDown', function () {
             const str = checker.asMarkDown(output);
-            assert.equal(str.split('\n')[0], '[@babel/code-frame@7.16.7](https://github.com/babel/babel) - MIT');
+            assert.equal(str.split('\n')[0], '- [@babel/code-frame@7.16.7](https://github.com/babel/babel) - MIT');
         });
     });
 
@@ -114,7 +114,7 @@ describe('main tests', function () {
             };
 
             const str = checker.asMarkDown(output, format);
-            assert.equal(str.split('\n')[0], ' - **[@babel/code-frame@7.16.7](https://github.com/babel/babel)**');
+            assert.equal(str.split('\n')[0], '- **[@babel/code-frame@7.16.7](https://github.com/babel/babel)**');
         });
     });
 
