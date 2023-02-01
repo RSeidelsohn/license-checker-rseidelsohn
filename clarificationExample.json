@@ -1,0 +1,9 @@
+{
+    "license-checker-rseidelsohn@0.0.0": {
+        "licenses": "MIT",
+        "licenseFile": "MY_IP",
+        "checksum": "71eb00f862028a6d940c742dfa96e8f5116823cc5be0b7fb4a640072d2080186",
+        "repository": "git://somecustomsite.com",
+        "copyright": "Someone else for some reason"
+    }
+}

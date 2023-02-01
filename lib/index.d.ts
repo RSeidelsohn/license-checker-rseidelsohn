@@ -95,6 +95,10 @@ export interface InitOpts {
      * Ignore peerDependencies
      */
     nopeer?: boolean;
+    /**
+     * A file that contains license clarifications for malformed or non-standard packages 
+     */
+    clarificationsFile?: string;
 }
 
 /**
