@@ -61,19 +61,21 @@ describe('clarifications', function() {
     });
 
 
-    it('should exit 1 if no checksum', function(done) {
+    it('should succeed if no checksum is specified', function(done) {
         let data = "";
-        let license_checker = spawn('node', [path.join(__dirname, '../bin/license-checker-rseidelsohn'), '--start', path.join(__dirname, clarifications_path), '--clarificationsFile', path.join(__dirname, clarifications_path, 'badClarification.json')], {
+
+        let license_checker = spawn('node', [path.join(__dirname, '../bin/license-checker-rseidelsohn'), '--start', path.join(__dirname, clarifications_path), '--clarificationsFile', path.join(__dirname, clarifications_path, 'noChecksum.json')], {
             cwd: path.join(__dirname, '../'),
         });
 
-        license_checker.stderr.on('data', function(stdout) {
+        license_checker.stdout.on("data", function(stdout) {
             data += stdout.toString();
-        });
+        })
 
         license_checker.on('exit', function(code) {
-            assert.equal(code, 1);
-            assert.equal(data.includes("must have a checksum"), true)
+            assert.equal(code, 0);
+            assert.equal(data.includes("MIT"), true)
+            assert.equal(data.includes("MY_IP"), true)
             done();
         });
     })
