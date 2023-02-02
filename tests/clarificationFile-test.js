@@ -49,8 +49,8 @@ describe('clarifications', function() {
             cwd: path.join(__dirname, '../'),
         });
 
-        license_checker.stderr.on('data', function(stdout) {
-            data += stdout.toString();
+        license_checker.stderr.on('data', function(stderr) {
+            data += stderr.toString();
         });
 
         license_checker.on('exit', function(code) {
