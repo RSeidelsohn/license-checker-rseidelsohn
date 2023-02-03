@@ -16,6 +16,7 @@
   - [All options in alphabetical order:](#all-options-in-alphabetical-order)
   - [Exclusions](#exclusions)
   - [Examples](#examples)
+  - [Clarifications](#clarifications)
   - [Custom format](#custom-format)
   - [Requiring](#requiring)
   - [Debugging](#debugging)
@@ -183,6 +184,7 @@ before.
 -   `--start [filepath]` path of the initial json to look for
 -   `--summary` output a summary of the license usage',
 -   `--unknown` report guessed licenses as unknown licenses.
+-    `--clarificationsFile` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 -   `--version` The current version
 -   `--help` The text you are reading right now :)
 
@@ -210,6 +212,28 @@ license-checker-rseidelsohn --excludeLicenses 'MIT, MIT OR X11, BSD, ISC'
 license-checker-rseidelsohn --includePackages 'react@16.3.0;react-dom@16.3.0;lodash@4.3.1'
 license-checker-rseidelsohn --excludePackages 'internal-1;internal-2'
 license-checker-rseidelsohn --onlyunknown
+```
+
+<a name="clarifications"/>
+
+## Clarifications
+
+The `--clarificationsFile` option can be used to provide custom processing instructions on a per-package basis. The format is as so:
+
+```json
+{
+    "package_name@version": {
+        // Any field available in customFormat can be clarified
+        "licenses": "MIT",
+        "licenseFile": "some/path",
+        "licenseText": "The full text of the license to include if you need"
+        // You can optionally add a SH-256 checksum of the license file contents that will be checked on each run. Intended to help detect when projects change their license.
+        "checksum": "deadbeef...",
+        // Add a licenseStart and optional licenseEnd to snip out a substring of the licenseText. The licenseStart will be included in the licenseText, the licenseEnd will not be.
+        "licenseStart": "# MIT License",
+        "licenseEnd": "=========",
+    }
+}
 ```
 
 <a name="custom_format"/>

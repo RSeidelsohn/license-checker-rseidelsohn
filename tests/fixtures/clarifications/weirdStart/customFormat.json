@@ -1,0 +1,13 @@
+{
+    "licenses": true,
+    "licenseText": true,
+    "name": false,
+    "version": false,
+    "description": false,
+    "copyright": false,
+    "licenseFile": true,
+    "licenseModified": false,
+    "publisher": false,
+    "email": false,
+    "path": false
+}

@@ -1,0 +1,7 @@
+{
+    "license-checker-rseidelsohn@0.0.0": {
+        "licenses": "MIT",
+        "licenseStart": "# LICENSE",
+        "licenseEnd": "# And one more thing..."
+    }
+}
