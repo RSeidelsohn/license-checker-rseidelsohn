@@ -80,7 +80,7 @@ describe('clarifications', function() {
         });
     })
 
-    it('should sniip the embedded license out of the README', function(done) {
+    it('should snip the embedded license out of the README', function(done) {
         let data = "";
 
         let license_checker = spawn(
