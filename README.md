@@ -157,6 +157,7 @@ before.
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
+-    `--clarificationsFile` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 -   `--csv` output in csv format.
 -   `--csvComponentPrefix` prefix column for component in csv format.
 -   `--customPath` to add a custom Format file in JSON
@@ -184,7 +185,6 @@ before.
 -   `--start [filepath]` path of the initial json to look for
 -   `--summary` output a summary of the license usage',
 -   `--unknown` report guessed licenses as unknown licenses.
--    `--clarificationsFile` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 -   `--version` The current version
 -   `--help` The text you are reading right now :)
 
