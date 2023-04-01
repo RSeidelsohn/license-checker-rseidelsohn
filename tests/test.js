@@ -5,6 +5,8 @@ const checker = require('../lib/index');
 let args = require('../lib/args');
 const chalk = require('chalk');
 const fs = require('fs');
+const pkgPath = path.join(__dirname, '../package.json');
+const pkgJson = require(pkgPath);
 
 describe('main tests', function () {
     it('should load init', function () {
@@ -137,6 +139,34 @@ describe('main tests', function () {
         it('should give us results', function () {
             assert.ok(output);
             assert.ok(Object.keys(output).length > 20);
+        });
+    });
+
+    describe('should parse direct dependencies only', function () {
+        let output;
+
+        before(function (done) {
+            checker.init(
+                {
+                    start: path.join(__dirname, '../'),
+                    direct: true,
+                },
+                function (err, sorted) {
+                    output = sorted;
+                    done();
+                },
+            );
+        });
+
+        it('and give us results', function () {
+            const pkgDepsNumber =
+                Object.keys(pkgJson.dependencies || {}).length +
+                Object.keys(pkgJson.devDependencies || {}).length +
+                Object.keys(pkgJson.peerDependencies || {}).length;
+            // all and only the dependencies listed in the package.json should be included in the output,
+            // plus the main module itself
+            assert.ok(Object.keys(output).length === pkgDepsNumber + 1);
+            assert.equal(output['abbrev@1.0.9'], undefined);
         });
     });
 
