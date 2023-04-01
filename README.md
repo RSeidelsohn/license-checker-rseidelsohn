@@ -233,7 +233,7 @@ license-checker-rseidelsohn --onlyunknown
 
 The `--clarificationsFile` option can be used to provide custom processing instructions on a per-package basis. The format is as so:
 
-```json
+```json5
 {
     "package_name@version": {
         // Any field available in customFormat can be clarified
