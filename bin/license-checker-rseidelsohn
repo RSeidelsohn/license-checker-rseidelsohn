@@ -20,7 +20,7 @@ const usageMessage = [
     'All options in alphabetical order:',
     '',
     '   --angularCli is just a synonym for --plainVertical',
-    '   --clarificationsFile A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. Can also be used to specify a subregion of a package\'s license file (instead reading the entire file).',
+    "   --clarificationsFile A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. Can also be used to specify a subregion of a package's license file (instead reading the entire file).",
     '   --csv output in csv format.',
     '   --csvComponentPrefix column prefix for components in csv file',
     '   --customPath to add a custom Format file in JSON',
