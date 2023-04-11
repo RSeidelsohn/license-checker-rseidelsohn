@@ -16,7 +16,7 @@ const path = require('path');
 
 const parsedArgs = args.parse();
 const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
-const kownOptions = Object.keys(args.knownOpts);
+const kownOptions = Object.keys(args.knownOptions);
 const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.includes(arg));
 
 exitProcessOrWarnIfNeeded({ unknownArgs, parsedArgs, hasFailingArg });
