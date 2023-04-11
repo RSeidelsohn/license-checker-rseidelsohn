@@ -6,16 +6,16 @@ Code licensed under the BSD License:
 http://yuilibrary.com/license/
 */
 
-const licenseChecker = require('../lib/index');
 const args = require('../lib/args');
-const helpers = require('../lib/helpers');
 const exitProcessOrWarnIfNeeded = require('../lib/exitProcessOrWarnIfNeeded');
-const parsedArgs = args.parse();
+const fs = require('fs');
+const helpers = require('../lib/helpers');
+const licenseChecker = require('../lib/index');
 const mkdirp = require('mkdirp');
 const path = require('path');
-const fs = require('fs');
-const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
 
+const parsedArgs = args.parse();
+const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
 const kownOptions = Object.keys(args.knownOpts);
 const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.includes(arg));
 
