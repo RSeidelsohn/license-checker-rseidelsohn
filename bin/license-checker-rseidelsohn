@@ -9,6 +9,7 @@ http://yuilibrary.com/license/
 const licenseChecker = require('../lib/index');
 const args = require('../lib/args');
 const usageMessage = require('../lib/usageMessage');
+const exitProcessOrWarnIfNeeded = require('../lib/exitProcessOrWarnIfNeeded');
 const parsedArgs = args.parse();
 const mkdirp = require('mkdirp');
 const path = require('path');
@@ -20,40 +21,7 @@ const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
 const kownOptions = Object.keys(args.knownOpts);
 const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.includes(arg));
 
-if (unknownArgs.length) {
-    console.error(`license-checker-rseidelsohn@${require('../package.json').version}`, '\n');
-    console.error(
-        `Error: Unknown option${unknownArgs.length > 1 ? 's' : ''}: ${unknownArgs
-            .map((unknownArg) => `'${unknownArg}'`)
-            .join(', ')}`,
-    );
-    console.error(`       Possibly a typo? Currently known options are:`);
-    console.error(usageMessage, '\n');
-    process.exit(1);
-}
-
-if (!unknownArgs.length && parsedArgs.help) {
-    console.error(`license-checker-rseidelsohn@${require('../package.json').version}`);
-    console.error(usageMessage, '\n');
-    process.exit(0);
-}
-
-if (parsedArgs.version) {
-    console.error(require('../package.json').version);
-    process.exit(1);
-}
-
-if (parsedArgs.failOn && parsedArgs.onlyAllow) {
-    console.error('Error: --failOn and --onlyAllow can not be used at the same time. Choose one or the other.');
-    process.exit(1);
-}
-
-if (hasFailingArg && hasFailingArg.indexOf(',') >= 0) {
-    const argName = parsedArgs.failOn ? 'failOn' : 'onlyAllow';
-    console.warn(
-        `Warning: As of v17 the --${argName} argument takes semicolons as delimeters instead of commas (some license names can contain commas)`,
-    );
-}
+exitProcessOrWarnIfNeeded({ unknownArgs, parsedArgs, hasFailingArg });
 
 licenseChecker.init(parsedArgs, function (err, json) {
     if (err) {
