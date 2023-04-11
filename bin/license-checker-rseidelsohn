@@ -21,21 +21,21 @@ const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.include
 
 exitProcessOrWarnIfNeeded({ unknownArgs, parsedArgs, hasFailingArg });
 
-licenseChecker.init(parsedArgs, function (err, json) {
+licenseChecker.init(parsedArgs, function (err, foundLicensesJson) {
     if (err) {
         console.error('An error has occurred:');
         console.error(err);
     }
 
     if (helpers.shouldColorizeOutput(parsedArgs)) {
-        helpers.colorizeOutput(json);
+        helpers.colorizeOutput(foundLicensesJson);
     }
 
-    const formattedOutput = helpers.getFormattedOutput(json, parsedArgs);
+    const formattedOutput = helpers.getFormattedOutput(foundLicensesJson, parsedArgs);
 
     if (parsedArgs.files || parsedArgs.out) {
         if (parsedArgs.files) {
-            licenseChecker.asFiles(json, parsedArgs.files);
+            licenseChecker.asFiles(foundLicensesJson, parsedArgs.files);
         }
 
         if (parsedArgs.out) {
