@@ -10,7 +10,7 @@ const args = require('../lib/args');
 const exitProcessOrWarnIfNeeded = require('../lib/exitProcessOrWarnIfNeeded');
 const fs = require('fs');
 const helpers = require('../lib/licenseCheckerHelpers');
-const licenseChecker = require('../lib/index');
+const licenseCheckerMain = require('../lib/index');
 const mkdirp = require('mkdirp');
 const path = require('path');
 
@@ -21,7 +21,7 @@ const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.include
 
 exitProcessOrWarnIfNeeded({ unknownArgs, parsedArgs, hasFailingArg });
 
-licenseChecker.init(parsedArgs, function (err, foundLicensesJson) {
+licenseCheckerMain.init(parsedArgs, function (err, foundLicensesJson) {
     if (err) {
         console.error('An error has occurred:');
         console.error(err);
@@ -35,7 +35,7 @@ licenseChecker.init(parsedArgs, function (err, foundLicensesJson) {
 
     if (parsedArgs.files || parsedArgs.out) {
         if (parsedArgs.files) {
-            licenseChecker.asFiles(foundLicensesJson, parsedArgs.files);
+            licenseCheckerMain.asFiles(foundLicensesJson, parsedArgs.files);
         }
 
         if (parsedArgs.out) {
