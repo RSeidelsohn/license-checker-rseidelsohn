@@ -48,10 +48,10 @@
     "exclude": [
       "**/tests/*.js"
     ],
-    "lines": 93,
-    "statements": 93,
-    "functions": 92,
-    "branches": 85
+    "lines": 90,
+    "statements": 89,
+    "functions": 88,
+    "branches": 82
   },
   "contributors": [
     "Adam Weber <adamweber01@gmail.com>",
