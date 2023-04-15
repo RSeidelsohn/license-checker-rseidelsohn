@@ -170,12 +170,12 @@ before.
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
--    `--clarificationsFile` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
+-    `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 -   `--csv` output in csv format.
 -   `--csvComponentPrefix` prefix column for component in csv format.
 -   `--customPath` to add a custom Format file in JSON
 -   `--development` only show development dependencies.
--   `--direct` look for direct dependencies only
+-   `--direct [boolean|number]` look for direct dependencies only if "true" or look for "number" of levels of dependencies
 -   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
 -   `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
 -   `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output (useful for excluding modules from a specific vendor and such). Example: `--excludePackagesStartingWith "webpack;@types;@babel"`
