@@ -149,7 +149,7 @@ describe('main tests', function () {
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
-                    direct: true,
+                    direct: 0, // 0 is the parsed value passed to init from license-checker-rseidelsohn if set to true
                 },
                 function (err, sorted) {
                     output = sorted;
@@ -166,7 +166,7 @@ describe('main tests', function () {
             // all and only the dependencies listed in the package.json should be included in the output,
             // plus the main module itself
             assert.ok(Object.keys(output).length === pkgDepsNumber + 1);
-            assert.equal(output['abbrev@1.0.9'], undefined);
+            assert.equal(typeof output['abbrev@1.0.9'], 'undefined');
         });
     });
 
