@@ -8,6 +8,7 @@
 .idea/
 .nyc_output
 .svn
+.vscode/
 artifacts
 coverage/
 CVS/

@@ -109,6 +109,16 @@ You could see something like this:
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
+### Version 4.2.1
+
+Refactor many more parts of the still old code, extracting more functionality into separate functions and files and providing more descriptive argument, variable and function names.
+Also, add a new test and improve the algorithm for finding licenses that are URLs - this previously used to catch image URLs thet quite often appear in the README file as licenses although license information was already correctly provided in the package.json. This part of the code is still subject to improvements, but for now it works better than before.
+Also, some minor bugs in the code have been fixed.
+All in all I did a lot of refactoring for helping me with future improvements (bug fixes and new features), as the code now is easier to understand than before (and still is a pretty big mess to me).
+### Version 4.2.0
+
+Add the option `--clarificationsFile [filepath]` for a A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
+
 ### Version 4.1.1
 
 Fix list format when outputting markdown format
@@ -170,12 +180,12 @@ before.
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
--    `--clarificationsFile` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
+-    `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 -   `--csv` output in csv format.
 -   `--csvComponentPrefix` prefix column for component in csv format.
 -   `--customPath` to add a custom Format file in JSON
 -   `--development` only show development dependencies.
--   `--direct` look for direct dependencies only
+-   `--direct [boolean|number]` look for direct dependencies only if "true" or look for "number" of levels of dependencies
 -   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
 -   `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") not in the semicolon-seperated list
 -   `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output (useful for excluding modules from a specific vendor and such). Example: `--excludePackagesStartingWith "webpack;@types;@babel"`

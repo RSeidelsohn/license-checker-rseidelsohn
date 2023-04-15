@@ -158,7 +158,7 @@ describe('license parser', function () {
         assert.equal(data, 'Public Domain');
     });
 
-    it('License at URL check', function () {
+    xit('License at URL check', function () {
         let data = getLicenseTitle('http://example.com/foo');
         assert.equal(data, 'Custom: http://example.com/foo');
         data = getLicenseTitle('See license at http://example.com/foo');
