@@ -109,9 +109,14 @@ You could see something like this:
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
+### Version 4.2.5
+
+fix: Provide safe defaults for desctructured argument object
+
 ### Version 4.2.4
 
 Improve the detection of URLs as licenses which are no licenses at all. Previously, when no license info could be found elsewhere, any URL in the README was taken as a custom license, which is not a very bulletproof method. Now, I restrict this method which was probably meant as a fallback solution to only being considered if the README contains at least the word "license" in some form (or notation). Not good, but better than before.
+
 ### Version 4.2.3
 
 Fix `--relativeModulePath` not working in combination with `--start`.
