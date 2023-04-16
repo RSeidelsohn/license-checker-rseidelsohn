@@ -109,6 +109,10 @@ You could see something like this:
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
+### Version 4.2.2
+
+Fix a bug that produced incorrect relative license file paths when using `--relativeLicensePath` together with `--files` and `--out`.
+
 ### Version 4.2.1
 
 Refactor many more parts of the still old code, extracting more functionality into separate functions and files and providing more descriptive argument, variable and function names.
