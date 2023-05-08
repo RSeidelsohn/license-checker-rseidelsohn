@@ -149,7 +149,7 @@
     "github-changes": "^2.0.3",
     "husky": "^8.0.0",
     "istanbul": "^0.4.5",
-    "jenkins-mocha": "^8.0.0",
+    "jenkins-mocha": "^11.0.0",
     "lint-staged": "^13.1.0",
     "locale": "^0.1.0",
     "prettier": "^2.8.3",
