@@ -170,6 +170,38 @@ describe('main tests', function () {
         });
     });
 
+    describe('should write output to files in programmatic usage', function () {
+        const tmpFileName = path.join(__dirname, 'tmp_output.json');
+
+        before(function (done) {
+            checker.init(
+                {
+                    start: path.join(__dirname, '../'),
+                    json: true,
+                    out: tmpFileName,
+                },
+                function (err, sorted) {
+                    done();
+                },
+            );
+        });
+
+        after(() => {
+            if (fs.existsSync(tmpFileName)) {
+                fs.unlinkSync(tmpFileName);
+            }
+        });
+
+        it('and the file should contain parseable JSON', function () {
+            assert.ok(fs.existsSync(tmpFileName));
+
+            const outputTxt = fs.readFileSync(tmpFileName, 'utf8');
+            const outputJson = JSON.parse(outputTxt);
+
+            assert.equal(typeof outputJson, 'object');
+        });
+    });
+
     function parseAndExclude(parsePath, licenses, result) {
         return function (done) {
             checker.init(

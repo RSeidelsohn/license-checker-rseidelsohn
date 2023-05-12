@@ -11,8 +11,6 @@ const exitProcessOrWarnIfNeeded = require('../lib/exitProcessOrWarnIfNeeded');
 const fs = require('fs');
 const helpers = require('../lib/licenseCheckerHelpers');
 const licenseCheckerMain = require('../lib/index');
-const mkdirp = require('mkdirp');
-const path = require('path');
 
 const parsedArgs = args.parse();
 const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
@@ -27,26 +25,12 @@ licenseCheckerMain.init(parsedArgs, function (err, foundLicensesJson) {
         console.error(err);
     }
 
-    if (helpers.shouldColorizeOutput(parsedArgs)) {
-        helpers.colorizeOutput(foundLicensesJson);
-    }
-
-    const formattedOutput = helpers.getFormattedOutput(foundLicensesJson, parsedArgs);
-
-    if (parsedArgs.files || parsedArgs.out) {
-        if (parsedArgs.files) {
-            licenseCheckerMain.asFiles(foundLicensesJson, parsedArgs.files);
-        }
-
-        if (parsedArgs.out) {
-            const dir = path.dirname(parsedArgs.out);
-
-            mkdirp.sync(dir);
-            fs.writeFileSync(parsedArgs.out, formattedOutput, 'utf8');
-        }
-    }
-
     if (!parsedArgs.out) {
+        if (helpers.shouldColorizeOutput(parsedArgs)) {
+            helpers.colorizeOutput(foundLicensesJson);
+        }
+
+        const formattedOutput = helpers.getFormattedOutput(foundLicensesJson, parsedArgs);
         console.log(formattedOutput);
     }
 });
