@@ -6,23 +6,23 @@
 
 ## Table of Contents
 
-- [NPM License Checker](#npm-license-checker)
-  - [A message from the maintainer](#a-message-from-the-maintainer)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Changes](#changes)
-    - [Version 3.1.0](#version-310)
-    - [Version 3.0.1](#version-301)
-    - [Version 3.0.0](#version-300)
-  - [All options in alphabetical order:](#all-options-in-alphabetical-order)
-  - [Exclusions](#exclusions)
-  - [Examples](#examples)
-  - [Clarifications](#clarifications)
-  - [Custom format](#custom-format)
-  - [Requiring](#requiring)
-  - [Debugging](#debugging)
-  - [How Licenses are Found](#how-licenses-are-found)
-  - [Related information sources on the internet](#related-information-sources-on-the-internet)
+-   [NPM License Checker](#npm-license-checker)
+    -   [A message from the maintainer](#a-message-from-the-maintainer)
+    -   [Table of Contents](#table-of-contents)
+    -   [Introduction](#introduction)
+    -   [Changes](#changes)
+        -   [Version 3.1.0](#version-310)
+        -   [Version 3.0.1](#version-301)
+        -   [Version 3.0.0](#version-300)
+    -   [All options in alphabetical order:](#all-options-in-alphabetical-order)
+    -   [Exclusions](#exclusions)
+    -   [Examples](#examples)
+    -   [Clarifications](#clarifications)
+    -   [Custom format](#custom-format)
+    -   [Requiring](#requiring)
+    -   [Debugging](#debugging)
+    -   [How Licenses are Found](#how-licenses-are-found)
+    -   [Related information sources on the internet](#related-information-sources-on-the-internet)
 
 <a name="a-message-from-the-maintainer"/>
 
@@ -39,6 +39,7 @@ Berlin, 1st of April 2023.
 <a name="introduction"/>
 
 ## Introduction
+
 _This is a fork of davglass' [license-checker v.25.0.1](https://github.com/davglass/license-checker/releases/tag/v25.0.1) - Since that code doesn't seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
 
 _I changed the original `exclude` argument to `excludeLicenses` in order to prevent confusion and better align it with the `excludePackages` argument. Also, the argument `includeLicenses` has been added for listing only packages that include the licenses listed._
@@ -109,6 +110,10 @@ You could see something like this:
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
+### Version 4.2.6
+
+fix: The bug under Windows, where @scope packages had been ignored, should be fixed now
+
 ### Version 4.2.5
 
 fix: Provide safe defaults for desctructured argument object
@@ -120,6 +125,7 @@ Improve the detection of URLs as licenses which are no licenses at all. Previous
 ### Version 4.2.3
 
 Fix `--relativeModulePath` not working in combination with `--start`.
+
 ### Version 4.2.2
 
 Fix a bug that produced incorrect relative license file paths when using `--relativeLicensePath` together with `--files` and `--out`.
@@ -130,6 +136,7 @@ Refactor many more parts of the still old code, extracting more functionality in
 Also, add a new test and improve the algorithm for finding licenses that are URLs - this previously used to catch image URLs thet quite often appear in the README file as licenses although license information was already correctly provided in the package.json. This part of the code is still subject to improvements, but for now it works better than before.
 Also, some minor bugs in the code have been fixed.
 All in all I did a lot of refactoring for helping me with future improvements (bug fixes and new features), as the code now is easier to understand than before (and still is a pretty big mess to me).
+
 ### Version 4.2.0
 
 Add the option `--clarificationsFile [filepath]` for a A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
@@ -166,11 +173,9 @@ Allow combining the options `--excludePackages` and `--excludePackagesStartingWi
 
 Bugfix for `--excludePackagesStartingWith`
 
-
 ### Version 3.2.0
 
- Add flag `--excludePackagesStartingWith [list]` and add detection of `Hippocratic License 2.1`
-
+Add flag `--excludePackagesStartingWith [list]` and add detection of `Hippocratic License 2.1`
 
 ### Version 3.1.0
 
@@ -195,7 +200,7 @@ before.
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
--    `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
+-   `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 -   `--csv` output in csv format.
 -   `--csvComponentPrefix` prefix column for component in csv format.
 -   `--customPath` to add a custom Format file in JSON
