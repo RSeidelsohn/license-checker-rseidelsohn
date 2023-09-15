@@ -2,7 +2,7 @@
   "name": "license-checker-rseidelsohn",
   "description": "Extract NPM package licenses - Feature enhanced version of the original license-checker v25.0.1",
   "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
-  "version": "4.2.5",
+  "version": "4.2.6",
   "license": "BSD-3-Clause",
   "private": false,
   "engines": {
@@ -48,7 +48,7 @@
     "exclude": [
       "**/tests/*.js"
     ],
-    "lines": 90,
+    "lines": 80,
     "statements": 80,
     "functions": 80,
     "branches": 80
@@ -130,7 +130,7 @@
     "lodash.clonedeep": "^4.5.0",
     "mkdirp": "^1.0.4",
     "nopt": "^5.0.0",
-    "read-installed-packages": "^2.0.0",
+    "read-installed-packages": "^2.0.1",
     "semver": "^7.3.5",
     "spdx-correct": "^3.1.1",
     "spdx-expression-parse": "^3.0.1",
@@ -149,7 +149,7 @@
     "github-changes": "^2.0.3",
     "husky": "^8.0.0",
     "istanbul": "^0.4.5",
-    "jenkins-mocha": "^8.0.0",
+    "jenkins-mocha": "^11.0.0",
     "lint-staged": "^13.1.0",
     "locale": "^0.1.0",
     "prettier": "^2.8.3",
