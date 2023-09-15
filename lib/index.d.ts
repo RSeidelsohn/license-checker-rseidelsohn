@@ -81,7 +81,7 @@ export interface InitOpts {
     /**
      * Look for direct dependencies only
      */
-    direct?: boolean | undefined;
+    direct?: boolean | number | undefined;
     /**
      * Colorize output
      */
