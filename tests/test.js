@@ -42,12 +42,12 @@ describe('main tests', function () {
         it('and convert to CSV', function () {
             const str = checker.asCSV(output);
             assert.equal(str.split('\n')[0], '"module name","license","repository"');
-            assert.equal(str.split('\n')[1], '"@babel/code-frame@7.16.7","MIT","https://github.com/babel/babel"');
+            assert.equal(str.split('\n')[1], '"@ampproject/remapping@2.2.1","Apache-2.0","https://github.com/ampproject/remapping"');
         });
 
         it('and convert to MarkDown', function () {
             const str = checker.asMarkDown(output);
-            assert.equal(str.split('\n')[0], '- [@babel/code-frame@7.16.7](https://github.com/babel/babel) - MIT');
+            assert.equal(str.split('\n')[0], '- [@ampproject/remapping@2.2.1](https://github.com/ampproject/remapping) - Apache-2.0');
         });
     });
 
@@ -89,7 +89,7 @@ describe('main tests', function () {
             assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
             assert.equal(
                 str.split('\n')[1],
-                '"@babel/code-frame@7.16.7","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
+                '"@ampproject/remapping@2.2.1","@ampproject/remapping","Remap sequential sourcemaps through transformations to point at the original source code","<<Should Never be set>>"',
             );
         });
 
@@ -104,7 +104,7 @@ describe('main tests', function () {
             assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
             assert.equal(
                 str.split('\n')[1],
-                '"main-module","@babel/code-frame@7.16.7","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
+                '"main-module","@ampproject/remapping@2.2.1","@ampproject/remapping","Remap sequential sourcemaps through transformations to point at the original source code","<<Should Never be set>>"',
             );
         });
 
@@ -116,7 +116,7 @@ describe('main tests', function () {
             };
 
             const str = checker.asMarkDown(output, format);
-            assert.equal(str.split('\n')[0], '- **[@babel/code-frame@7.16.7](https://github.com/babel/babel)**');
+            assert.equal(str.split('\n')[0], '- **[@ampproject/remapping@2.2.1](https://github.com/ampproject/remapping)**');
         });
     });
 
@@ -340,10 +340,11 @@ describe('main tests', function () {
                 'onlyAllow',
                 '../',
                 'MIT;ISC;MIT;BSD-3-Clause;BSD;Apache-2.0;' +
-                    'BSD-2-Clause;Apache*;BSD*;CC-BY-3.0;Unlicense;CC0-1.0;The MIT License;AFLv2.1,BSD;' +
-                    'Public Domain;Custom: http://i.imgur.com/goJdO.png;WTFPL*;Apache License, Version 2.0;' +
-                    'WTFPL;(MIT AND CC-BY-3.0);Custom: https://github.com/substack/node-browserify;' +
-                    'BSD-3-Clause OR MIT;(WTFPL OR MIT);Python-2.0',
+                'BSD-2-Clause;Apache*;BSD*;CC-BY-3.0;CC-BY-4.0;Unlicense;CC0-1.0;The MIT License;AFLv2.1,BSD;' +
+                'Public Domain;Custom: http://i.imgur.com/goJdO.png;WTFPL*;Apache License, Version 2.0;' +
+                'WTFPL;(MIT AND CC-BY-3.0);Custom: https://github.com/substack/node-browserify;' +
+                '(AFL-2.1 OR BSD-3-Clause);MIT*;0BSD;(MIT OR CC0-1.0);Apache-2.0*;' +
+                'BSD-3-Clause OR MIT;(WTFPL OR MIT);Python-2.0',
                 result,
             ),
         );
