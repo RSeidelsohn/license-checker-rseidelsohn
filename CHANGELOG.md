@@ -1,6 +1,37 @@
 ## Change Log
 
-### upcoming (2023/06/09 10:12 +00:00)
+### upcoming (2023/09/15 16:36 +00:00)
+- [#93](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/93) Merge pull request #93 from Linko91/patch-1 (@Linko91)
+- [#81](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/81) Merge pull request #81 from sportsracer/fix-programmatic-out-option (@sportsracer)
+- [8387216](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/83872161084494d98de4f056ba603e4ebe23f02d) Merge branch 'master' into fix-programmatic-out-option (@RSeidelsohn)
+- [#86](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/86) Merge pull request #86 from RSeidelsohn/dependabot/npm_and_yarn/semver-7.5.2 (@RSeidelsohn)
+- [#90](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/90) Merge pull request #90 from RSeidelsohn/dependabot/npm_and_yarn/word-wrap-1.2.4 (@RSeidelsohn)
+- [2c3bfb4](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/2c3bfb4c54b20e12abec4ca0d5e55d56917e18b7) docs: Add description of changes in new version
+- [5593636](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/5593636b1fe02efa915780b4a1dc67a32e03309b) updated "direct" type on index.d.ts (@Linko91)
+- [ee849aa](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/ee849aa594655f421b50a588781bda6499861cff) chore(deps-dev): bump word-wrap from 1.2.3 to 1.2.4 (@dependabot[bot])
+- [d697656](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/d697656405e50cc3aac24cd054a3c3ccd1514f88) chore(deps): bump semver from 7.3.5 to 7.5.2 (@dependabot[bot])
+- [#80](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/80) Merge pull request #80 from RSeidelsohn/dependabot/npm_and_yarn/flat-and-jenkins-mocha-5.0.2 (@RSeidelsohn)
+
+### v4.2.6 (2023/06/09 10:25 +00:00)
+- [#85](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/85) Merge pull request #85 from RSeidelsohn/release_4.2.6 (@RSeidelsohn)
+- [6c7cfbb](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/6c7cfbbdbaddc9f13a90e501677583aa6e3a0890) doc: Create a changelog
+- [c16b8a3](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/c16b8a375ee926c87980505e8d7e364cc4b7f197) chore: Bump version
+- [235cc2a](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/235cc2ac28bcbe78c75b219bbc8d2c261002b46b) fix: Update read-installed-packages to 2.0.1
+- [3b8cb4c](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/3b8cb4c2e9698e75661a16b7c334956001351d6b) refactor: Create helper function and use explicit node: in requires
+- [713f680](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/713f680b255e188c31707a5dbbdffa85a0bdbec9) refactor: Extract a small functionality into a helper function
+- [806bc46](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/806bc467a19803608285f06bf40a541d38ab6dfe) refactor: Combine early return conditions
+- [92c5a6a](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/92c5a6a2be5aec0f8f6d94a550418bb1ce4c4d33) docs: Make comment more explicit
+- [4063551](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/4063551bf62e19d772532762fbf558b520dbb388) refactor: Refactor and reorder constant and variable definitions
+- [ca76b0f](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/ca76b0fdac90102aa33cdee50b616bbeb6aae39e) refactor: Move getCsvData and getCsvHeaders functions to index helpers
+- [0b500dd](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/0b500ddee5a6d8980d8b79a9511b3e7025860c7c) refactor: Increase type safety and simplify code
+- [a3203f5](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/a3203f503931147c796059c60b29a403f133aa44) refactor: Move getOptionArray function to index helpers
+- [eb87e1b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/eb87e1b42a0c0d139edd4de3506fa30477ab7ab1) refactor: Add a comment and increase type safety a bit
+- [cbbbba4](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/cbbbba4e47b3a70ad3b960d6dd9d90c2db27e294) refactor: Increase understandability of function
+- [d7d069b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/d7d069b535f6b72d781f134db88c5adfc6b9a692) Fix: Consider out option also when passed to programmatic interface (@steffen-workpath)
+- [8b94df8](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/8b94df81a40331956cf874201057c6dc4a873ab5) docs: Add a few more comments to the code
+- [257c35b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/257c35bee73f2b3315cee465f4df5112b4a22c6b) chore(deps): bump flat and jenkins-mocha (@dependabot[bot])
+- [25ec20a](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/25ec20a30426563a3734580ac4cb0906eac4803a) docs: Improve the usage message
+- [edca92f](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/edca92fdf70283bf36263f6077515e66c7a5d0e2) refactor: Improve readability
 - [#79](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/79) Merge pull request #79 from RSeidelsohn/dependabot/npm_and_yarn/yaml-2.2.2 (@RSeidelsohn)
 - [16475cf](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/16475cf09633068e0a3688f376bcc7fa0765b37a) chore(deps): bump yaml from 2.2.1 to 2.2.2 (@dependabot[bot])
 
