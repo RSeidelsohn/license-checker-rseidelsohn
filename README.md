@@ -11,6 +11,7 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
+        -   [Version 4.2.8](#version-4.2.8)
         -   [Version 4.2.7](#version-4.2.7)
         -   [Version 4.2.6](#version-4.2.6)
         -   [Version 4.2.5](#version-4.2.5)
@@ -124,6 +125,11 @@ You could see something like this:
 <a name="changes"/>
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
+
+<a name="version-4.2.8"/>
+### Version 4.2.8
+
+fix: methods from exports instead of global this (@chohner), closes #95
 
 <a name="version-4.2.7"/>
 ### Version 4.2.7

@@ -1,6 +1,16 @@
 ## Change Log
 
-### upcoming (2023/09/15 16:36 +00:00)
+### v4.2.8 (2023/09/25 11:25 +00:00)
+- [#96](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/96) Merge pull request #96 from chohner/fix_exports_methods (@chohner)
+- [7d25eb8](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/7d25eb8d923c20a093b114befd7abe74b8ab983a) fix: methods from exports instead of global this (@chohner)
+
+### v4.2.7 (2023/09/15 16:36 +00:00)
+- [a43c400](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/a43c400f36c6f0d25ba74d44d80c3d343a9c037d) docs: Update CHANGELOG
+- [e0ad9bf](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/e0ad9bf8d0115119f21e67f1d9fc24f01256ebd9) test: Update tests after dependency updates
+- [005ae12](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/005ae1215a62906994673e2bf91b6e360f45551a) refactor: Simplify and secure two helper functions
+- [3e60e41](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/3e60e4107811911509333cf6ccdcdfbb9b9d3686) fix: Fix wrong merge
+- [d72111b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/d72111b6026b65135508c3820e0b7423c78fabbe) fix: Remove broken husky for now
+- [3fb8672](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/3fb8672ac93bdca223acb6d691f70142a5a02893) chore: Bump version, run audit fix and update README
 - [#93](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/93) Merge pull request #93 from Linko91/patch-1 (@Linko91)
 - [#81](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/81) Merge pull request #81 from sportsracer/fix-programmatic-out-option (@sportsracer)
 - [8387216](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/83872161084494d98de4f056ba603e4ebe23f02d) Merge branch 'master' into fix-programmatic-out-option (@RSeidelsohn)
