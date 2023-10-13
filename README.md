@@ -11,6 +11,7 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
+        -   [Version 4.2.9](#version-4.2.9)
         -   [Version 4.2.8](#version-4.2.8)
         -   [Version 4.2.7](#version-4.2.7)
         -   [Version 4.2.6](#version-4.2.6)
@@ -125,6 +126,11 @@ You could see something like this:
 <a name="changes"/>
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
+
+<a name="version-4.2.9"/>
+### Version 4.2.9
+
+fix: Fixes broken refactoring from version 4.2.7, closes #94
 
 <a name="version-4.2.8"/>
 ### Version 4.2.8
