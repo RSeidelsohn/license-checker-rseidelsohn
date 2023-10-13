@@ -131,7 +131,7 @@
     "debug": "^4.3.4",
     "lodash.clonedeep": "^4.5.0",
     "mkdirp": "^1.0.4",
-    "nopt": "^5.0.0",
+    "nopt": "^7.2.0",
     "read-installed-packages": "^2.0.1",
     "semver": "^7.3.5",
     "spdx-correct": "^3.1.1",
