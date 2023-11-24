@@ -11,6 +11,7 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
+        -   [Version 4.2.11](#version-4.2.11)
         -   [Version 4.2.10](#version-4.2.10)
         -   [Version 4.2.9](#version-4.2.9)
         -   [Version 4.2.8](#version-4.2.8)
@@ -127,6 +128,14 @@ You could see something like this:
 <a name="changes"></a>
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
+
+<a name="version-4.2.10"></a>
+
+### Version 4.2.11
+
+misc: Rename a variable and use correct value for exact comparison
+fix: Fix ts definition issue
+update: Merge Dependabot update of @babel/code-frame
 
 <a name="version-4.2.10"></a>
 
