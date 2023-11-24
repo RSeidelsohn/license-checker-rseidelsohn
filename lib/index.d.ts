@@ -45,7 +45,7 @@ export interface InitOpts {
     /**
      * Exclude modules which licenses are in the comma-separated list from the output
      */
-    exclude?: string[] | undefined;
+    excludeLicenses?: string | undefined;
     /**
      * Output the location of the license files as relative paths
      */
@@ -96,7 +96,7 @@ export interface InitOpts {
      */
     nopeer?: boolean;
     /**
-     * A file that contains license clarifications for malformed or non-standard packages 
+     * A file that contains license clarifications for malformed or non-standard packages
      */
     clarificationsFile?: string;
 }
