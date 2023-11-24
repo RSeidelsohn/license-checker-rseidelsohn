@@ -6,5 +6,6 @@
 	"copyright": "",
 	"licenseFile": "none",
 	"licenseText": "none",
-	"licenseModified": "no"
+	"licenseModified": "no",
+    "customAttribute": "customValue"
 }
