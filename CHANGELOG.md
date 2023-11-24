@@ -1,6 +1,31 @@
 ## Change Log
 
-### v4.2.8 (2023/09/25 11:25 +00:00)
+### upcoming (2023/11/24 14:05 +00:00)
+- [52cbb7c](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/52cbb7ce9ae2fa0af766bccc9d58b4ac42fb14c8) Rename variable and compare with correct value
+- [35f9806](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/35f98063241f6f8abc1acd4fa31e2af48357a987) chore: Bump version
+- [c523274](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/c523274d356330e50a348e1eb8dda90fc51006de) Fix ts definition issue
+- [#100](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/100) Merge pull request #100 from RSeidelsohn/dependabot/npm_and_yarn/babel/traverse-7.23.2 (@RSeidelsohn)
+- [5e1f619](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/5e1f61911fa4e598f0c5cae29756ec86fd106fcc) chore(deps-dev): bump @babel/traverse from 7.21.5 to 7.23.2 (@dependabot[bot])
+
+### v4.2.10 (2023/10/13 15:28 +00:00)
+- [#99](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/99) Merge pull request #99 from RSeidelsohn/release-4-2-10 (@RSeidelsohn)
+- [47e5432](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/47e54329cffdbc8a58b7905f34fd91cefc21d74a) Merge branch 'master' into release-4-2-10 (@RSeidelsohn)
+- [a4f0029](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/a4f0029f111e4f3c26ee32be27f6a61c12c644be) chore: Bump version (@RSeidelsohn)
+- [acebf61](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/acebf618fb6171fce093fcffa6fa7637eaa0a6b2) docs: Add changes to README (@RSeidelsohn)
+- [64dc943](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/64dc943d9950d30bbdf41a64975fb2c4992a752b) fix: Fix the broken direct attribute
+- [9c0099d](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/9c0099d87d71e4eb82972e07461bb026d3da643f) WIP
+- [5084e29](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/5084e2949c2a61f636ac1f02b7f0b2cd38453ba1) chore: Update nopt version from 5.0.0 to 7.2.0
+- [5616994](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/5616994a3c376008db948d6c98181ec4a3fb67b0) docs: Try to fix the markdown rendering glitch
+- [303b7f7](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/303b7f70e1ddbf0cf42c4a20bdb2b6244f840c16) docs: Add more documentation to a function
+
+### v4.2.9 (2023/10/13 11:52 +00:00)
+- [b767852](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/b7678525d3397d9787501bb77d93868d78df153f) docs: Add latest change to README
+- [7833444](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/7833444ef5150f286544c11a1720fd899e2411aa) refactor: Use easier to understand functions and variable names
+- [69bd393](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/69bd3938fc683faa0ae51ce610b943830ccef852) chore: Bump version
+- [94a363a](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/94a363a4edc907f7e599799e83abbc67247045b1) fix: Revert breaking refactoring
+- [72ebae0](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/72ebae0fc835a0afe31d54c657604ca8c0964c5a) chore: Bump version and update changes (@RSeidelsohn)
+- [0c3fe21](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/0c3fe210f0b6fe3d63ace785b65333b1ccd0a517) config: Add .tool-versions file (@RSeidelsohn)
+- [e549812](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/e549812f8500d8bf03474cc8d94836d029c7b9a5) chore: Update contributors list (@RSeidelsohn)
 - [#96](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/96) Merge pull request #96 from chohner/fix_exports_methods (@chohner)
 - [7d25eb8](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/7d25eb8d923c20a093b114befd7abe74b8ab983a) fix: methods from exports instead of global this (@chohner)
 
