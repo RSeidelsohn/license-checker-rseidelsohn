@@ -512,7 +512,19 @@ describe('main tests', function () {
 
         it('should handle direct true', function () {
             const result = args.setDefaults({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
-            assert.equal(result.direct, 0);
+            assert.equal(result.direct, Infinity);
+            assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+        });
+
+        it('should override direct option with depth option', function () {
+            const result = args.setDefaults({ direct: '9', depth: '99', start: path.resolve(path.join(__dirname, '../')) });
+            assert.equal(result.direct, 99);
+            assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+        });
+
+        it('should use depth for direct option when direct is not provided', function () {
+            const result = args.setDefaults({ depth: '99', start: path.resolve(path.join(__dirname, '../')) });
+            assert.equal(result.direct, 99);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 

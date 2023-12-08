@@ -11,28 +11,29 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
-        -   [Version 4.2.11](#version-4.2.11)
-        -   [Version 4.2.10](#version-4.2.10)
-        -   [Version 4.2.9](#version-4.2.9)
-        -   [Version 4.2.8](#version-4.2.8)
-        -   [Version 4.2.7](#version-4.2.7)
-        -   [Version 4.2.6](#version-4.2.6)
-        -   [Version 4.2.5](#version-4.2.5)
-        -   [Version 4.2.4](#version-4.2.4)
-        -   [Version 4.2.3](#version-4.2.3)
-        -   [Version 4.2.2](#version-4.2.2)
-        -   [Version 4.2.1](#version-4.2.1)
-        -   [Version 4.2.0](#version-4.2.0)
-        -   [Version 4.1.1](#version-4.1.1)
-        -   [Version 4.1.0](#version-4.1.0)
-        -   [Version 4.0.1](#version-4.0.1)
-        -   [Version 4.0.0](#version-4.0.0)
-        -   [Version 3.3.0](#version-3.3.0)
-        -   [Version 3.2.1](#version-3.2.1)
-        -   [Version 3.2.0](#version-3.2.0)
-        -   [Version 3.1.0](#version-3.1.0)
-        -   [Version 3.0.1](#version-3.0.1)
-        -   [Version 3.0.0](#version-3.0.0)
+        -   [Version 4.3.0](#Version-4-3-0)
+        -   [Version 4.2.11](#Version-4-2-11)
+        -   [Version 4.2.10](#Version-4-2-10)
+        -   [Version 4.2.9](#Version-4-2-9)
+        -   [Version 4.2.8](#Version-4-2-8)
+        -   [Version 4.2.7](#Version-4-2-7)
+        -   [Version 4.2.6](#Version-4-2-6)
+        -   [Version 4.2.5](#Version-4-2-5)
+        -   [Version 4.2.4](#Version-4-2-4)
+        -   [Version 4.2.3](#Version-4-2-3)
+        -   [Version 4.2.2](#Version-4-2-2)
+        -   [Version 4.2.1](#Version-4-2-1)
+        -   [Version 4.2.0](#Version-4-2-0)
+        -   [Version 4.1.1](#Version-4-1-1)
+        -   [Version 4.1.0](#Version-4-1-0)
+        -   [Version 4.0.1](#Version-4-0-1)
+        -   [Version 4.0.0](#Version-4-0-0)
+        -   [Version 3.3.0](#Version-3-3-0)
+        -   [Version 3.2.1](#Version-3-2-1)
+        -   [Version 3.2.0](#Version-3-2-0)
+        -   [Version 3.1.0](#Version-3-1-0)
+        -   [Version 3.0.1](#Version-3-0-1)
+        -   [Version 3.0.0](#Version-3-0-0)
     -   [All options in alphabetical order:](#all-options-in-alphabetical-order)
     -   [Exclusions](#exclusions)
     -   [Examples](#examples)
@@ -129,7 +130,14 @@ You could see something like this:
 
 ## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
-<a name="version-4.2.10"></a>
+<a name="Version-4-3-0"></a>
+
+### Version 4.3.0
+
+feat: Add numeric "--depth" option that overrides the ambiguous "--direct" option
+fix: Fix local anchors in the README
+
+<a name="Version-4-2-11"></a>
 
 ### Version 4.2.11
 
@@ -137,25 +145,25 @@ misc: Rename a variable and use correct value for exact comparison
 fix: Fix ts definition issue
 update: Merge Dependabot update of @babel/code-frame
 
-<a name="version-4.2.10"></a>
+<a name="Version-4-2-10"></a>
 
 ### Version 4.2.10
 
 fix: Fixes broken `--direct` attribute
 
-<a name="version-4.2.9"></a>
+<a name="Version-4-2-9"></a>
 
 ### Version 4.2.9
 
 fix: Fixes broken refactoring from version 4.2.7, closes #94
 
-<a name="version-4.2.8"></a>
+<a name="Version-4-2-8"></a>
 
 ### Version 4.2.8
 
 fix: methods from exports instead of global this (@chohner), closes #95
 
-<a name="version-4.2.7"></a>
+<a name="Version-4-2-7"></a>
 
 ### Version 4.2.7
 
@@ -164,37 +172,37 @@ chore(deps): bump semver from 7.3.5 to 7.5.2
 
 fix: Consider out option also when passed to programmatic interface, fixes #42
 
-<a name="version-4.2.6"></a>
+<a name="Version-4-2-6"></a>
 
 ### Version 4.2.6
 
 fix: The bug under Windows, where @scope packages had been ignored, should be fixed now
 
-<a name="version-4.2.5"></a>
+<a name="Version-4-2-5"></a>
 
 ### Version 4.2.5
 
 fix: Provide safe defaults for desctructured argument object
 
-<a name="version-4.2.4"></a>
+<a name="Version-4-2-4"></a>
 
 ### Version 4.2.4
 
 Improve the detection of URLs as licenses which are no licenses at all. Previously, when no license info could be found elsewhere, any URL in the README was taken as a custom license, which is not a very bulletproof method. Now, I restrict this method which was probably meant as a fallback solution to only being considered if the README contains at least the word "license" in some form (or notation). Not good, but better than before.
 
-<a name="version-4.2.3"></a>
+<a name="Version-4-2-3"></a>
 
 ### Version 4.2.3
 
 Fix `--relativeModulePath` not working in combination with `--start`.
 
-<a name="version-4.2.2"></a>
+<a name="Version-4-2-2"></a>
 
 ### Version 4.2.2
 
 Fix a bug that produced incorrect relative license file paths when using `--relativeLicensePath` together with `--files` and `--out`.
 
-<a name="version-4.2.1"></a>
+<a name="Version-4-2-1"></a>
 
 ### Version 4.2.1
 
@@ -203,31 +211,31 @@ Also, add a new test and improve the algorithm for finding licenses that are URL
 Also, some minor bugs in the code have been fixed.
 All in all I did a lot of refactoring for helping me with future improvements (bug fixes and new features), as the code now is easier to understand than before (and still is a pretty big mess to me).
 
-<a name="version-4.2.0"></a>
+<a name="Version-4-2-0"></a>
 
 ### Version 4.2.0
 
 Add the option `--clarificationsFile [filepath]` for a A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 
-<a name="version-4.1.1"></a>
+<a name="Version-4-1-1"></a>
 
 ### Version 4.1.1
 
 Fix list format when outputting markdown format
 
-<a name="version-4.1.0"></a>
+<a name="Version-4-1-0"></a>
 
 ### Version 4.1.0
 
 Change config that required the major npm version to be 8. This led to code not compiling for some users and was done for no good reason. Now it is required to be >= 8.
 
-<a name="version-4.0.1"></a>
+<a name="Version-4-0-1"></a>
 
 ### Version 4.0.1
 
 Fix some typos in the README file.
 
-<a name="version-4.0.0"></a>
+<a name="Version-4-0-0"></a>
 
 ### Version 4.0.0
 
@@ -241,37 +249,37 @@ This being said, the only change with 4.0.0 is a switch in the `.nvmrc` file of 
 
 That then being said, I really want to invite you to add pull requests to this project. If you feel like, please ask me to give you higher-level access to this repo. I am not keen on mainaining it on my own - I just took it over in order to add my own feature request after the original author stopped finding the time to further support it. Now, I am not using this module for work any more (which might change in the future), but I see my responsibility to at least taking care of pull requests and releasing them, and from time to time working on feature requests as a kind of kata for me.
 
-<a name="version-3.3.0"></a>
+<a name="Version-3-3-0"></a>
 
 ### Version 3.3.0
 
 Allow combining the options `--excludePackages` and `--excludePackagesStartingWith`
 
-<a name="version-3.2.1"></a>
+<a name="Version-3-2-1"></a>
 
 ### Version 3.2.1
 
 Bugfix for `--excludePackagesStartingWith`
 
-<a name="version-3.2.0"></a>
+<a name="Version-3-2-0"></a>
 
 ### Version 3.2.0
 
 Add flag `--excludePackagesStartingWith [list]` and add detection of `Hippocratic License 2.1`
 
-<a name="version-3.1.0"></a>
+<a name="Version-3-1-0"></a>
 
 ### Version 3.1.0
 
 Add new option `--limitAttributes`. Example usage: `node bin/license-checker-rseidelsohn --limitAttributes publisher,email` will only list the `publisher` and `email` attributes for every dependency.
 
-<a name="version-3.0.1"></a>
+<a name="Version-3-0-1"></a>
 
 ### Version 3.0.1
 
 Fix the `--direct` option.
 
-<a name="version-3.0.0"></a>
+<a name="Version-3-0-0"></a>
 
 ### Version 3.0.0
 
@@ -288,10 +296,11 @@ before.
 ## All options in alphabetical order:
 
 -   `--angularCli` is just a synonym for `--plainVertical`
--   `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
--   `--csv` output in csv format.
--   `--csvComponentPrefix` prefix column for component in csv format.
+-   `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file)
+-   `--csv` output in csv format
+-   `--csvComponentPrefix` prefix column for component in csv format
 -   `--customPath` to add a custom Format file in JSON
+-   `--depth [number]` look for "number" of levels of dependencies - overrides the ambiguously named "--direct" option'
 -   `--development` only show development dependencies.
 -   `--direct [boolean|number]` look for direct dependencies only if "true" or look for "number" of levels of dependencies
 -   `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
@@ -299,23 +308,23 @@ before.
 -   `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output (useful for excluding modules from a specific vendor and such). Example: `--excludePackagesStartingWith "webpack;@types;@babel"`
 -   `--excludePrivatePackages` restrict output to not include any package marked as private
 -   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
--   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt.
+-   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt
 -   `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
 -   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
--   `--json` output in json format.
--   `--limitAttributes [list]` limit the attributes to be output.
--   `--markdown` output in markdown format.
--   `--nopeer` skip peer dependencies in output.
+-   `--json` output in json format
+-   `--limitAttributes [list]` limit the attributes to be output
+-   `--markdown` output in markdown format
+-   `--nopeer` skip peer dependencies in output
 -   `--onlyAllow [list]` fail (exit with codexclusionse 1) on the first occurrence of the licenses not in the semicolon-seperated list
--   `--onlyunknown` only list packages with unknown or guessed licenses.
--   `--out [filepath]` write the data to a specific file.
+-   `--onlyunknown` only list packages with unknown or guessed licenses
+-   `--out [filepath]` write the data to a specific file
 -   `--plainVertical` output license info in plain vertical format like [Angular CLI does](https://angular.io/3rdpartylicenses.txt)
 -   `--production` only show production dependencies.
 -   `--relativeLicensePath` output the location of the license files as relative paths
 -   `--relativeModulePath` output the location of the module files as relative paths
 -   `--start [filepath]` path of the initial json to look for
 -   `--summary` output a summary of the license usage',
--   `--unknown` report guessed licenses as unknown licenses.
+-   `--unknown` report guessed licenses as unknown licenses
 -   `--version` The current version
 -   `--help` The text you are reading right now :)
 
