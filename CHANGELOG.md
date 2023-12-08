@@ -1,6 +1,7 @@
 ## Change Log
 
-### upcoming (2023/11/24 14:05 +00:00)
+### upcoming (2023/12/08 14:22 +00:00)
+- [dbff514](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/dbff5146d1bf62d26b64cabdf88b202287f94f48) docs: Update CHANGELOG
 - [52cbb7c](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/52cbb7ce9ae2fa0af766bccc9d58b4ac42fb14c8) Rename variable and compare with correct value
 - [35f9806](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/35f98063241f6f8abc1acd4fa31e2af48357a987) chore: Bump version
 - [c523274](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/c523274d356330e50a348e1eb8dda90fc51006de) Fix ts definition issue
