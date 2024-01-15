@@ -126,6 +126,12 @@
     "tbbstny <tbbstny@users.noreply.github.com>",
     "zodiac403 <zodiac403@gmx.de>"
   ],
+  "files": [
+    "bin",
+    "lib",
+    "CHANGELOG.md",
+    "SECURITY.md"
+  ],
   "dependencies": {
     "chalk": "4.1.2",
     "debug": "^4.3.4",
