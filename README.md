@@ -376,6 +376,27 @@ The `--clarificationsFile` option can be used to provide custom processing instr
 }
 ```
 
+`version` can either be an exact version or a semver range, multiple ranges are supported for a single package, for example:
+
+```json5
+{
+    "package_name@^1": {
+        // Any field available in customFormat can be clarified
+        "licenses": "GPL",
+        // ... other fields, see above
+    },
+    "package_name@^2": {
+        // Any field available in customFormat can be clarified
+        "licenses": "MIT",
+        // ... other fields, see above
+    },
+}
+```
+
+For overlapping ranges, the first matching entry is used.
+
+The `--clarificationsMatchAll` option, when enabled, raises an error if not all specified clarifications were used, it is off by default.
+
 <a name="custom_format"></a>
 
 ## Custom format
