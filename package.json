@@ -21,6 +21,7 @@
   "bin": {
     "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn"
   },
+  "files": ["lib"],
   "scripts": {
     "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
     "contrib": "node ./scripts/contrib.js",
