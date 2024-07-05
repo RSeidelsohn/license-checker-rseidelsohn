@@ -11,29 +11,29 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
-        -   [Version 4.3.0](#Version-4-3-0)
-        -   [Version 4.2.11](#Version-4-2-11)
-        -   [Version 4.2.10](#Version-4-2-10)
-        -   [Version 4.2.9](#Version-4-2-9)
-        -   [Version 4.2.8](#Version-4-2-8)
-        -   [Version 4.2.7](#Version-4-2-7)
-        -   [Version 4.2.6](#Version-4-2-6)
-        -   [Version 4.2.5](#Version-4-2-5)
-        -   [Version 4.2.4](#Version-4-2-4)
-        -   [Version 4.2.3](#Version-4-2-3)
-        -   [Version 4.2.2](#Version-4-2-2)
-        -   [Version 4.2.1](#Version-4-2-1)
-        -   [Version 4.2.0](#Version-4-2-0)
-        -   [Version 4.1.1](#Version-4-1-1)
-        -   [Version 4.1.0](#Version-4-1-0)
-        -   [Version 4.0.1](#Version-4-0-1)
-        -   [Version 4.0.0](#Version-4-0-0)
-        -   [Version 3.3.0](#Version-3-3-0)
-        -   [Version 3.2.1](#Version-3-2-1)
-        -   [Version 3.2.0](#Version-3-2-0)
-        -   [Version 3.1.0](#Version-3-1-0)
-        -   [Version 3.0.1](#Version-3-0-1)
-        -   [Version 3.0.0](#Version-3-0-0)
+        -   [Version 4.3.0](#version-4-3-0)
+        -   [Version 4.2.11](#version-4-2-11)
+        -   [Version 4.2.10](#version-4-2-10)
+        -   [Version 4.2.9](#version-4-2-9)
+        -   [Version 4.2.8](#version-4-2-8)
+        -   [Version 4.2.7](#version-4-2-7)
+        -   [Version 4.2.6](#version-4-2-6)
+        -   [Version 4.2.5](#version-4-2-5)
+        -   [Version 4.2.4](#version-4-2-4)
+        -   [Version 4.2.3](#version-4-2-3)
+        -   [Version 4.2.2](#version-4-2-2)
+        -   [Version 4.2.1](#version-4-2-1)
+        -   [Version 4.2.0](#version-4-2-0)
+        -   [Version 4.1.1](#version-4-1-1)
+        -   [Version 4.1.0](#version-4-1-0)
+        -   [Version 4.0.1](#version-4-0-1)
+        -   [Version 4.0.0](#version-4-0-0)
+        -   [Version 3.3.0](#version-3-3-0)
+        -   [Version 3.2.1](#version-3-2-1)
+        -   [Version 3.2.0](#version-3-2-0)
+        -   [Version 3.1.0](#version-3-1-0)
+        -   [Version 3.0.1](#version-3-0-1)
+        -   [Version 3.0.0](#version-3-0-0)
     -   [All options in alphabetical order:](#all-options-in-alphabetical-order)
     -   [Exclusions](#exclusions)
     -   [Examples](#examples)
@@ -44,9 +44,7 @@
     -   [How Licenses are Found](#how-licenses-are-found)
     -   [Related information sources on the internet](#related-information-sources-on-the-internet)
 
-<a name="a-message-from-the-maintainer"></a>
-
-## A message from the maintainer
+## <a name="a-message-from-the-maintainer"></a>A message from the maintainer
 
 Folks, I love and honor open software (the latter not as much as I should), and therefore I am a little ashamed of the lack of regular care I give to this project. My family (two still young kids and a wife working full-time just as me) plus my hobbies (reading - currently I read the great book "Coders at work" and plan to work my way through "Structure and interpretation of computer programs", a book many great and experienced coders say is kind of a must-read - and homebrewing) take their toll. And then there's the time I need for procrastination as well. You get the picture.
 I took over this project from another guy who initially built it, because he did not respond to any PRs or emails for years and I needed a feature that was not available. And I thought there are enough people out there that should profit from what I do, so I forked the `license-checker` under the now pretty clumpsy name `license-checker-rseidelsohn` - here we are.
@@ -56,9 +54,7 @@ But also, I am now working for Springer Nature since mid of february, and this a
 
 Berlin, 1st of April 2023.
 
-<a name="introduction"></a>
-
-## Introduction
+## <a name="introduction"></a>Introduction
 
 _This is a fork of davglass' [license-checker v.25.0.1](https://github.com/davglass/license-checker/releases/tag/v25.0.1) - Since that code doesn't seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
 
@@ -81,7 +77,7 @@ license-checker-rseidelsohn
 
 You should see something like this:
 
-```
+```ascii
 ├─ cli@0.4.3
 │  ├─ repository: http://github.com/chriso/cli
 │  └─ licenses: MIT
@@ -120,124 +116,88 @@ An asterisk next to a license name means that it was deduced from
 an other file than package.json (README, LICENSE, COPYING, ...)
 You could see something like this:
 
-```
+```ascii
 └─ debug@2.0.0
    ├─ repository: https://github.com/visionmedia/debug
    └─ licenses: MIT*
 ```
 
-<a name="changes"></a>
+## <a name="changes"></a>Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
-## Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
-
-<a name="Version-4-3-0"></a>
-
-### Version 4.3.0
+### <a name="Version-4-3-0"></a>Version 4.3.0
 
 feat: Add numeric "--depth" option that overrides the ambiguous "--direct" option
 fix: Fix local anchors in the README
 
-<a name="Version-4-2-11"></a>
-
-### Version 4.2.11
+### <a name="Version-4-2-11"></a>Version 4.2.11
 
 misc: Rename a variable and use correct value for exact comparison
 fix: Fix ts definition issue
 update: Merge Dependabot update of @babel/code-frame
 
-<a name="Version-4-2-10"></a>
-
-### Version 4.2.10
+### <a name="Version-4-2-10"></a>Version 4.2.10
 
 fix: Fixes broken `--direct` attribute
 
-<a name="Version-4-2-9"></a>
-
-### Version 4.2.9
+### <a name="Version-4-2-9"></a>Version 4.2.9
 
 fix: Fixes broken refactoring from version 4.2.7, closes #94
 
-<a name="Version-4-2-8"></a>
-
-### Version 4.2.8
+### <a name="Version-4-2-8"></a>Version 4.2.8
 
 fix: methods from exports instead of global this (@chohner), closes #95
 
-<a name="Version-4-2-7"></a>
-
-### Version 4.2.7
+### <a name="Version-4-2-7"></a>Version 4.2.7
 
 chore(deps-dev): bump word-wrap from 1.2.3 to 1.2.4
 chore(deps): bump semver from 7.3.5 to 7.5.2
 
 fix: Consider out option also when passed to programmatic interface, fixes #42
 
-<a name="Version-4-2-6"></a>
-
-### Version 4.2.6
+### <a name="Version-4-2-6"></a>Version 4.2.6
 
 fix: The bug under Windows, where @scope packages had been ignored, should be fixed now
 
-<a name="Version-4-2-5"></a>
-
-### Version 4.2.5
+### <a name="Version-4-2-5"></a>Version 4.2.5
 
 fix: Provide safe defaults for desctructured argument object
 
-<a name="Version-4-2-4"></a>
-
-### Version 4.2.4
+### <a name="Version-4-2-4"></a>Version 4.2.4
 
 Improve the detection of URLs as licenses which are no licenses at all. Previously, when no license info could be found elsewhere, any URL in the README was taken as a custom license, which is not a very bulletproof method. Now, I restrict this method which was probably meant as a fallback solution to only being considered if the README contains at least the word "license" in some form (or notation). Not good, but better than before.
 
-<a name="Version-4-2-3"></a>
-
-### Version 4.2.3
+### <a name="Version-4-2-3"></a>Version 4.2.3
 
 Fix `--relativeModulePath` not working in combination with `--start`.
 
-<a name="Version-4-2-2"></a>
-
-### Version 4.2.2
+### <a name="Version-4-2-2"></a>Version 4.2.2
 
 Fix a bug that produced incorrect relative license file paths when using `--relativeLicensePath` together with `--files` and `--out`.
 
-<a name="Version-4-2-1"></a>
-
-### Version 4.2.1
+### <a name="Version-4-2-1"></a>Version 4.2.1
 
 Refactor many more parts of the still old code, extracting more functionality into separate functions and files and providing more descriptive argument, variable and function names.
 Also, add a new test and improve the algorithm for finding licenses that are URLs - this previously used to catch image URLs thet quite often appear in the README file as licenses although license information was already correctly provided in the package.json. This part of the code is still subject to improvements, but for now it works better than before.
 Also, some minor bugs in the code have been fixed.
 All in all I did a lot of refactoring for helping me with future improvements (bug fixes and new features), as the code now is easier to understand than before (and still is a pretty big mess to me).
 
-<a name="Version-4-2-0"></a>
-
-### Version 4.2.0
+### <a name="Version-4-2-0"></a>Version 4.2.0
 
 Add the option `--clarificationsFile [filepath]` for a A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file).
 
-<a name="Version-4-1-1"></a>
-
-### Version 4.1.1
+### <a name="Version-4-1-1"></a>Version 4.1.1
 
 Fix list format when outputting markdown format
 
-<a name="Version-4-1-0"></a>
-
-### Version 4.1.0
+### <a name="Version-4-1-0"></a>Version 4.1.0
 
 Change config that required the major npm version to be 8. This led to code not compiling for some users and was done for no good reason. Now it is required to be >= 8.
 
-<a name="Version-4-0-1"></a>
-
-### Version 4.0.1
+### <a name="Version-4-0-1"></a>Version 4.0.1
 
 Fix some typos in the README file.
 
-<a name="Version-4-0-0"></a>
-
-### Version 4.0.0
+### <a name="Version-4-0-0"></a>Version 4.0.0
 
 Due to [end of service for NodeJS' security updates](https://endoflife.date/nodejs), I decided to from now on use a current LTS-version, which is NodeJS v18.
 
@@ -249,39 +209,27 @@ This being said, the only change with 4.0.0 is a switch in the `.nvmrc` file of 
 
 That then being said, I really want to invite you to add pull requests to this project. If you feel like, please ask me to give you higher-level access to this repo. I am not keen on mainaining it on my own - I just took it over in order to add my own feature request after the original author stopped finding the time to further support it. Now, I am not using this module for work any more (which might change in the future), but I see my responsibility to at least taking care of pull requests and releasing them, and from time to time working on feature requests as a kind of kata for me.
 
-<a name="Version-3-3-0"></a>
-
-### Version 3.3.0
+### <a name="Version-3-3-0"></a>Version 3.3.0
 
 Allow combining the options `--excludePackages` and `--excludePackagesStartingWith`
 
-<a name="Version-3-2-1"></a>
-
-### Version 3.2.1
+### <a name="Version-3-2-1"></a>Version 3.2.1
 
 Bugfix for `--excludePackagesStartingWith`
 
-<a name="Version-3-2-0"></a>
-
-### Version 3.2.0
+### <a name="Version-3-2-0"></a>Version 3.2.0
 
 Add flag `--excludePackagesStartingWith [list]` and add detection of `Hippocratic License 2.1`
 
-<a name="Version-3-1-0"></a>
-
-### Version 3.1.0
+### <a name="Version-3-1-0"></a>Version 3.1.0
 
 Add new option `--limitAttributes`. Example usage: `node bin/license-checker-rseidelsohn --limitAttributes publisher,email` will only list the `publisher` and `email` attributes for every dependency.
 
-<a name="Version-3-0-1"></a>
-
-### Version 3.0.1
+### <a name="Version-3-0-1"></a>Version 3.0.1
 
 Fix the `--direct` option.
 
-<a name="Version-3-0-0"></a>
-
-### Version 3.0.0
+### <a name="Version-3-0-0"></a>Version 3.0.0
 
 From now on, when you give the `--files` option, this tool outputs the path to the _copied_ license files rather than to
 the originals. When the `relativeLicensePath` option is given, this path will either be relative to the working
@@ -291,9 +239,7 @@ When using the `--out` option, you will not see output in the console, as the ou
 `--out`. When using the `--files` option without `--out` option, you will now get console output, which was not the case
 before.
 
-<a name="all_options_in_alphabetical_order"></a>
-
-## All options in alphabetical order:
+## <a name="all_options_in_alphabetical_order"></a>All options in alphabetical order
 
 -   `--angularCli` is just a synonym for `--plainVertical`
 -   `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file)
@@ -328,9 +274,7 @@ before.
 -   `--version` The current version
 -   `--help` The text you are reading right now :)
 
-<a name="exclusions"></a>
-
-## Exclusions
+## <a name="exclusions"></a>Exclusions
 
 A list of licenses is the simplest way to describe what you want to exclude.
 
@@ -339,9 +283,7 @@ You can use valid SPDX expressions like `MIT OR X11`.
 You can use non-valid SPDX identifiers, like `Public Domain`, since `npm` does
 support some license strings that are not SPDX identifiers.
 
-<a name="examples"></a>
-
-## Examples
+## <a name="examples"></a>Examples
 
 ```
 license-checker-rseidelsohn --json > /path/to/licenses.json
@@ -354,9 +296,7 @@ license-checker-rseidelsohn --excludePackages 'internal-1;internal-2'
 license-checker-rseidelsohn --onlyunknown
 ```
 
-<a name="clarifications"></a>
-
-## Clarifications
+## <a name="clarifications"></a>Clarifications
 
 The `--clarificationsFile` option can be used to provide custom processing instructions on a per-package basis. The format is as so:
 
@@ -376,9 +316,7 @@ The `--clarificationsFile` option can be used to provide custom processing instr
 }
 ```
 
-<a name="custom_format"></a>
-
-## Custom format
+## <a name="custom_format"></a>Custom format
 
 The `--customPath` option can be used with CSV to specify the columns. Note that
 the first column, `module_name`, will always be used.
@@ -405,9 +343,7 @@ See an example in [customFormatExample.json](customFormatExample.json).
 
 Note that outputting the license text is not recommended with Markdown formatting, as it can be very long and does not work well with Markdown lists.
 
-<a name="requiring"></a>
-
-## Requiring
+## <a name="requiring"></a>Requiring
 
 ```js
 var checker = require('license-checker-rseidelsohn');
@@ -428,9 +364,7 @@ checker.init(
 );
 ```
 
-<a name="debugging"></a>
-
-## Debugging
+## <a name="debugging"></a>Debugging
 
 license-checker uses [debug](https://www.npmjs.com/package/debug) for internal logging. There’s two internal markers:
 
@@ -448,17 +382,13 @@ scanning ./yui-lint
 # ...
 ```
 
-<a name="all_options_in_alphabetical_order"></a>
-
-## How Licenses are Found
+## <a name="all_options_in_alphabetical_order"></a>How Licenses are Found
 
 We walk through the `node_modules` directory with the [`read-installed-packages`](https://www.npmjs.org/package/read-installed-packages) module. Once we gathered a list of modules we walk through them and look at all of their `package.json`'s, We try to identify the license with the [`spdx`](https://www.npmjs.com/package/spdx) module to see if it has a valid SPDX license attached. If that fails, we then look into the module for the following files: `LICENSE`, `LICENCE`, `COPYING`, & `README`.
 
 If one of the those files are found (in that order) we will attempt to parse the license data from it with a list of known license texts. This will be shown with the `*` next to the name of the license to show that we "guessed" at it.
 
-<a name="related_information_sources_on_the_internet"></a>
-
-## Related information sources on the internet
+## <a name="related_information_sources_on_the_internet"></a>Related information sources on the internet
 
 -   [ChooseALicense.com](https://choosealicense.com/) - aims at helping you in choosing an open source license for your project
 -   [TLDRLegal.com](https://tldrlegal.com/) - aims at exlaining complicated legal details of software licenses in easy to understand english
