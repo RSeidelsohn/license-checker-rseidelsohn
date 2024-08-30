@@ -127,7 +127,14 @@ You could see something like this:
 
 ## <a id="changes"></a>Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
-### <a id="Version-4-3-0"></a>Version 4.3.0
+### <a id="Version-4-4-0"></a>Version 4.4.0
+
+chore(deps-dev): bump braces from 3.0.2 to 3.0.3 by @dependabot in https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/114
+chore: only include necessary files in package by @ol-teuto in https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/106
+feat: allow specifying ranges in clarifications file and add strict usage checking for them by @ol-teuto in https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/110
+feat: Add new option `clarificationsMatchAll` by @ol-teuto
+
+### <a id="Version-4-3-1"></a>Version 4.3.1
 
 misc: Move from `require` to `import` in all the files
 misc: Update indexHelpers.js by @ArsArmandi in https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/108
