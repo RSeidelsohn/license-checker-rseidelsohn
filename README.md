@@ -11,6 +11,7 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
+        -   [Version 4.3.1](#Version-4-3-1)
         -   [Version 4.3.0](#Version-4-3-0)
         -   [Version 4.2.11](#Version-4-2-11)
         -   [Version 4.2.10](#Version-4-2-10)
@@ -123,6 +124,11 @@ You could see something like this:
 ```
 
 ## <a id="changes"></a>Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
+
+### <a id="Version-4-3-0"></a>Version 4.3.0
+
+misc: Move from `require` to `import` in all the files
+misc: Update indexHelpers.js by @ArsArmandi in https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/108
 
 ### <a id="Version-4-3-0"></a>Version 4.3.0
 
