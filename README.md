@@ -44,7 +44,79 @@
     -   [Debugging](#debugging)
     -   [How Licenses are Found](#how-licenses-are-found)
     -   [Related information sources on the internet](#related-information-sources-on-the-internet)
-
+<<< clarifications-semver
+326
+ 
+`version` can either be an exact version or a semver range, multiple ranges are supported for a single package, for example:
+327
+ 
+​
+328
+ 
+```json5
+329
+ 
+{
+330
+ 
+    "package_name@^1": {
+331
+ 
+        // Any field available in customFormat can be clarified
+332
+ 
+        "licenses": "GPL",
+333
+ 
+        // ... other fields, see above
+334
+ 
+    },
+335
+ 
+    "package_name@^2": {
+336
+ 
+        // Any field available in customFormat can be clarified
+337
+ 
+        "licenses": "MIT",
+338
+ 
+        // ... other fields, see above
+339
+ 
+    },
+340
+ 
+}
+341
+ 
+```
+342
+ 
+​
+343
+ 
+For overlapping ranges, the first matching entry is used.
+344
+ 
+​
+345
+ 
+The `--clarificationsMatchAll` option, when enabled, raises an error if not all specified clarifications were used, it is off by default.
+346
+ 
+​
+347
+ 
+<a name="custom_format"></a>
+348
+ 
+​
+349
+ 
+#
 ## <a id="a-message-from-the-maintainer"></a>A message from the maintainer
 
 Folks, I love and honor open software (the latter not as much as I should), and therefore I am a little ashamed of the lack of regular care I give to this project. My family (two still young kids and a wife working full-time just as me) plus my hobbies (reading - currently I read the great book "Coders at work" and plan to work my way through "Structure and interpretation of computer programs", a book many great and experienced coders say is kind of a must-read - and homebrewing) take their toll. And then there's the time I need for procrastination as well. You get the picture.
@@ -249,6 +321,7 @@ before.
 
 -   `--angularCli` is just a synonym for `--plainVertical`
 -   `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead reading the entire file)
+-   `--clarificationsMatchAll [boolean]` This optional new feature is still lacking a description - to be done
 -   `--csv` output in csv format
 -   `--csvComponentPrefix` prefix column for component in csv format
 -   `--customPath` to add a custom Format file in JSON
@@ -322,7 +395,30 @@ The `--clarificationsFile` option can be used to provide custom processing instr
 }
 ```
 
-## <a id="custom_format"></a>Custom format
+`version` can either be an exact version or a semver range, multiple ranges are supported for a single package, for example:
+
+```json5
+{
+    "package_name@^1": {
+        // Any field available in customFormat can be clarified
+        "licenses": "GPL",
+        // ... other fields, see above
+    },
+    "package_name@^2": {
+        // Any field available in customFormat can be clarified
+        "licenses": "MIT",
+        // ... other fields, see above
+    },
+}
+```
+
+For overlapping ranges, the first matching entry is used.
+
+The `--clarificationsMatchAll` option, when enabled, raises an error if not all specified clarifications were used, it is off by default.
+
+<a name="custom_format"></a>
+
+## Custom format
 
 The `--customPath` option can be used with CSV to specify the columns. Note that
 the first column, `module_name`, will always be used.
