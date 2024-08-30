@@ -2,9 +2,10 @@
   "name": "license-checker-rseidelsohn",
   "description": "Extract NPM package licenses - Feature enhanced version of the original license-checker v25.0.1",
   "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "license": "BSD-3-Clause",
   "private": false,
+  "type": "module",
   "engines": {
     "npm": ">=8",
     "node": ">=18"
@@ -125,6 +126,12 @@
     "santiagocanti <santiago.canti@auth0.com>",
     "tbbstny <tbbstny@users.noreply.github.com>",
     "zodiac403 <zodiac403@gmx.de>"
+  ],
+  "files": [
+    "bin",
+    "lib",
+    "CHANGELOG.md",
+    "SECURITY.md"
   ],
   "dependencies": {
     "chalk": "4.1.2",
