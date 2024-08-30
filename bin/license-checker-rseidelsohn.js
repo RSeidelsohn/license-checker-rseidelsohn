@@ -6,11 +6,10 @@ Code licensed under the BSD License:
 http://yuilibrary.com/license/
 */
 
-const args = require('../lib/args');
-const exitProcessOrWarnIfNeeded = require('../lib/exitProcessOrWarnIfNeeded');
-const fs = require('fs');
-const helpers = require('../lib/licenseCheckerHelpers');
-const licenseCheckerMain = require('../lib/index');
+import * as args from '../lib/args.js';
+import { exitProcessOrWarnIfNeeded } from '../lib/exitProcessOrWarnIfNeeded.js';
+import * as helpers from '../lib/licenseCheckerHelpers.js';
+import * as licenseCheckerMain from '../lib/index.js';
 
 const parsedArgs = args.parse();
 const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
