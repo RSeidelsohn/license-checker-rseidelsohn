@@ -11,6 +11,7 @@
     -   [Table of Contents](#table-of-contents)
     -   [Introduction](#introduction)
     -   [Changes](#changes)
+        -   [Version 4.4.1](#Version-4-4-1)
         -   [Version 4.4.0](#Version-4-4-0)
         -   [Version 4.3.1](#Version-4-3-1)
         -   [Version 4.3.0](#Version-4-3-0)
@@ -126,6 +127,10 @@ You could see something like this:
 ```
 
 ## <a id="changes"></a>Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
+
+### <a id="Version-4-4-1"></a>Version 4.4.1
+
+fix: Fix errors that broke the whole new version (sorry for these)
 
 ### <a id="Version-4-4-0"></a>Version 4.4.0
 
