@@ -20,7 +20,7 @@
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "bin": {
-        "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn"
+        "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn.js"
     },
     "scripts": {
         "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
