@@ -128,6 +128,10 @@ You could see something like this:
 
 ## <a id="changes"></a>Changes (see a more detailed and always up-to-date list [here](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases))
 
+### <a id="Version-4-4-2"></a>Version 4.4.2
+
+fix: Fix missing file name ending (sorry for these)
+
 ### <a id="Version-4-4-1"></a>Version 4.4.1
 
 fix: Fix errors that broke the whole new version (sorry for these)

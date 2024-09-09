@@ -2,7 +2,7 @@
     "name": "license-checker-rseidelsohn",
     "description": "Extract NPM package licenses - Feature enhanced version of the original license-checker v25.0.1",
     "author": "Roman Seidelsohn <rseidelsohn@gmail.com>",
-    "version": "4.4.1",
+    "version": "4.4.2",
     "license": "BSD-3-Clause",
     "private": false,
     "type": "module",
@@ -30,7 +30,7 @@
         "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary",
         "lint": "npx eslint --ext js .",
         "lint:fix": "npm run lint -- --fix",
-        "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn --check && npx prettier scripts --check",
+        "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn.js --check && npx prettier scripts --check",
         "prettier:fix": "npm run prettier -- --write",
         "format": "npm run prettier:fix && npm run lint:fix",
         "format:dry": "npm run prettier && npm run lint"
