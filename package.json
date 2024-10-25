@@ -25,13 +25,13 @@
     "scripts": {
         "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
         "contrib": "node ./scripts/contrib.js",
-        "pretest": "eslint --fix .",
-        "test": "jenkins-mocha ./tests/*.js",
-        "posttest": "nyc check-coverage && nyc report -r lcov -r text -r text-summary",
-        "lint": "npx eslint --ext js .",
+        "pretest": "npm run lint:fix",
+        "test": "mocha ./tests/*.js",
+        "coverage": "c8 npm test",
+        "lint": "eslint --ext js .",
         "lint:fix": "npm run lint -- --fix",
-        "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn.js --check && npx prettier scripts --check",
-        "prettier:fix": "npm run prettier -- --write",
+        "prettier": "prettier lib --check && prettier bin/license-checker-rseidelsohn.js --check && prettier scripts --check",
+        "prettier:fix": "prettier lib --write && prettier bin/license-checker-rseidelsohn.js --write && prettier scripts --write",
         "format": "npm run prettier:fix && npm run lint:fix",
         "format:dry": "npm run prettier && npm run lint"
     },
@@ -43,7 +43,7 @@
         "type": "git",
         "url": "https://github.com/RSeidelsohn/license-checker-rseidelsohn.git"
     },
-    "nyc": {
+    "c8": {
         "check-coverage": true,
         "exclude": [
             "**/tests/*.js"
@@ -149,6 +149,7 @@
     "devDependencies": {
         "@types/mssql": "8.1.1",
         "@types/node": "^16.18.11",
+        "c8": "^10.1.2",
         "detectionizr": "*",
         "eslint": "^8.32.0",
         "eslint-config-prettier": "^8.6.0",
@@ -157,9 +158,9 @@
         "git-contributors": "^0.2.5",
         "github-changes": "^2.0.3",
         "istanbul": "^0.4.5",
-        "jenkins-mocha": "^11.0.0",
         "lint-staged": "^13.1.0",
         "locale": "^0.1.0",
+        "mocha": "^10.7.3",
         "prettier": "^2.8.3",
         "queue": "^6.0.2",
         "request": "^2.88.2",
