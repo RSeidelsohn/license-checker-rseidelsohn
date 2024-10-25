@@ -1,14 +1,15 @@
-const assert = require('assert');
-const path = require('path');
-const checker = require('../lib/index');
-const { describe } = require('node:test');
-const spawn = require('child_process').spawn;
+import assert from 'assert'
+import path from 'path'
+import { init } from '../lib/index.js'
+import { describe } from 'node:test'
+import { spawn } from 'child_process'
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 describe('clarifications', function() {
     function parseAndClarify(parsePath, clarificationPath, result) {
         return function(done) {
-            checker.init(
+            init(
                 {
                     start: path.join(__dirname, parsePath),
                     clarificationsFile: path.join(__dirname, clarificationPath),

@@ -1,12 +1,15 @@
-const assert = require('assert');
-const path = require('path');
-const util = require('util');
-const checker = require('../lib/index');
-let args = require('../lib/args');
-const chalk = require('chalk');
-const fs = require('fs');
-const pkgPath = path.join(__dirname, '../package.json');
-const pkgJson = require(pkgPath);
+import assert from 'assert'
+import path from 'path'
+import util from 'util'
+import * as checker from '../lib/index.js'
+import * as args from '../lib/args.js'
+import chalk from 'chalk'
+import fs from 'fs'
+import pkgJson from '../package.json' assert { type: 'json' }
+import { tmpdir } from 'os'
+import rimraf from 'rimraf'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 describe('main tests', function () {
     it('should load init', function () {
@@ -42,12 +45,12 @@ describe('main tests', function () {
         it('and convert to CSV', function () {
             const str = checker.asCSV(output);
             assert.equal(str.split('\n')[0], '"module name","license","repository"');
-            assert.equal(str.split('\n')[1], '"@ampproject/remapping@2.2.1","Apache-2.0","https://github.com/ampproject/remapping"');
+            assert.equal(str.split('\n')[1], '"@babel/code-frame@7.22.13","MIT","https://github.com/babel/babel"');
         });
 
         it('and convert to MarkDown', function () {
             const str = checker.asMarkDown(output);
-            assert.equal(str.split('\n')[0], '- [@ampproject/remapping@2.2.1](https://github.com/ampproject/remapping) - Apache-2.0');
+            assert.equal(str.split('\n')[0], '- [@babel/code-frame@7.22.13](https://github.com/babel/babel) - MIT');
         });
     });
 
@@ -89,7 +92,7 @@ describe('main tests', function () {
             assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
             assert.equal(
                 str.split('\n')[1],
-                '"@ampproject/remapping@2.2.1","@ampproject/remapping","Remap sequential sourcemaps through transformations to point at the original source code","<<Should Never be set>>"',
+                '"@babel/code-frame@7.22.13","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
@@ -104,7 +107,7 @@ describe('main tests', function () {
             assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
             assert.equal(
                 str.split('\n')[1],
-                '"main-module","@ampproject/remapping@2.2.1","@ampproject/remapping","Remap sequential sourcemaps through transformations to point at the original source code","<<Should Never be set>>"',
+                '"main-module","@babel/code-frame@7.22.13","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"',
             );
         });
 
@@ -116,7 +119,7 @@ describe('main tests', function () {
             };
 
             const str = checker.asMarkDown(output, format);
-            assert.equal(str.split('\n')[0], '- **[@ampproject/remapping@2.2.1](https://github.com/ampproject/remapping)**');
+            assert.equal(str.split('\n')[0], '- **[@babel/code-frame@7.22.13](https://github.com/babel/babel)**');
         });
     });
 
@@ -344,7 +347,7 @@ describe('main tests', function () {
                 'Public Domain;Custom: http://i.imgur.com/goJdO.png;WTFPL*;Apache License, Version 2.0;' +
                 'WTFPL;(MIT AND CC-BY-3.0);Custom: https://github.com/substack/node-browserify;' +
                 '(AFL-2.1 OR BSD-3-Clause);MIT*;0BSD;(MIT OR CC0-1.0);Apache-2.0*;' +
-                'BSD-3-Clause OR MIT;(WTFPL OR MIT);Python-2.0',
+                'BSD-3-Clause OR MIT;(WTFPL OR MIT);Python-2.0;BlueOak-1.0.0',
                 result,
             ),
         );
@@ -490,8 +493,6 @@ describe('main tests', function () {
     });
 
     describe('should parse with args', function () {
-        let args = require('../lib/args.js');
-
         it('should handle undefined', function () {
             const result = args.setDefaults(undefined);
             assert.equal(result.color, chalk.supportsColor);
@@ -568,13 +569,13 @@ describe('main tests', function () {
             process.argv.push('--customPath');
             process.argv.push('./customFormatExample.json');
 
-            args = args.parse();
-            args.start = path.join(__dirname, '../');
+            const parsed = args.parse();
+            parsed.start = path.join(__dirname, '../');
 
             process.argv.pop();
             process.argv.pop();
 
-            checker.init(args, function (err, filtered) {
+            checker.init(parsed, function (err, filtered) {
                 var customFormatContent = fs.readFileSync(
                     path.join(__dirname, './../customFormatExample.json'),
                     'utf8',
@@ -875,7 +876,7 @@ describe('main tests', function () {
         });
 
         it('as files', function () {
-            const out = path.join(require('os').tmpdir(), 'lc');
+            const out = path.join(tmpdir(), 'lc');
             let files = null;
             checker.asFiles(
                 {
@@ -893,7 +894,7 @@ describe('main tests', function () {
 
             files = fs.readdirSync(out);
             assert.equal(files[0], 'foo-LICENSE.txt');
-            require('rimraf').sync(out);
+            rimraf.sync(out);
         });
     });
 
