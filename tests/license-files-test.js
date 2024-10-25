@@ -1,5 +1,5 @@
-const assert = require('assert');
-const licenseFiles = require('../lib/license-files');
+import assert from 'assert'
+import { licenseFiles } from '../lib/license-files.js'
 
 describe('license files detector', function () {
     it('should export a function', function () {

@@ -1,6 +1,6 @@
-const assert = require('assert');
-const util = require('util');
-const getLicenseTitle = require('../lib/getLicenseTitle');
+import assert from 'assert'
+import util from 'util'
+import { getLicenseTitle } from '../lib/getLicenseTitle.js'
 
 describe('license parser', function () {
     it('should export a function', function () {
