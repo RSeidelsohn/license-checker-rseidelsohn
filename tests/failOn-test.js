@@ -1,6 +1,8 @@
-const assert = require('assert');
-const path = require('path');
-const spawn = require('child_process').spawn;
+import assert from 'assert'
+import path from 'path'
+import { spawn } from 'child_process'
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 describe('bin/license-checker-rseidelsohn', function () {
     this.timeout(8000);
