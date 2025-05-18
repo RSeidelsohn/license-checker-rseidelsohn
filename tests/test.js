@@ -493,37 +493,37 @@ describe('main tests', function () {
         let args = require('../lib/args.js');
 
         it('should handle undefined', function () {
-            const result = args.setDefaults(undefined);
+            const result = args.setDefaultArguments(undefined);
             assert.equal(result.color, chalk.supportsColor);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should handle color undefined', function () {
-            const result = args.setDefaults({ color: undefined, start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.setDefaultArguments({ color: undefined, start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.color, chalk.supportsColor);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should handle direct undefined', function () {
-            const result = args.setDefaults({ direct: undefined, start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.setDefaultArguments({ direct: undefined, start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.direct, Infinity);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should handle direct true', function () {
-            const result = args.setDefaults({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.setDefaultArguments({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.direct, Infinity);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should override direct option with depth option', function () {
-            const result = args.setDefaults({ direct: '9', depth: '99', start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.setDefaultArguments({ direct: '9', depth: '99', start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.direct, 99);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
 
         it('should use depth for direct option when direct is not provided', function () {
-            const result = args.setDefaults({ depth: '99', start: path.resolve(path.join(__dirname, '../')) });
+            const result = args.setDefaultArguments({ depth: '99', start: path.resolve(path.join(__dirname, '../')) });
             assert.equal(result.direct, 99);
             assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
         });
@@ -535,7 +535,7 @@ describe('main tests', function () {
                     start: path.resolve(path.join(__dirname, '../')),
                 };
                 def[type] = true;
-                const result = args.setDefaults(def);
+                const result = args.setDefaultArguments(def);
                 assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
             });
         });
@@ -568,7 +568,7 @@ describe('main tests', function () {
             process.argv.push('--customPath');
             process.argv.push('./customFormatExample.json');
 
-            args = args.parse();
+            args = args.getNormalizedArguments(process.argv);
             args.start = path.join(__dirname, '../');
 
             process.argv.pop();
