@@ -18,7 +18,7 @@
         "no-console": 0,
         "no-irregular-whitespace": 2,
         "no-useless-escape": 0,
-        "indent": ["error", 4],
+        "indent": ["error", "tab"],
         "space-before-function-paren": [
             "error",
             {
