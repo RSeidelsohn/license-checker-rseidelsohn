@@ -9,6 +9,7 @@
 .nyc_output
 .svn
 .vscode/
+.zed/
 artifacts
 coverage/
 CVS/
