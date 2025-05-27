@@ -279,6 +279,7 @@ before.
 -   `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output (useful for excluding modules from a specific vendor and such). Example: `--excludePackagesStartingWith "webpack;@types;@babel"`
 -   `--excludePrivatePackages` restrict output to not include any package marked as private
 -   `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
+-   `--failSlow [boolean]` Modify behavior of failOn and onlyAllow, to not fail after the first occurrence of the license. Exit code 1 will be returned after all licenses are checked.
 -   `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt
 -   `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
 -   `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or only "package") in the semicolon-seperated list
