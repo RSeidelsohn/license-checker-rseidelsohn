@@ -926,6 +926,45 @@ BSD-3-Clause
         });
     });
 
+    describe('should export custom license type correctly', function () {
+        let output;
+
+        before(function (done) {
+            this.timeout(5000);
+
+            checker.init(
+                {
+                    start: path.join(__dirname, './fixtures/custom-license-file'),
+                },
+                function (err, sorted) {
+                    output = sorted;
+                    done();
+                },
+            );
+        });
+
+        it('as csv', function () {
+            const data = checker.asCSV(output);
+            assert.equal(data, '"module name","license","repository"\n' +
+                               '"custom-license@0.0.0","Custom: MY-LICENSE.md",""');
+        });
+
+        it('as markdown', function () {
+            const data = checker.asMarkDown(output);
+            assert.equal(data, '- [custom-license@0.0.0](undefined) - Custom: MY-LICENSE.md');
+        });
+
+        it('as summary', function () {
+            const data = checker.asSummary(output);
+            assert.equal(data, '└─ Custom: MY-LICENSE.md: 1\n');
+        });
+
+        it('as Angular CLI like plain vertical format', function () {
+            const data = checker.asPlainVertical(output);
+            assert.equal(data, 'custom-license 0.0.0\nCustom: MY-LICENSE.md\n');
+        });
+    });
+
     describe('json parsing', function () {
         it('should parse json successfully (File exists + was json)', function () {
             const path = './tests/config/custom_format_correct.json';
