@@ -11,7 +11,7 @@ import { exitProcessOrWarnIfNeeded } from '../lib/exitProcessOrWarnIfNeeded.js';
 import * as helpers from '../lib/licenseCheckerHelpers.js';
 import * as licenseCheckerMain from '../lib/index.js';
 
-const parsedArgs = args.parse();
+const parsedArgs = args.getNormalizedArguments();
 const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
 const kownOptions = Object.keys(args.knownOptions);
 const unknownArgs = Object.keys(parsedArgs).filter((arg) => !kownOptions.includes(arg));
