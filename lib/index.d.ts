@@ -165,6 +165,14 @@ export interface ModuleInfo {
      * Path of NOTICE file
      */
     noticeFile?: string | undefined;
+    /**
+     * Depth in the dependency tree
+     */
+    depth?: number | undefined;
+    /**
+     * Is it a dev dependency?
+     */
+    isDevDependency?: boolean | undefined;
 }
 
 export interface ModuleInfos {
