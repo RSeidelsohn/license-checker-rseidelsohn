@@ -3,6 +3,7 @@
 *.sublime-*
 *~
 .*.swp
+Session.vim
 .com.apple.timemachine.supported
 .DS_Store
 .idea/

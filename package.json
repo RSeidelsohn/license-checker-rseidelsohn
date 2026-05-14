@@ -7,8 +7,8 @@
     "private": false,
     "type": "module",
     "engines": {
-        "npm": ">=8",
-        "node": ">=18"
+        "npm": ">=10",
+        "node": ">=22"
     },
     "engine-strict": true,
     "keywords": [
