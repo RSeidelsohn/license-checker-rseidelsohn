@@ -14,13 +14,35 @@ badd +44 package.json
 badd +2 .prettierignore
 badd +11 .editorconfig
 badd +1 .nvmrc
-badd +0 .gitignore
+badd +6 .gitignore
+badd +1 .tool-versions
 argglobal
 %argdel
 set stal=2
 tabnew +setlocal\ bufhidden=wipe
+tabnew +setlocal\ bufhidden=wipe
+tabnew +setlocal\ bufhidden=wipe
 tabrewind
-edit .gitignore
+edit ~/Development/license-checker-rseidelsohn
+argglobal
+balt .gitignore
+setlocal foldmethod=indent
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal nofoldenable
+let s:l = 27 - ((26 * winheight(0) + 21) / 43)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 27
+normal! 0
+lcd ~/Development/license-checker-rseidelsohn
+tabnext
+edit ~/Development/license-checker-rseidelsohn/.gitignore
 argglobal
 setlocal foldmethod=indent
 setlocal foldexpr=0
@@ -36,6 +58,24 @@ keepjumps exe s:l
 normal! zt
 keepjumps 6
 normal! 011|
+lcd ~/Development/license-checker-rseidelsohn
+tabnext
+edit ~/Development/license-checker-rseidelsohn/.tool-versions
+argglobal
+setlocal foldmethod=indent
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal nofoldenable
+let s:l = 1 - ((0 * winheight(0) + 21) / 43)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 1
+normal! 013|
 lcd ~/Development/license-checker-rseidelsohn
 tabnext
 edit ~/Development/license-checker-rseidelsohn/.nvmrc
@@ -55,7 +95,7 @@ normal! zt
 keepjumps 1
 normal! 03|
 lcd ~/Development/license-checker-rseidelsohn
-tabnext 1
+tabnext 2
 set stal=1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
