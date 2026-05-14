@@ -1,4 +1,5 @@
 *.min.js
+Session.vim
 package-lock.json
 package.json
 artifacts/
