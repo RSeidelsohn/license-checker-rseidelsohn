@@ -63,6 +63,10 @@ export interface InitOpts {
 	 */
 	onlyAllow?: string | undefined;
 	/**
+	 * Modify behavior of failOn and onlyAllow, to not fail after the first occurrence of the license. Exit code 1 will be returned after all licenses are checked.
+	 */
+	failSlow?: boolean | undefined;
+	/**
 	 * Restrict output to the packages (package@version) in the semicolon-separated list
 	 */
 	packages?: string | undefined;
