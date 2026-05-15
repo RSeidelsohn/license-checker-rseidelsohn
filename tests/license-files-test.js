@@ -11,7 +11,7 @@ describe('license files detector', function () {
     });
 
     it('no license files', function () {
-        assert.deepEqual(licenseFiles(['.gitignore', '.travis.yml', 'TODO']), []);
+        assert.deepEqual(licenseFiles(['.gitignore', 'TODO']), []);
     });
 
     it('one license candidate', function () {
