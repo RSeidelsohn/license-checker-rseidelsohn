@@ -23,7 +23,7 @@ describe('main tests', function () {
     describe('should parse local with unknown', function () {
         let output;
 
-        before(function (done) {
+        beforeAll(function (done) {
             this.timeout(5000);
 
             checker.init(
@@ -57,7 +57,7 @@ describe('main tests', function () {
     describe('should parse local with unknown and custom format', function () {
         let output;
 
-        before(function (done) {
+        beforeAll(function (done) {
             const format = {
                 name: '<<Default Name>>',
                 description: '<<Default Description>>',
@@ -126,7 +126,7 @@ describe('main tests', function () {
     describe('should parse local without unknown', function () {
         let output;
 
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
@@ -148,7 +148,7 @@ describe('main tests', function () {
     describe('should parse direct dependencies only', function () {
         let output;
 
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
@@ -176,7 +176,7 @@ describe('main tests', function () {
     describe('should write output to files in programmatic usage', function () {
         const tmpFileName = path.join(__dirname, 'tmp_output.json');
 
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
@@ -189,7 +189,7 @@ describe('main tests', function () {
             );
         });
 
-        after(() => {
+        afterAll(() => {
             if (fs.existsSync(tmpFileName)) {
                 fs.unlinkSync(tmpFileName);
             }
@@ -223,7 +223,7 @@ describe('main tests', function () {
     describe('should parse local with unknown and excludes', function () {
         let result = {};
 
-        before(parseAndExclude('../', 'MIT, ISC', result));
+        beforeAll(parseAndExclude('../', 'MIT, ISC', result));
 
         it('should exclude MIT and ISC licensed modules from results', function () {
             let excluded = true;
@@ -238,7 +238,7 @@ describe('main tests', function () {
 
     describe('should parse local with excludes containing commas', function () {
         let result = {};
-        before(parseAndExclude('./fixtures/excludeWithComma', 'Apache License\\, Version 2.0', result));
+        beforeAll(parseAndExclude('./fixtures/excludeWithComma', 'Apache License\\, Version 2.0', result));
 
         it('should exclude a license with a comma from the list', function () {
             let excluded = true;
@@ -254,7 +254,7 @@ describe('main tests', function () {
 
     describe('should parse local with BSD excludes', function () {
         let result = {};
-        before(parseAndExclude('./fixtures/excludeBSD', 'BSD', result));
+        beforeAll(parseAndExclude('./fixtures/excludeBSD', 'BSD', result));
 
         it('should exclude BSD-3-Clause', function () {
             let excluded = true;
@@ -270,7 +270,7 @@ describe('main tests', function () {
 
     describe('should parse local with Public Domain excludes', function () {
         let result = {};
-        before(parseAndExclude('./fixtures/excludePublicDomain', 'Public Domain', result));
+        beforeAll(parseAndExclude('./fixtures/excludePublicDomain', 'Public Domain', result));
 
         it('should exclude Public Domain', function () {
             let excluded = true;
@@ -286,7 +286,7 @@ describe('main tests', function () {
 
     describe('should not exclude Custom if not specified in excludes', function () {
         let result = {};
-        before(parseAndExclude('./fixtures/custom-license-file', 'MIT', result));
+        beforeAll(parseAndExclude('./fixtures/custom-license-file', 'MIT', result));
 
         it('should exclude Public Domain', function () {
             let excluded = true;
@@ -320,7 +320,7 @@ describe('main tests', function () {
 
     describe('should exit on given list of onlyAllow licenses', function () {
         let result = {};
-        before(parseAndFailOn('onlyAllow', '../', 'MIT; ISC', result));
+        beforeAll(parseAndFailOn('onlyAllow', '../', 'MIT; ISC', result));
 
         it('should exit on non MIT and ISC licensed modules from results', function () {
             assert.equal(result.exitCode, 1);
@@ -329,7 +329,7 @@ describe('main tests', function () {
 
     describe('should exit on single onlyAllow license', function () {
         let result = {};
-        before(parseAndFailOn('onlyAllow', '../', 'ISC', result));
+        beforeAll(parseAndFailOn('onlyAllow', '../', 'ISC', result));
 
         it('should exit on non ISC licensed modules from results', function () {
             assert.equal(result.exitCode, 1);
@@ -338,7 +338,7 @@ describe('main tests', function () {
 
     describe('should not exit on complete list', function () {
         let result = {};
-        before(
+        beforeAll(
             parseAndFailOn(
                 'onlyAllow',
                 '../',
@@ -359,7 +359,7 @@ describe('main tests', function () {
 
     describe('should exit on given list of failOn licenses', function () {
         let result = {};
-        before(parseAndFailOn('failOn', '../', 'MIT; ISC', result));
+        beforeAll(parseAndFailOn('failOn', '../', 'MIT; ISC', result));
 
         it('should exit on MIT and ISC licensed modules from results', function () {
             assert.equal(result.exitCode, 1);
@@ -368,7 +368,7 @@ describe('main tests', function () {
 
     describe('should exit on single failOn license', function () {
         let result = {};
-        before(parseAndFailOn('failOn', '../', 'ISC', result));
+        beforeAll(parseAndFailOn('failOn', '../', 'ISC', result));
 
         it('should exit on ISC licensed modules from results', function () {
             assert.equal(result.exitCode, 1);
@@ -377,7 +377,7 @@ describe('main tests', function () {
 
     describe('should parse local and handle private modules', function () {
         let output;
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, './fixtures/privateModule'),
@@ -419,7 +419,7 @@ describe('main tests', function () {
 
     describe('should treat URLs as custom licenses', function () {
         let output;
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, './fixtures/custom-license-url'),
@@ -443,7 +443,7 @@ describe('main tests', function () {
 
     describe('should treat file references as custom licenses', function () {
         let output;
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, './fixtures/custom-license-file'),
@@ -723,7 +723,7 @@ describe('main tests', function () {
 
     describe('should only list UNKNOWN or guessed licenses successful', function () {
         let output;
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
@@ -768,7 +768,7 @@ describe('main tests', function () {
 
     describe('should list given packages', function () {
         let result = {};
-        before(parseAndInclude('./fixtures/includeBSD', 'BSD', result));
+        beforeAll(parseAndInclude('./fixtures/includeBSD', 'BSD', result));
 
         it('should include only BSD', function () {
             const output = result.output;
@@ -778,7 +778,7 @@ describe('main tests', function () {
 
     describe('should not list not given packages', function () {
         let result = {};
-        before(parseAndInclude('./fixtures/includeApache', 'BSD', result));
+        beforeAll(parseAndInclude('./fixtures/includeApache', 'BSD', result));
 
         it('should not include Apache', function () {
             const output = result.output;
@@ -788,7 +788,7 @@ describe('main tests', function () {
 
     describe('should only list UNKNOWN or guessed licenses with errors (argument missing)', function () {
         let output;
-        before(function (done) {
+        beforeAll(function (done) {
             checker.init(
                 {
                     start: path.join(__dirname, '../'),
@@ -901,7 +901,7 @@ describe('main tests', function () {
     describe('should export', function () {
         let output;
 
-        before(function (done) {
+        beforeAll(function (done) {
             this.timeout(5000);
 
             checker.init(
