@@ -400,7 +400,6 @@ checker.init(
     {
         start: '/path/to/start/looking',
     },
-    // eslint-disable-next-line no-unused-vars
     function (err, packages) {
         if (err) {
             //Handle error
