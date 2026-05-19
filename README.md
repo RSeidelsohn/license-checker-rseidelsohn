@@ -123,9 +123,10 @@ Take a look at the detailed [changelog](CHANGELOG.md) or at the
 ## <a id="all-options-in-alphabetical-order"></a>All options in alphabetical order
 
 - `--angularCli` is just a synonym for `--plainVertical`
-- `--clarificationsFile [filepath]` A file that describe the license clarifications for each package, see
-  clarificationExample.json, any field available to the customFormat option can be clarified. The clarifications file
-  can also be used to specify a subregion of a package's license file (instead reading the entire file)
+- `--clarificationsFile [filepath]` A file that describe the license clarifications for each package. See
+  [clarificationExample.json](clarificationExample.json). Any field available to the customFormat option can be
+  clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead of
+  reading the entire file)
 - `--clarificationsMatchAll [boolean]` This optional new feature is still lacking a description - to be done
 - `--csv` output in csv format
 - `--csvComponentPrefix` prefix column for component in csv format
