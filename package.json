@@ -17,15 +17,13 @@
         "license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn.js"
     },
     "scripts": {
-        "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
-        "contrib": "node ./scripts/contrib.js",
         "test": "vitest run",
-        "lint": "npx eslint --ext js .",
-        "lint:fix": "npm run lint -- --fix",
-        "prettier": "npx prettier lib --check && npx prettier bin/license-checker-rseidelsohn.js --check && npx prettier scripts --check",
-        "prettier:fix": "npm run prettier -- --write",
-        "format": "npm run prettier:fix && npm run lint:fix",
-        "format:dry": "npm run prettier && npm run lint"
+        "test-dev": "vitest",
+        "check": "biome check",
+        "check-fix": "biome check --write",
+        "check-fix-unsafe": "biome check --write --unsafe",
+        "changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
+        "contrib": "node ./scripts/contrib.js"
     },
     "homepage": "https://github.com/RSeidelsohn/license-checker-rseidelsohn#readme",
     "bugs": {
@@ -55,20 +53,16 @@
         "treeify": "^1.1.0"
     },
     "devDependencies": {
+        "@biomejs/biome": "2.4.15",
         "@types/mkdirp": "^1.0.2",
         "@types/mssql": "8.1.1",
         "@types/node": "24.12.4",
         "@types/spdx-expression-parse": "^3.0.5",
         "detectionizr": "*",
-        "eslint": "^9.25.1",
-        "eslint-config-prettier": "^10.1.2",
-        "eslint-plugin-prettier": "^5.2.6",
         "format-package-json": "^0.2.0",
         "git-contributors": "^0.2.5",
         "github-changes": "^2.0.3",
-        "lint-staged": "^13.1.0",
         "locale": "^0.1.0",
-        "prettier": "^3.5.3",
         "queue": "^6.0.2",
         "rimraf": "^3.0.2",
         "vitest": "4.1.6"
