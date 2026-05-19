@@ -1,0 +1,96 @@
+{
+    "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
+    "root": true,
+
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+
+    "files": {
+        "includes": ["**", "!tests/config/custom_format_broken.json"]
+    },
+
+    "formatter": {
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 120
+    },
+
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "asNeeded",
+            "quoteStyle": "single",
+            "trailingCommas": "es5"
+        }
+    },
+
+    "linter": {
+        "rules": {
+            "complexity": {
+                "noForEach": "off",
+                "noUselessCatchBinding": "error",
+                "noUselessUndefined": "error",
+                "useMaxParams": "warn"
+            },
+
+            "style": {
+                "noEnum": "warn",
+                "noInferrableTypes": "error",
+                "noParameterAssign": "error",
+                "noUnusedTemplateLiteral": "error",
+                "noUselessElse": "error",
+                "useAsConstAssertion": "error",
+                "useBlockStatements": "error",
+                "useConsistentArrayType": {
+                    "level": "error",
+                    "options": { "syntax": "shorthand" }
+                },
+                "useConst": {
+                    "level": "warn",
+                    "fix": "unsafe"
+                },
+                "useDefaultParameterLast": "error",
+                "useEnumInitializers": "error",
+                "useForOf": "error",
+                "useNumberNamespace": "error",
+                "useShorthandFunctionType": "warn",
+                "useSingleVarDeclarator": "error",
+                "useConsistentArrowReturn": "warn"
+            },
+
+            "suspicious": {
+                "noAssignInExpressions": "warn",
+                "noShadowRestrictedNames": "off",
+                "useNamespaceKeyword": "warn"
+            },
+
+            "correctness": {
+                "noUnusedImports": {
+                    "level": "warn",
+                    "fix": "safe"
+                },
+                "noUnusedVariables": "off",
+                "useSingleJsDocAsterisk": "warn"
+            }
+        }
+    },
+
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
+    },
+
+    "overrides": [
+        {
+            "includes": ["**/*.yaml", "**/*.yml"],
+            "formatter": {
+                "indentWidth": 2
+            }
+        }
+    ]
+}
