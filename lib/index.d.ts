@@ -94,6 +94,7 @@ export interface InitOpts {
      * Specify the columns for CSV format
      * or add the specified items for JSON format
      */
+    // biome-ignore lint/suspicious/noExplicitAny: TODO let's switch to proper TS soon-ish, instead of writing the d.ts manually
     customFormat?: Record<string, any> | undefined;
     /**
      * Ignore peerDependencies

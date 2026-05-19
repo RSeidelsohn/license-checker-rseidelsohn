@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import { licenseFiles } from '../lib/license-files.js';
 
 describe('license files detector', () => {

@@ -1,14 +1,14 @@
+import assert from 'node:assert';
+import { spawn } from 'node:child_process';
+import path from 'node:path';
 import { describe } from 'node:test';
-import assert from 'assert';
-import { spawn } from 'child_process';
-import path from 'path';
 import { init } from '../lib/index.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 describe('clarifications', () => {
     const clarifications_path = './fixtures/clarifications';
-    let result = {};
+    const result = {};
 
     beforeAll(
         async () =>
@@ -26,7 +26,7 @@ describe('clarifications', () => {
                             licenseText: '',
                         },
                     },
-                    (err, filtered) => {
+                    (_err, filtered) => {
                         result.output = filtered;
                         resolve();
                     }
@@ -43,7 +43,7 @@ describe('clarifications', () => {
 
     it('should exit 1 if the checksum does not match', done => {
         let data = '';
-        let license_checker = spawn(
+        const license_checker = spawn(
             'node',
             [
                 path.join(__dirname, '../bin/license-checker-rseidelsohn'),
@@ -71,7 +71,7 @@ describe('clarifications', () => {
     it('should succeed if no checksum is specified', done => {
         let data = '';
 
-        let license_checker = spawn(
+        const license_checker = spawn(
             'node',
             [
                 path.join(__dirname, '../bin/license-checker-rseidelsohn'),
@@ -100,7 +100,7 @@ describe('clarifications', () => {
     it('should snip the embedded license out of the README', done => {
         let data = '';
 
-        let license_checker = spawn(
+        const license_checker = spawn(
             'node',
             [
                 path.join(__dirname, '../bin/license-checker-rseidelsohn'),
@@ -135,7 +135,7 @@ describe('clarifications', () => {
     it('should snip the embedded license in the README to the end.', done => {
         let data = '';
 
-        let license_checker = spawn(
+        const license_checker = spawn(
             'node',
             [
                 path.join(__dirname, '../bin/license-checker-rseidelsohn'),

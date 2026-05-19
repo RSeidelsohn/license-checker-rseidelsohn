@@ -1,10 +1,10 @@
-import assert from 'assert';
+import assert from 'node:assert';
+import fs from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import util from 'node:util';
 import chalk from 'chalk';
-import fs from 'fs';
-import { tmpdir } from 'os';
-import path from 'path';
 import rimraf from 'rimraf';
-import util from 'util';
 import * as args from '../lib/args.js';
 import * as checker from '../lib/index.js';
 import pkgJson from '../package.json' with { type: 'json' };
@@ -30,7 +30,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, '../'),
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }
@@ -69,7 +69,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     customFormat: format,
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }
@@ -132,7 +132,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     unknown: true,
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }
@@ -154,7 +154,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     direct: 0, // 0 is the parsed value passed to init from license-checker-rseidelsohn if set to true
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }
@@ -183,7 +183,7 @@ describe('main tests', () => {
                     json: true,
                     out: tmpFileName,
                 },
-                (err, sorted) => {
+                (_err, _sorted) => {
                     done();
                 }
             );
@@ -212,7 +212,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, parsePath),
                     excludeLicenses: licenses,
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     result.output = filtered;
                     done();
                 }
@@ -221,7 +221,7 @@ describe('main tests', () => {
     }
 
     describe('should parse local with unknown and excludes', () => {
-        let result = {};
+        const result = {};
 
         beforeAll(parseAndExclude('../', 'MIT, ISC', result));
 
@@ -229,20 +229,21 @@ describe('main tests', () => {
             let excluded = true;
             const output = result.output;
             Object.keys(output).forEach(item => {
-                if (output[item].licenses && (output[item].licenses === 'MIT' || output[item].licenses === 'ISC'))
+                if (output[item].licenses && (output[item].licenses === 'MIT' || output[item].licenses === 'ISC')) {
                     excluded = false;
+                }
             });
             assert.ok(excluded);
         });
     });
 
     describe('should parse local with excludes containing commas', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndExclude('./fixtures/excludeWithComma', 'Apache License\\, Version 2.0', result));
 
         it('should exclude a license with a comma from the list', () => {
             let excluded = true;
-            let output = result.output;
+            const output = result.output;
             Object.keys(output).forEach(item => {
                 if (output[item].licenses && output[item].licenses === 'Apache License, Version 2.0') {
                     excluded = false;
@@ -253,7 +254,7 @@ describe('main tests', () => {
     });
 
     describe('should parse local with BSD excludes', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndExclude('./fixtures/excludeBSD', 'BSD', result));
 
         it('should exclude BSD-3-Clause', () => {
@@ -269,7 +270,7 @@ describe('main tests', () => {
     });
 
     describe('should parse local with Public Domain excludes', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndExclude('./fixtures/excludePublicDomain', 'Public Domain', result));
 
         it('should exclude Public Domain', () => {
@@ -285,7 +286,7 @@ describe('main tests', () => {
     });
 
     describe('should not exclude Custom if not specified in excludes', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndExclude('./fixtures/custom-license-file', 'MIT', result));
 
         it('should exclude Public Domain', () => {
@@ -310,7 +311,7 @@ describe('main tests', () => {
                 start: path.join(__dirname, parsePath),
             };
             config[key] = licenses;
-            checker.init(config, (err, filtered) => {
+            checker.init(config, (_err, filtered) => {
                 result.output = filtered;
                 result.exitCode = exitCode;
                 done();
@@ -319,7 +320,7 @@ describe('main tests', () => {
     }
 
     describe('should exit on given list of onlyAllow licenses', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndFailOn('onlyAllow', '../', 'MIT; ISC', result));
 
         it('should exit on non MIT and ISC licensed modules from results', () => {
@@ -328,7 +329,7 @@ describe('main tests', () => {
     });
 
     describe('should exit on single onlyAllow license', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndFailOn('onlyAllow', '../', 'ISC', result));
 
         it('should exit on non ISC licensed modules from results', () => {
@@ -337,7 +338,7 @@ describe('main tests', () => {
     });
 
     describe('should not exit on complete list', () => {
-        let result = {};
+        const result = {};
         beforeAll(
             parseAndFailOn(
                 'onlyAllow',
@@ -358,7 +359,7 @@ describe('main tests', () => {
     });
 
     describe('should exit on given list of failOn licenses', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndFailOn('failOn', '../', 'MIT; ISC', result));
 
         it('should exit on MIT and ISC licensed modules from results', () => {
@@ -367,7 +368,7 @@ describe('main tests', () => {
     });
 
     describe('should exit on single failOn license', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndFailOn('failOn', '../', 'ISC', result));
 
         it('should exit on ISC licensed modules from results', () => {
@@ -382,7 +383,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, './fixtures/privateModule'),
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     output = filtered;
                     done();
                 }
@@ -408,7 +409,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, '../node_modules/locale'),
                 },
-                (err, output) => {
+                (_err, output) => {
                     const item = output[Object.keys(output)[0]];
                     assert.equal(item.licenses, 'MIT*');
                     done();
@@ -424,7 +425,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, './fixtures/custom-license-url'),
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     output = filtered;
                     done();
                 }
@@ -434,8 +435,9 @@ describe('main tests', () => {
         it('should recognise a custom license at a url', () => {
             let foundCustomLicense = false;
             Object.keys(output).forEach(item => {
-                if (output[item].licenses && output[item].licenses === 'Custom: http://example.com/dummy-license')
+                if (output[item].licenses && output[item].licenses === 'Custom: http://example.com/dummy-license') {
                     foundCustomLicense = true;
+                }
             });
             assert.ok(foundCustomLicense);
         });
@@ -448,7 +450,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, './fixtures/custom-license-file'),
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     output = filtered;
                     done();
                 }
@@ -458,8 +460,9 @@ describe('main tests', () => {
         it('should recognise a custom license in a file', () => {
             let foundCustomLicense = false;
             Object.keys(output).forEach(item => {
-                if (output[item].licenses && output[item].licenses === 'Custom: MY-LICENSE.md')
+                if (output[item].licenses && output[item].licenses === 'Custom: MY-LICENSE.md') {
                     foundCustomLicense = true;
+                }
             });
             assert.ok(foundCustomLicense);
         });
@@ -540,8 +543,8 @@ describe('main tests', () => {
         });
 
         ['json', 'markdown', 'csv', 'summary'].forEach(type => {
-            it('should disable color on ' + type, () => {
-                let def = {
+            it(`should disable color on ${type}`, () => {
+                const def = {
                     color: undefined,
                     start: path.resolve(path.join(__dirname, '../')),
                 };
@@ -563,7 +566,7 @@ describe('main tests', () => {
                         pewpew: '<<Should Never be set>>',
                     },
                 },
-                (err, d) => {
+                (_err, d) => {
                     Object.keys(d).forEach(item => {
                         assert.notEqual(d[item].name, undefined);
                         assert.notEqual(d[item].description, undefined);
@@ -585,7 +588,7 @@ describe('main tests', () => {
             process.argv.pop();
             process.argv.pop();
 
-            checker.init(parsed, (err, filtered) => {
+            checker.init(parsed, (_err, filtered) => {
                 var customFormatContent = fs.readFileSync(
                     path.join(__dirname, './../customFormatExample.json'),
                     'utf8'
@@ -614,7 +617,7 @@ describe('main tests', () => {
                         publisher: '',
                     },
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     assert.equal(Object.keys(filtered).length, 1);
                     assert.equal(filtered['license-checker-rseidelsohn@0.0.0'].publisher, 'Roman Seidelsohn');
                     done();
@@ -629,8 +632,8 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, '../'),
                 },
-                (err, output) => {
-                    Object.keys(output).map(key => {
+                (_err, output) => {
+                    Object.keys(output).forEach(key => {
                         const expectedPath = path.join(__dirname, '../');
                         const actualPath = output[key].path.substr(0, expectedPath.length);
                         assert.equal(actualPath, expectedPath);
@@ -646,7 +649,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     relativeModulePath: true,
                 },
-                (err, output) => {
+                (_err, output) => {
                     const rootPath = path.join(__dirname, '../');
                     Object.keys(output).forEach(key => {
                         const outputPath = output[key].path;
@@ -668,7 +671,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, '../'),
                 },
-                (err, output) => {
+                (_err, output) => {
                     Object.keys(output)
                         .map(key => output[key])
                         .filter(dep => dep.licenseFile !== undefined)
@@ -688,7 +691,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     relativeLicensePath: true,
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     Object.keys(filtered)
                         .map(key => filtered[key])
                         .filter(dep => dep.licenseFile !== undefined)
@@ -714,7 +717,7 @@ describe('main tests', () => {
                         publisher: false,
                     },
                 },
-                (err, output) => {
+                (_err, output) => {
                     assert(output['abbrev@1.0.9'] !== undefined, 'Check if the expected package still exists.');
                     assert.equal(output['abbrev@1.0.9'].copyright, 'Copyright (c) Isaac Z. Schlueter and Contributors');
                     done();
@@ -731,7 +734,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     onlyunknown: true,
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }
@@ -760,7 +763,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, parsePath),
                     includeLicenses: licenses,
                 },
-                (err, filtered) => {
+                (_err, filtered) => {
                     result.output = filtered;
                     done();
                 }
@@ -769,7 +772,7 @@ describe('main tests', () => {
     }
 
     describe('should list given packages', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndInclude('./fixtures/includeBSD', 'BSD', result));
 
         it('should include only BSD', () => {
@@ -779,7 +782,7 @@ describe('main tests', () => {
     });
 
     describe('should not list not given packages', () => {
-        let result = {};
+        const result = {};
         beforeAll(parseAndInclude('./fixtures/includeApache', 'BSD', result));
 
         it('should not include Apache', () => {
@@ -796,7 +799,7 @@ describe('main tests', () => {
                     start: path.join(__dirname, '../'),
                     production: true,
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }
@@ -910,7 +913,7 @@ describe('main tests', () => {
                 {
                     start: path.join(__dirname, './fixtures/includeBSD'),
                 },
-                (err, sorted) => {
+                (_err, sorted) => {
                     output = sorted;
                     done();
                 }

@@ -1,6 +1,6 @@
-import assert from 'assert';
-import { spawn } from 'child_process';
-import path from 'path';
+import assert from 'node:assert';
+import { spawn } from 'node:child_process';
+import path from 'node:path';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -78,7 +78,9 @@ describe('bin/license-checker-rseidelsohn', () => {
             excludedNames.forEach(pkgName => {
                 if (pkgName.indexOf('@') > 1) {
                     // check for the exact version
-                    if (p === pkgName) illegalPackageFound = true;
+                    if (p === pkgName) {
+                        illegalPackageFound = true;
+                    }
                 } else if (p.startsWith(`${pkgName}@`)) {
                     illegalPackageFound = true;
                 }
