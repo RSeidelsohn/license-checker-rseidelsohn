@@ -1,6 +1,6 @@
 {
-    "license-checker-rseidelsohn@0.0.0": {
-        "licenses": "MIT",
-        "licenseStart": "# LICENSE"
-    }
+	"license-checker-rseidelsohn@0.0.0": {
+		"licenses": "MIT",
+		"licenseStart": "# LICENSE"
+	}
 }
