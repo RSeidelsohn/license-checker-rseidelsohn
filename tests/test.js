@@ -569,7 +569,7 @@ describe('main tests', function () {
             process.argv.push('--customPath');
             process.argv.push('./customFormatExample.json');
 
-            const parsed = args.parse();
+            const parsed = args.getNormalizedArguments();
             parsed.start = path.join(__dirname, '../');
 
             process.argv.pop();
