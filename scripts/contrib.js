@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 
-const join = require('node:path').join;
-const format = require('format-package-json');
-const GitContributors = require('git-contributors').GitContributors;
-const opts = join(__dirname, '../');
-const pkg = join(__dirname, '../package.json');
-const json = require(pkg);
+import { execFile } from 'node:child_process';
+import { readFile, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { promisify } from 'node:util';
 
-json.contributors = [
+const execFileAsync = promisify(execFile);
+
+const REPOSITORY_ROOT = resolve(import.meta.dirname, '..');
+const PACKAGE_JSON_PATH = resolve(REPOSITORY_ROOT, 'package.json');
+const CONTRIBUTOR_PATTERN = /^(?<name>.+?) <(?<email>[^>]+)>$/;
+
+export const LEGACY_CONTRIBUTORS = [
 	'Adam Weber <adamweber01@gmail.com>',
 	'Andrew Couch <andy@couchand.com>',
 	'Asharma <Asharma@agtinternational.com>',
@@ -59,16 +63,117 @@ json.contributors = [
 	'santiagocanti <santiago.canti@auth0.com>',
 	'tbbstny <tbbstny@users.noreply.github.com>',
 	'zodiac403 <zodiac403@gmx.de>',
-]; //clear it
+];
 
-GitContributors.list(opts, (_err, result) => {
-	result.forEach(item => {
-		json.contributors.push([item.name, `<${item.email}>`].join(' '));
+export const readPackageJson = async () => JSON.parse(await readFile(PACKAGE_JSON_PATH, 'utf8'));
+
+export const formatContributor = (name, email) => `${name.trim()} <${email.trim()}>`;
+
+export const isBotContributor = (name, email) => name.includes('[bot]') || email.includes('[bot]');
+
+export const parseContributor = contributor => {
+	const match = CONTRIBUTOR_PATTERN.exec(contributor);
+
+	if (!match?.groups) {
+		return;
+	}
+
+	return {
+		contributor,
+		email: match.groups.email.trim(),
+		name: match.groups.name.trim(),
+	};
+};
+
+const isLikelyFullName = name => name.includes(' ');
+
+const selectPreferredContributor = (currentContributor, candidateContributor) => {
+	if (!currentContributor) {
+		return candidateContributor;
+	}
+
+	const currentHasFullName = isLikelyFullName(currentContributor.name);
+	const candidateHasFullName = isLikelyFullName(candidateContributor.name);
+
+	if (currentHasFullName !== candidateHasFullName) {
+		return candidateHasFullName ? candidateContributor : currentContributor;
+	}
+
+	if (currentContributor.name.length !== candidateContributor.name.length) {
+		return candidateContributor.name.length > currentContributor.name.length
+			? candidateContributor
+			: currentContributor;
+	}
+
+	return candidateContributor.contributor < currentContributor.contributor ? candidateContributor : currentContributor;
+};
+
+export const uniqueSorted = contributors => {
+	const contributorsByEmail = new Map();
+	const contributorsWithoutEmail = [];
+
+	for (const contributor of contributors) {
+		const parsedContributor = parseContributor(contributor);
+
+		if (!parsedContributor) {
+			contributorsWithoutEmail.push(contributor);
+			continue;
+		}
+
+		const emailKey = parsedContributor.email.toLowerCase();
+		const preferredContributor = selectPreferredContributor(contributorsByEmail.get(emailKey), parsedContributor);
+
+		contributorsByEmail.set(emailKey, preferredContributor);
+	}
+
+	return [
+		...new Set([
+			...Array.from(contributorsByEmail.values(), ({ contributor }) => contributor),
+			...contributorsWithoutEmail,
+		]),
+	].sort();
+};
+
+const parseGitContributor = line => {
+	const [name, email] = line.split('\t');
+
+	return { email, name };
+};
+
+export const getGitContributors = async () => {
+	const { stdout } = await execFileAsync('git', ['log', '--format=%an%x09%ae'], {
+		cwd: REPOSITORY_ROOT,
+		encoding: 'utf8',
 	});
 
-	json.contributors.sort();
+	return uniqueSorted(
+		stdout
+			.split('\n')
+			.filter(Boolean)
+			.map(parseGitContributor)
+			.filter(({ email, name }) => name && email && !isBotContributor(name, email))
+			.map(({ email, name }) => formatContributor(name, email))
+	);
+};
 
-	format(pkg, json, () => {
-		console.log(`Wrote ${result.length} contributors to: ${pkg}`);
-	});
-});
+export const writePackageJson = async packageJson => {
+	await writeFile(PACKAGE_JSON_PATH, `${JSON.stringify(packageJson, null, '\t')}\n`);
+};
+
+export const main = async () => {
+	const packageJson = await readPackageJson();
+	const gitContributors = await getGitContributors();
+	const contributors = uniqueSorted([...LEGACY_CONTRIBUTORS, ...gitContributors]);
+
+	packageJson.contributors = contributors;
+	await writePackageJson(packageJson);
+
+	console.log(
+		`Wrote ${contributors.length} contributors to: ${PACKAGE_JSON_PATH} ` +
+			`(${LEGACY_CONTRIBUTORS.length} legacy, ${gitContributors.length} git)`
+	);
+};
+
+if (import.meta.main) {
+	await main();
+}
