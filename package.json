@@ -40,12 +40,12 @@
 		"SECURITY.md"
 	],
 	"dependencies": {
+		"@npmcli/arborist": "^9.6.0",
 		"chalk": "4.1.2",
 		"debug": "^4.3.4",
 		"lodash.clonedeep": "^4.5.0",
 		"mkdirp": "^1.0.4",
 		"nopt": "^7.2.0",
-		"read-installed-packages": "^2.0.1",
 		"semver": "^7.3.5",
 		"spdx-correct": "^3.2.0",
 		"spdx-expression-parse": "^4.0.0",

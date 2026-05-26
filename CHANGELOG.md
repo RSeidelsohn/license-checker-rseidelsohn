@@ -1,6 +1,8 @@
 ## Change Log
 
-### upcoming (2026/05/26 20:18 +00:00)
+### upcoming (2026/05/26 21:46 +00:00)
+- [9d5b0d3](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/9d5b0d35ce01869de6311fb24b9803c28b0ef834) chore: update changelog from script (@defaude)
+- [4a0b2b0](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/4a0b2b08798a46581b71a5090a745ed2f29e6e84) chore: update contrib script (@defaude)
 - [d447390](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/d447390968922c6167586a06f1823605e56e61c9) fix: init callback typing (@defaude)
 - [e741230](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/e7412306ccb7e5a9c7bc78747ccde138e300dfba) fix: work around deprecation warning for existsSync (@defaude)
 - [#135](https://github.com/RSeidelsohn/license-checker-rseidelsohn/pull/135) Merge pull request #135 from t-tsutsumi-scc/fix/use-args.getNormalizedArguments-instead-of-removed-parse (@t-tsutsumi-scc)
