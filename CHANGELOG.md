@@ -1,6 +1,8 @@
 ## Change Log
 
-### upcoming (2026/05/26 21:46 +00:00)
+### v5.0.0 (2026/05/27 06:00 +00:00)
+- [5b60e4b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/5b60e4be95d2bd7e14a0f33b9cb8d50b7d2a22c9) 5.0.0 (@defaude)
+- [b1e2616](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/b1e2616d3d62eaedbe38caba3fbef3dfead10e6b) chore: drop read-installed-packages dep (@defaude)
 - [9d5b0d3](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/9d5b0d35ce01869de6311fb24b9803c28b0ef834) chore: update changelog from script (@defaude)
 - [4a0b2b0](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/4a0b2b08798a46581b71a5090a745ed2f29e6e84) chore: update contrib script (@defaude)
 - [d447390](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/d447390968922c6167586a06f1823605e56e61c9) fix: init callback typing (@defaude)
