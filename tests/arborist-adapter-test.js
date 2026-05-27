@@ -13,6 +13,29 @@ const writePackage = (directory, packageJson) => {
 	fs.writeFileSync(path.join(directory, 'package.json'), `${JSON.stringify(packageJson, null, 2)}\n`);
 };
 
+const writeHiddenLockfile = (root, packages) => {
+	const hiddenLockfilePath = path.join(root, 'node_modules/.package-lock.json');
+
+	fs.mkdirSync(path.dirname(hiddenLockfilePath), { recursive: true });
+	fs.writeFileSync(
+		hiddenLockfilePath,
+		`${JSON.stringify(
+			{
+				name: 'fixture-root',
+				version: '1.0.0',
+				lockfileVersion: 3,
+				requires: true,
+				packages,
+			},
+			null,
+			2
+		)}\n`
+	);
+
+	const future = new Date(Date.now() + 10000);
+	fs.utimesSync(hiddenLockfilePath, future, future);
+};
+
 const readInstalledPackages = (folder, options = {}) =>
 	new Promise((resolve, reject) => {
 		readInstalledPackagesWithArborist(folder, options, (error, installedPackages) => {
@@ -114,6 +137,39 @@ describe('readInstalledPackagesWithArborist', () => {
 		assert.equal(installedPackages.dependencies['@scope/scoped'].realName, '@scope/scoped');
 		assert.equal(installedPackages.dependencies.missingRequired, '1.0.0');
 		assert.equal(installedPackages.dependencies.missingOptional, undefined);
+	});
+
+	it('preserves license fields from on-disk package.json when Arborist reads hidden lockfile metadata', async () => {
+		writeHiddenLockfile(root, {
+			'': {
+				name: 'fixture-root',
+				version: '1.0.0',
+				dependencies: {
+					prod: '1.0.0',
+				},
+			},
+			'node_modules/prod': {
+				version: '1.0.0',
+			},
+		});
+
+		const installedPackages = await readInstalledPackages(root);
+
+		assert.equal(installedPackages.license, 'MIT');
+		assert.equal(installedPackages.dependencies.prod.license, 'MIT');
+	});
+
+	it('preserves legacy licenses fields from on-disk package.json', async () => {
+		const legacyLicenses = [{ type: 'Apache-2.0' }, { type: 'MIT' }];
+		writePackage(path.join(root, 'node_modules/prod'), {
+			name: 'prod',
+			version: '1.0.0',
+			licenses: legacyLicenses,
+		});
+
+		const installedPackages = await readInstalledPackages(root);
+
+		assert.deepEqual(installedPackages.dependencies.prod.licenses, legacyLicenses);
 	});
 
 	it('omits peer dependencies when requested', async () => {
