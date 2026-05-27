@@ -40,7 +40,8 @@
 		"SECURITY.md"
 	],
 	"dependencies": {
-		"@npmcli/arborist": "^9.6.0",
+		"@npmcli/arborist": "9.6.0",
+		"@npmcli/package-json": "7.0.5",
 		"chalk": "4.1.2",
 		"debug": "^4.3.4",
 		"lodash.clonedeep": "^4.5.0",

@@ -2,7 +2,6 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import util from 'node:util';
 import chalk from 'chalk';
 import rimraf from 'rimraf';
 import * as args from '../lib/args.js';
@@ -10,6 +9,38 @@ import * as checker from '../lib/index.js';
 import pkgJson from '../package.json' with { type: 'json' };
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const initChecker = options =>
+	new Promise((resolve, reject) => {
+		checker.init(options, (error, output) => {
+			if (error) {
+				reject(error);
+				return;
+			}
+
+			resolve(output);
+		});
+	});
+
+const initCheckerRaw = options =>
+	new Promise(resolve => {
+		checker.init(options, (error, output) => {
+			resolve({ error, output });
+		});
+	});
+
+const getPackageKey = (output, packageName) => {
+	const packageKey = Object.keys(output).find(key => key.startsWith(`${packageName}@`));
+	assert.ok(packageKey, `Expected ${packageName} in output`);
+	return packageKey;
+};
+
+const hasPackage = (output, packageName) => Object.keys(output).some(key => key.startsWith(`${packageName}@`));
+
+const isSameOrChildPath = (rootPath, currentPath) => {
+	const relativePath = path.relative(rootPath, currentPath);
+	return relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
+};
 
 describe('main tests', () => {
 	it('should load init', () => {
@@ -23,62 +54,50 @@ describe('main tests', () => {
 	describe('should parse local with unknown', () => {
 		let output;
 
-		beforeAll(function (done) {
-			this.timeout(5000);
-
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
-		});
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, '../'),
+			});
+		}, 5000);
 
 		it('and give us results', () => {
 			assert.ok(Object.keys(output).length > 70);
-			assert.equal(output['abbrev@1.0.9'].licenses, 'ISC');
+			assert.equal(output[getPackageKey(output, 'abbrev')].licenses, 'ISC');
 		});
 
 		it('and convert to CSV', () => {
 			const str = checker.asCSV(output);
+			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], '"module name","license","repository"');
-			assert.equal(str.split('\n')[1], '"@babel/code-frame@7.22.13","MIT","https://github.com/babel/babel"');
+			assert.equal(str.split('\n')[1], `"${codeFramePackageKey}","MIT","https://github.com/babel/babel"`);
 		});
 
 		it('and convert to MarkDown', () => {
 			const str = checker.asMarkDown(output);
-			assert.equal(str.split('\n')[0], '- [@babel/code-frame@7.22.13](https://github.com/babel/babel) - MIT');
+			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
+			assert.equal(str.split('\n')[0], `- [${codeFramePackageKey}](https://github.com/babel/babel) - MIT`);
 		});
 	});
 
 	describe('should parse local with unknown and custom format', () => {
 		let output;
 
-		beforeAll(done => {
+		beforeAll(async () => {
 			const format = {
 				name: '<<Default Name>>',
 				description: '<<Default Description>>',
 				pewpew: '<<Should Never be set>>',
 			};
 
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					customFormat: format,
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
+			output = await initChecker({
+				start: path.join(__dirname, '../'),
+				customFormat: format,
+			});
 		});
 
 		it('and give us results', () => {
 			assert.ok(Object.keys(output).length > 70);
-			assert.equal(output['abbrev@1.0.9'].description, "Like ruby's abbrev module, but in js");
+			assert.equal(output[getPackageKey(output, 'abbrev')].description, "Like ruby's abbrev module, but in js");
 		});
 
 		it('and convert to CSV', () => {
@@ -89,10 +108,11 @@ describe('main tests', () => {
 			};
 
 			const str = checker.asCSV(output, format);
+			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
 			assert.equal(
 				str.split('\n')[1],
-				'"@babel/code-frame@7.22.13","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"'
+				`"${codeFramePackageKey}","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"`
 			);
 		});
 
@@ -104,10 +124,11 @@ describe('main tests', () => {
 			};
 
 			const str = checker.asCSV(output, format, 'main-module');
+			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
 			assert.equal(
 				str.split('\n')[1],
-				'"main-module","@babel/code-frame@7.22.13","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"'
+				`"main-module","${codeFramePackageKey}","@babel/code-frame","Generate errors that contain a code frame that point to source locations.","<<Should Never be set>>"`
 			);
 		});
 
@@ -119,24 +140,19 @@ describe('main tests', () => {
 			};
 
 			const str = checker.asMarkDown(output, format);
-			assert.equal(str.split('\n')[0], '- **[@babel/code-frame@7.22.13](https://github.com/babel/babel)**');
+			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
+			assert.equal(str.split('\n')[0], `- **[${codeFramePackageKey}](https://github.com/babel/babel)**`);
 		});
 	});
 
 	describe('should parse local without unknown', () => {
 		let output;
 
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					unknown: true,
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, '../'),
+				unknown: true,
+			});
 		});
 
 		it('should give us results', () => {
@@ -148,17 +164,11 @@ describe('main tests', () => {
 	describe('should parse direct dependencies only', () => {
 		let output;
 
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					direct: 0, // 0 is the parsed value passed to init from license-checker-rseidelsohn if set to true
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, '../'),
+				direct: 0, // 0 is the parsed value passed to init from license-checker-rseidelsohn if set to true
+			});
 		});
 
 		it('and give us results', () => {
@@ -169,24 +179,19 @@ describe('main tests', () => {
 			// all and only the dependencies listed in the package.json should be included in the output,
 			// plus the main module itself
 			assert.ok(Object.keys(output).length === pkgDepsNumber + 1);
-			assert.equal(typeof output['abbrev@1.0.9'], 'undefined');
+			assert.equal(hasPackage(output, 'abbrev'), false);
 		});
 	});
 
 	describe('should write output to files in programmatic usage', () => {
 		const tmpFileName = path.join(__dirname, 'tmp_output.json');
 
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					json: true,
-					out: tmpFileName,
-				},
-				(_err, _sorted) => {
-					done();
-				}
-			);
+		beforeAll(async () => {
+			await initChecker({
+				start: path.join(__dirname, '../'),
+				json: true,
+				out: tmpFileName,
+			});
 		});
 
 		afterAll(() => {
@@ -206,17 +211,11 @@ describe('main tests', () => {
 	});
 
 	function parseAndExclude(parsePath, licenses, result) {
-		return done => {
-			checker.init(
-				{
-					start: path.join(__dirname, parsePath),
-					excludeLicenses: licenses,
-				},
-				(_err, filtered) => {
-					result.output = filtered;
-					done();
-				}
-			);
+		return async () => {
+			result.output = await initChecker({
+				start: path.join(__dirname, parsePath),
+				excludeLicenses: licenses,
+			});
 		};
 	}
 
@@ -302,8 +301,9 @@ describe('main tests', () => {
 	});
 
 	function parseAndFailOn(key, parsePath, licenses, result) {
-		return done => {
+		return async () => {
 			let exitCode = 0;
+			const originalExit = process.exit;
 			process.exit = code => {
 				exitCode = code;
 			};
@@ -311,11 +311,13 @@ describe('main tests', () => {
 				start: path.join(__dirname, parsePath),
 			};
 			config[key] = licenses;
-			checker.init(config, (_err, filtered) => {
-				result.output = filtered;
+
+			try {
+				result.output = await initChecker(config);
 				result.exitCode = exitCode;
-				done();
-			});
+			} finally {
+				process.exit = originalExit;
+			}
 		};
 	}
 
@@ -348,7 +350,7 @@ describe('main tests', () => {
 					'Public Domain;Custom: http://i.imgur.com/goJdO.png;WTFPL*;Apache License, Version 2.0;' +
 					'WTFPL;(MIT AND CC-BY-3.0);Custom: https://github.com/substack/node-browserify;' +
 					'(AFL-2.1 OR BSD-3-Clause);MIT*;0BSD;(MIT OR CC0-1.0);Apache-2.0*;' +
-					'BSD-3-Clause OR MIT;(WTFPL OR MIT);Python-2.0;BlueOak-1.0.0',
+					'BSD-3-Clause OR MIT;(WTFPL OR MIT);Python-2.0;BlueOak-1.0.0;MPL-2.0',
 				result
 			)
 		);
@@ -378,16 +380,10 @@ describe('main tests', () => {
 
 	describe('should parse local and handle private modules', () => {
 		let output;
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, './fixtures/privateModule'),
-				},
-				(_err, filtered) => {
-					output = filtered;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, './fixtures/privateModule'),
+			});
 		});
 
 		it('should recognise private modules', () => {
@@ -404,32 +400,21 @@ describe('main tests', () => {
 	});
 
 	describe('should treat license file over custom urls', () => {
-		it('should recognise a custom license at a url', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../node_modules/locale'),
-				},
-				(_err, output) => {
-					const item = output[Object.keys(output)[0]];
-					assert.equal(item.licenses, 'MIT*');
-					done();
-				}
-			);
+		it('should recognise a custom license at a url', async () => {
+			const output = await initChecker({
+				start: path.join(__dirname, '../node_modules/locale'),
+			});
+			const item = output[Object.keys(output)[0]];
+			assert.equal(item.licenses, 'MIT*');
 		});
 	});
 
 	describe('should treat URLs as custom licenses', () => {
 		let output;
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, './fixtures/custom-license-url'),
-				},
-				(_err, filtered) => {
-					output = filtered;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, './fixtures/custom-license-url'),
+			});
 		});
 
 		it('should recognise a custom license at a url', () => {
@@ -445,16 +430,10 @@ describe('main tests', () => {
 
 	describe('should treat file references as custom licenses', () => {
 		let output;
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, './fixtures/custom-license-file'),
-				},
-				(_err, filtered) => {
-					output = filtered;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, './fixtures/custom-license-file'),
+			});
 		});
 
 		it('should recognise a custom license in a file', () => {
@@ -469,29 +448,21 @@ describe('main tests', () => {
 	});
 
 	describe('error handler', () => {
-		it('should init without errors', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					development: true,
-				},
-				err => {
-					assert.equal(err, null);
-					done();
-				}
-			);
+		it('should init without errors', async () => {
+			const { error } = await initCheckerRaw({
+				start: path.join(__dirname, '../'),
+				development: true,
+			});
+
+			assert.equal(error, null);
 		});
 
-		it('should init with errors (npm packages not found)', done => {
-			checker.init(
-				{
-					start: 'C:\\',
-				},
-				err => {
-					assert.ok(util.isError(err));
-					done();
-				}
-			);
+		it('should init with errors (npm packages not found)', async () => {
+			const { error } = await initCheckerRaw({
+				start: 'C:\\',
+			});
+
+			assert.ok(error instanceof Error);
 		});
 	});
 
@@ -556,29 +527,25 @@ describe('main tests', () => {
 	});
 
 	describe('custom formats', () => {
-		it('should create a custom format using customFormat successfully', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					customFormat: {
-						name: '<<Default Name>>',
-						description: '<<Default Description>>',
-						pewpew: '<<Should Never be set>>',
-					},
+		it('should create a custom format using customFormat successfully', async () => {
+			const output = await initChecker({
+				start: path.join(__dirname, '../'),
+				customFormat: {
+					name: '<<Default Name>>',
+					description: '<<Default Description>>',
+					pewpew: '<<Should Never be set>>',
 				},
-				(_err, d) => {
-					Object.keys(d).forEach(item => {
-						assert.notEqual(d[item].name, undefined);
-						assert.notEqual(d[item].description, undefined);
-						assert.notEqual(d[item].pewpew, undefined);
-						assert.equal(d[item].pewpew, '<<Should Never be set>>');
-					});
-					done();
-				}
-			);
+			});
+
+			Object.keys(output).forEach(item => {
+				assert.notEqual(output[item].name, undefined);
+				assert.notEqual(output[item].description, undefined);
+				assert.notEqual(output[item].pewpew, undefined);
+				assert.equal(output[item].pewpew, '<<Should Never be set>>');
+			});
 		});
 
-		it('should create a custom format using customPath', done => {
+		it('should create a custom format using customPath', async () => {
 			process.argv.push('--customPath');
 			process.argv.push('./customFormatExample.json');
 
@@ -588,154 +555,116 @@ describe('main tests', () => {
 			process.argv.pop();
 			process.argv.pop();
 
-			checker.init(parsed, (_err, filtered) => {
-				var customFormatContent = fs.readFileSync(path.join(__dirname, './../customFormatExample.json'), 'utf8');
+			const filtered = await initChecker(parsed);
+			const customFormatContent = fs.readFileSync(path.join(__dirname, './../customFormatExample.json'), 'utf8');
 
-				assert.notEqual(customFormatContent, undefined);
-				assert.notEqual(customFormatContent, null);
+			assert.notEqual(customFormatContent, undefined);
+			assert.notEqual(customFormatContent, null);
 
-				var customJson = JSON.parse(customFormatContent);
+			const customJson = JSON.parse(customFormatContent);
 
-				//Test dynamically with the file directly
-				Object.keys(filtered).forEach(licenseItem => {
-					Object.keys(customJson).forEach(definedItem => {
-						assert.notEqual(filtered[licenseItem][definedItem], 'undefined');
-					});
+			//Test dynamically with the file directly
+			Object.keys(filtered).forEach(licenseItem => {
+				Object.keys(customJson).forEach(definedItem => {
+					assert.notEqual(filtered[licenseItem][definedItem], 'undefined');
 				});
-				done();
 			});
 		});
 
-		it('should return data for keys with different names in json vs custom format', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, './fixtures/author'),
-					customFormat: {
-						publisher: '',
-					},
+		it('should return data for keys with different names in json vs custom format', async () => {
+			const filtered = await initChecker({
+				start: path.join(__dirname, './fixtures/author'),
+				customFormat: {
+					publisher: '',
 				},
-				(_err, filtered) => {
-					assert.equal(Object.keys(filtered).length, 1);
-					assert.equal(filtered['license-checker-rseidelsohn@0.0.0'].publisher, 'Roman Seidelsohn');
-					done();
-				}
-			);
+			});
+
+			assert.equal(Object.keys(filtered).length, 1);
+			assert.equal(filtered['license-checker-rseidelsohn@0.0.0'].publisher, 'Roman Seidelsohn');
 		});
 	});
 
 	describe('should output the module location', () => {
-		it('as absolute path', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-				},
-				(_err, output) => {
-					Object.keys(output).forEach(key => {
-						const expectedPath = path.join(__dirname, '../');
-						const actualPath = output[key].path.substr(0, expectedPath.length);
-						assert.equal(actualPath, expectedPath);
-					});
-					done();
-				}
-			);
+		it('as absolute path', async () => {
+			const output = await initChecker({
+				start: path.join(__dirname, '../'),
+			});
+
+			Object.keys(output).forEach(key => {
+				const expectedPath = path.resolve(path.join(__dirname, '../'));
+				assert.equal(isSameOrChildPath(expectedPath, output[key].path), true);
+			});
 		});
 
-		it('using only relative paths if the option relativeModulePath is being used', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					relativeModulePath: true,
-				},
-				(_err, output) => {
-					const rootPath = path.join(__dirname, '../');
-					Object.keys(output).forEach(key => {
-						const outputPath = output[key].path;
-						assert.strictEqual(
-							outputPath.startsWith(rootPath),
-							false,
-							`Output path is not a relative path: ${outputPath}`
-						);
-					});
-					done();
-				}
-			);
+		it('using only relative paths if the option relativeModulePath is being used', async () => {
+			const output = await initChecker({
+				start: path.join(__dirname, '../'),
+				relativeModulePath: true,
+			});
+			const rootPath = path.join(__dirname, '../');
+
+			Object.keys(output).forEach(key => {
+				const outputPath = output[key].path;
+				assert.strictEqual(outputPath.startsWith(rootPath), false, `Output path is not a relative path: ${outputPath}`);
+			});
 		});
 	});
 
 	describe('should output the location of the license files', () => {
-		it('as absolute paths', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-				},
-				(_err, output) => {
-					Object.keys(output)
-						.map(key => output[key])
-						.filter(dep => dep.licenseFile !== undefined)
-						.forEach(dep => {
-							const expectedPath = path.join(__dirname, '../');
-							const actualPath = dep.licenseFile.substr(0, expectedPath.length);
-							assert.equal(actualPath, expectedPath);
-						});
-					done();
-				}
-			);
+		it('as absolute paths', async () => {
+			const output = await initChecker({
+				start: path.join(__dirname, '../'),
+			});
+
+			Object.keys(output)
+				.map(key => output[key])
+				.filter(dep => dep.licenseFile !== undefined)
+				.forEach(dep => {
+					const expectedPath = path.resolve(path.join(__dirname, '../'));
+					assert.equal(isSameOrChildPath(expectedPath, dep.licenseFile), true);
+				});
 		});
 
-		it('as relative paths when using relativeLicensePath', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					relativeLicensePath: true,
-				},
-				(_err, filtered) => {
-					Object.keys(filtered)
-						.map(key => filtered[key])
-						.filter(dep => dep.licenseFile !== undefined)
-						.forEach(dep => {
-							assert.notEqual(dep.licenseFile.substr(0, 1), '/');
-						});
-					done();
-				}
-			);
+		it('as relative paths when using relativeLicensePath', async () => {
+			const filtered = await initChecker({
+				start: path.join(__dirname, '../'),
+				relativeLicensePath: true,
+			});
+
+			Object.keys(filtered)
+				.map(key => filtered[key])
+				.filter(dep => dep.licenseFile !== undefined)
+				.forEach(dep => {
+					assert.notEqual(dep.licenseFile.substr(0, 1), '/');
+				});
 		});
 	});
 
 	describe('handle copytight statement', () => {
-		it('should output copyright statements when configured in custom format', done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					customFormat: {
-						copyright: '', // specify custom format
-						email: false,
-						licenseFile: false,
-						licenseText: false,
-						publisher: false,
-					},
+		it('should output copyright statements when configured in custom format', async () => {
+			const output = await initChecker({
+				start: path.join(__dirname, '../'),
+				customFormat: {
+					copyright: '', // specify custom format
+					email: false,
+					licenseFile: false,
+					licenseText: false,
+					publisher: false,
 				},
-				(_err, output) => {
-					assert(output['abbrev@1.0.9'] !== undefined, 'Check if the expected package still exists.');
-					assert.equal(output['abbrev@1.0.9'].copyright, 'Copyright (c) Isaac Z. Schlueter and Contributors');
-					done();
-				}
-			);
+			});
+
+			const abbrevPackageKey = getPackageKey(output, 'abbrev');
+			assert.equal(output[abbrevPackageKey].copyright, 'Copyright (c) Isaac Z. Schlueter and Contributors*');
 		});
 	});
 
 	describe('should only list UNKNOWN or guessed licenses successful', () => {
 		let output;
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					onlyunknown: true,
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, '../'),
+				onlyunknown: true,
+			});
 		});
 
 		it('so we check if there is no license with a star or UNKNOWN found', () => {
@@ -754,17 +683,11 @@ describe('main tests', () => {
 	});
 
 	function parseAndInclude(parsePath, licenses, result) {
-		return done => {
-			checker.init(
-				{
-					start: path.join(__dirname, parsePath),
-					includeLicenses: licenses,
-				},
-				(_err, filtered) => {
-					result.output = filtered;
-					done();
-				}
-			);
+		return async () => {
+			result.output = await initChecker({
+				start: path.join(__dirname, parsePath),
+				includeLicenses: licenses,
+			});
 		};
 	}
 
@@ -790,17 +713,11 @@ describe('main tests', () => {
 
 	describe('should only list UNKNOWN or guessed licenses with errors (argument missing)', () => {
 		let output;
-		beforeAll(done => {
-			checker.init(
-				{
-					start: path.join(__dirname, '../'),
-					production: true,
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, '../'),
+				production: true,
+			});
 		});
 
 		it('so we check if there is no license with a star or UNKNOWN found', () => {
@@ -903,19 +820,11 @@ describe('main tests', () => {
 	describe('should export', () => {
 		let output;
 
-		beforeAll(function (done) {
-			this.timeout(5000);
-
-			checker.init(
-				{
-					start: path.join(__dirname, './fixtures/includeBSD'),
-				},
-				(_err, sorted) => {
-					output = sorted;
-					done();
-				}
-			);
-		});
+		beforeAll(async () => {
+			output = await initChecker({
+				start: path.join(__dirname, './fixtures/includeBSD'),
+			});
+		}, 5000);
 
 		it('an Angular CLI like plain vertical format', () => {
 			const data = checker.asPlainVertical(output);

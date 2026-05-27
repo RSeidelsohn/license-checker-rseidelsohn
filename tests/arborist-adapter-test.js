@@ -172,6 +172,29 @@ describe('readInstalledPackagesWithArborist', () => {
 		assert.deepEqual(installedPackages.dependencies.prod.licenses, legacyLicenses);
 	});
 
+	it('normalizes package metadata like the previous read-installed-packages reader', async () => {
+		writePackage(path.join(root, 'node_modules/prod'), {
+			name: 'prod',
+			version: '1.0.0',
+			license: 'MIT',
+			author: 'Jane Doe <jane@example.com> (https://example.com)',
+			repository: 'git+https://github.com/example/prod.git',
+		});
+
+		const installedPackages = await readInstalledPackages(root);
+		const prodPackage = installedPackages.dependencies.prod;
+
+		assert.deepEqual(prodPackage.author, {
+			name: 'Jane Doe',
+			email: 'jane@example.com',
+			url: 'https://example.com',
+		});
+		assert.deepEqual(prodPackage.repository, {
+			type: 'git',
+			url: 'git+https://github.com/example/prod.git',
+		});
+	});
+
 	it('omits peer dependencies when requested', async () => {
 		const installedPackages = await readInstalledPackages(root, { nopeer: true });
 
@@ -208,9 +231,10 @@ describe('readInstalledPackagesWithArborist', () => {
 			const installedPackages = await readInstalledPackages(linkRoot);
 			const linkedPackage = installedPackages.dependencies.linked;
 
-			assert.equal(linkedPackage.link, true);
+			assert.equal(linkedPackage.link, linkedTarget);
 			assert.equal(linkedPackage.path, path.join(linkRoot, 'node_modules/linked'));
 			assert.equal(linkedPackage.realPath, linkedTarget);
+			assert.equal(linkedPackage.parent, undefined);
 			assert.equal(linkedPackage.dependencies.linkedDependency.name, 'linkedDependency');
 		} finally {
 			fs.rmSync(base, { force: true, recursive: true });
@@ -237,6 +261,20 @@ describe('checker.init with Arborist dependency trees', () => {
 		assert.notEqual(output['dev@1.0.0'], undefined);
 		assert.notEqual(output['peer@1.0.0'], undefined);
 		assert.notEqual(output['@scope/scoped@1.0.0'], undefined);
+	});
+
+	it('includes publisher from normalized author data without requiring custom format', async () => {
+		writePackage(path.join(root, 'node_modules/prod'), {
+			name: 'prod',
+			version: '1.0.0',
+			license: 'MIT',
+			author: 'Jane Doe <jane@example.com>',
+		});
+
+		const output = await initChecker({ json: true, start: root });
+
+		assert.equal(output['prod@1.0.0'].publisher, 'Jane Doe');
+		assert.equal(output['prod@1.0.0'].email, 'jane@example.com');
 	});
 
 	it('excludes dev-only dependencies in production mode', async () => {
