@@ -65,7 +65,7 @@ export interface InitOpts {
 	/**
 	 * Restrict output to the packages (package@version) in the semicolon-separated list
 	 */
-	packages?: string | undefined;
+	includePackages?: string | undefined;
 	/**
 	 * Restrict output to the packages (package@version) not in the semicolon-separated list
 	 */
