@@ -8,12 +8,12 @@
 -   [A message from the maintainer](#a-message-from-the-maintainer)
 -   [Introduction](#introduction)
 -   [Changes](#changes)
--   [All options in alphabetical order](#all-options-in-alphabetical-order)
+-   [CLI options](#all-options-in-alphabetical-order)
 -   [Exclusions](#exclusions)
 -   [Examples](#examples)
 -   [Clarifications](#clarifications)
 -   [Custom format](#custom-format)
--   [Requiring](#requiring)
+-   [Programmatic API](#importing)
 -   [Debugging](#debugging)
 -   [How Licenses are Found](#how-licenses-are-found)
 -   [Related information sources on the internet](#related-information-sources-on-the-internet)
@@ -120,7 +120,11 @@ COPYING, ...).
 Take a look at the detailed [changelog](CHANGELOG.md) or at the
 [releases page](https://github.com/RSeidelsohn/license-checker-rseidelsohn/releases).
 
-## <a id="all-options-in-alphabetical-order"></a>All options in alphabetical order
+## <a id="all-options-in-alphabetical-order"></a>CLI options
+
+The following options are command-line flags for the `license-checker-rseidelsohn` executable. Some of the same
+behavior is also available through the programmatic `init` API. See [Programmatic API](#importing) for the supported
+`init` options and their types.
 
 - `--angularCli` is just a synonym for `--plainVertical`
 - `--clarificationsFile [filepath]` A file that describe the license clarifications for each package. See
@@ -137,8 +141,8 @@ Take a look at the detailed [changelog](CHANGELOG.md) or at the
 - `--excludeLicenses [list]` exclude modules which licenses are in the comma-separated list from the output
 - `--excludePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or
   only "package") not in the semicolon-separated list
-- `--excludePackagesStartingWith [list]` exclude modules which names start with the comma-separated list from the output
-  (useful for excluding modules from a specific vendor and such). Example:
+- `--excludePackagesStartingWith [list]` exclude modules which names start with the semicolon-separated list from the
+  output (useful for excluding modules from a specific vendor and such). Example:
   `--excludePackagesStartingWith "webpack;@types;@babel"`
 - `--excludePrivatePackages` restrict output to not include any package marked as private
 - `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
@@ -160,6 +164,7 @@ Take a look at the detailed [changelog](CHANGELOG.md) or at the
 - `--start [filepath]` path of the initial JSON to look for
 - `--summary` output a summary of the license usage
 - `--unknown` report guessed licenses as unknown licenses
+
 - `--version` The current version
 - `--help` The text you are reading right now :)
 
@@ -258,25 +263,55 @@ You can also give default values for each item. See an example in [customFormatE
 Note that outputting the license text is not recommended with Markdown formatting, as it can be very long and does not
 work well with Markdown lists.
 
-## <a id="requiring"></a>Requiring
+## <a id="importing"></a>Programmatic API
+
+The only documented programmatic entrypoint is `init(opts, callback)`.
 
 ```js
-var checker = require('license-checker-rseidelsohn');
+import { init } from 'license-checker-rseidelsohn';
 
-checker.init(
-    {
-        start: '/path/to/start/looking',
-    },
-    function (err, packages) {
-        if (err) {
-            //Handle error
-        } else {
-            //The sorted package data
-            //as an Object
-        }
-    },
-);
+init({ start: '/path/to/start/looking' }, (err, packages) => {
+	if (err) {
+		// Handle error
+	} else {
+		// The sorted package data as an Object
+	}
+});
 ```
+
+If an error occurred, the callback receives it as the first parameter. If the checker ran successfully, no error is
+passed, but the second parameter is an object keyed by package name plus version.
+
+Supported `init` options (alphabetically):
+
+| Option                        | Type                                           | Description                                                                                                                  |
+|-------------------------------|------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| `clarificationsFile`          | `string`                                       | Path to a JSON file with package-specific license clarifications.                                                            |
+| `clarificationsMatchAll`      | `boolean`                                      | Fail the run if any clarification entry was not used.                                                                        |
+| `color`                       | `boolean`                                      | Colorize license strings in the returned data where the checker emits colorized license values.                              |
+| `customFormat`                | `Record<string, string \| false \| undefined>` | Custom output fields and default values. Use `false` to omit a default field.                                                |
+| `customPath`                  | `string`                                       | Path to a JSON file that defines a custom output format.                                                                     |
+| `development`                 | `boolean`                                      | Only include development dependencies.                                                                                       |
+| `direct`                      | `number`                                       | Limit dependency recursion by depth. Use `0` for direct dependencies only.                                                   |
+| `excludeLicenses`             | `string`                                       | Comma-separated list of licenses to exclude.                                                                                 |
+| `excludePackages`             | `string`                                       | Semicolon-separated list of packages to exclude. Entries can be `package`, `package@majorversion`, or `package@fullversion`. |
+| `excludePackagesStartingWith` | `string`                                       | Semicolon-separated list of package-name prefixes to exclude.                                                                |
+| `excludePrivatePackages`      | `boolean`                                      | Exclude packages marked as private.                                                                                          |
+| `failOn`                      | `string`                                       | Semicolon-separated list of licenses that should fail the run when found.                                                    |
+| `includeLicenses`             | `string`                                       | Comma-separated list of licenses to include.                                                                                 |
+| `includePackages`             | `string`                                       | Semicolon-separated list of packages to include. Entries can be `package`, `package@majorversion`, or `package@fullversion`. |
+| `nopeer`                      | `boolean`                                      | Skip peer dependencies.                                                                                                      |
+| `onlyAllow`                   | `string`                                       | Semicolon-separated list of licenses that are allowed.                                                                       |
+| `onlyunknown`                 | `boolean`                                      | Only include packages with unknown or guessed licenses.                                                                      |
+| `production`                  | `boolean`                                      | Only include production dependencies.                                                                                        |
+| `relativeLicensePath`         | `boolean`                                      | Return license file paths relative to the scanned package path.                                                              |
+| `relativeModulePath`          | `boolean`                                      | Return module paths relative to the scanned package path.                                                                    |
+| `start`                       | `string`                                       | Path to start checking dependencies from.                                                                                    |
+| `unknown`                     | `boolean`                                      | Report guessed licenses as unknown licenses.                                                                                 |
+
+The following command-line flags control CLI output, formatting, or process behavior only and are not part of the `init`
+options: `--angularCli`, `--csv`, `--csvComponentPrefix`, `--files`, `--help`, `--json`, `--limitAttributes`,
+`--markdown`, `--out`, `--plainVertical`, `--summary`, and `--version`.
 
 ## <a id="debugging"></a>Debugging
 
