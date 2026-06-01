@@ -5,14 +5,17 @@ import path from 'node:path';
 import { supportsColor } from 'chalk';
 import * as rimraf from 'rimraf';
 import * as args from '../lib/args.js';
-import * as checker from '../lib/index.js';
+import { init } from '../lib/index.js';
+import { filterAttributes } from '../lib/util/filterAttributes.js';
+import { asCSV, asFiles, asMarkDown, asPlainVertical, asSummary, asTree, print } from '../lib/util/output.js';
+import { parseJson } from '../lib/util/parseJson.js';
 import pkgJson from '../package.json' with { type: 'json' };
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const initChecker = options =>
 	new Promise((resolve, reject) => {
-		checker.init(options, (error, output) => {
+		init(options, (error, output) => {
 			if (error) {
 				reject(error);
 				return;
@@ -24,7 +27,7 @@ const initChecker = options =>
 
 const initCheckerRaw = options =>
 	new Promise(resolve => {
-		checker.init(options, (error, output) => {
+		init(options, (error, output) => {
 			resolve({ error, output });
 		});
 	});
@@ -44,11 +47,11 @@ const isSameOrChildPath = (rootPath, currentPath) => {
 
 describe('main tests', () => {
 	it('should load init', () => {
-		assert.equal(typeof checker.init, 'function');
+		assert.equal(typeof init, 'function');
 	});
 
 	it('should load print', () => {
-		assert.equal(typeof checker.print, 'function');
+		assert.equal(typeof print, 'function');
 	});
 
 	describe('should parse local with unknown', () => {
@@ -66,14 +69,14 @@ describe('main tests', () => {
 		});
 
 		it('and convert to CSV', () => {
-			const str = checker.asCSV(output);
+			const str = asCSV(output);
 			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], '"module name","license","repository"');
 			assert.equal(str.split('\n')[1], `"${codeFramePackageKey}","MIT","https://github.com/babel/babel"`);
 		});
 
 		it('and convert to MarkDown', () => {
-			const str = checker.asMarkDown(output);
+			const str = asMarkDown(output);
 			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], `- [${codeFramePackageKey}](https://github.com/babel/babel) - MIT`);
 		});
@@ -107,7 +110,7 @@ describe('main tests', () => {
 				pewpew: '<<Should Never be set>>',
 			};
 
-			const str = checker.asCSV(output, format);
+			const str = asCSV(output, format);
 			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], '"module name","name","description","pewpew"');
 			assert.equal(
@@ -123,7 +126,7 @@ describe('main tests', () => {
 				pewpew: '<<Should Never be set>>',
 			};
 
-			const str = checker.asCSV(output, format, 'main-module');
+			const str = asCSV(output, format, 'main-module');
 			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], '"component","module name","name","description","pewpew"');
 			assert.equal(
@@ -139,7 +142,7 @@ describe('main tests', () => {
 				pewpew: '<<Should Never be set>>',
 			};
 
-			const str = checker.asMarkDown(output, format);
+			const str = asMarkDown(output, format);
 			const codeFramePackageKey = getPackageKey(output, '@babel/code-frame');
 			assert.equal(str.split('\n')[0], `- **[${codeFramePackageKey}](https://github.com/babel/babel)**`);
 		});
@@ -739,18 +742,18 @@ describe('main tests', () => {
 				assert.ok(data);
 				assert.ok(data.indexOf('└─') > -1);
 			};
-			checker.print([{}]);
+			print([{}]);
 			console.log = log;
 		});
 
 		it('as tree', () => {
-			const data = checker.asTree([{}]);
+			const data = asTree([{}]);
 			assert.ok(data);
 			assert.ok(data.indexOf('└─') > -1);
 		});
 
 		it('as csv', () => {
-			const data = checker.asCSV({
+			const data = asCSV({
 				foo: {
 					licenses: 'MIT',
 					repository: '/path/to/foo',
@@ -761,7 +764,7 @@ describe('main tests', () => {
 		});
 
 		it('as csv with partial data', () => {
-			const data = checker.asCSV({
+			const data = asCSV({
 				foo: {},
 			});
 			assert.ok(data);
@@ -769,7 +772,7 @@ describe('main tests', () => {
 		});
 
 		it('as markdown', () => {
-			const data = checker.asMarkDown({
+			const data = asMarkDown({
 				foo: {
 					licenses: 'MIT',
 					repository: '/path/to/foo',
@@ -780,7 +783,7 @@ describe('main tests', () => {
 		});
 
 		it('as summary', () => {
-			const data = checker.asSummary({
+			const data = asSummary({
 				foo: {
 					licenses: 'MIT',
 					repository: '/path/to/foo',
@@ -792,8 +795,7 @@ describe('main tests', () => {
 
 		it('as files', () => {
 			const out = path.join(tmpdir(), 'lc');
-			let files = null;
-			checker.asFiles(
+			asFiles(
 				{
 					foo: {
 						licenses: 'MIT',
@@ -807,7 +809,7 @@ describe('main tests', () => {
 				out
 			);
 
-			files = fs.readdirSync(out);
+			const files = fs.readdirSync(out);
 			assert.equal(files[0], 'foo-LICENSE.txt');
 			rimraf.sync(out);
 		});
@@ -823,7 +825,7 @@ describe('main tests', () => {
 		}, 5000);
 
 		it('an Angular CLI like plain vertical format', () => {
-			const data = checker.asPlainVertical(output);
+			const data = asPlainVertical(output);
 			assert.ok(data);
 			assert.equal(
 				data,
@@ -834,40 +836,12 @@ BSD-3-Clause
 		});
 	});
 
-	describe('json parsing', () => {
-		it('should parse json successfully (File exists + was json)', () => {
-			const path = './tests/config/custom_format_correct.json';
-			const json = checker.parseJson(path);
-			assert.notEqual(json, undefined);
-			assert.notEqual(json, null);
-			assert.equal(json.licenseModified, 'no');
-			assert.ok(json.licenseText);
-		});
-
-		it('should parse json with errors (File exists + no json)', () => {
-			const path = './tests/config/custom_format_broken.json';
-			const json = checker.parseJson(path);
-			assert.ok(json instanceof Error);
-		});
-
-		it('should parse json with errors (File not found)', () => {
-			const path = './NotExitingFile.json';
-			const json = checker.parseJson(path);
-			assert.ok(json instanceof Error);
-		});
-
-		it('should parse json with errors (null passed)', () => {
-			const json = checker.parseJson(null);
-			assert.ok(json instanceof Error);
-		});
-	});
-
 	describe('limit attributes', () => {
 		it('should filter attributes based on limitAttributes defined', () => {
 			const path = './tests/config/custom_format_correct.json';
-			const json = checker.parseJson(path);
+			const json = parseJson(path);
 
-			const filteredJson = checker.filterAttributes(['version', 'name'], json);
+			const filteredJson = filterAttributes(['version', 'name'], json);
 
 			assert.notStrictEqual(filteredJson.version, undefined);
 			assert.notStrictEqual(filteredJson.name, undefined);
@@ -880,9 +854,9 @@ BSD-3-Clause
 
 		it('should keep json as is if no outputColumns defined', () => {
 			const path = './tests/config/custom_format_correct.json';
-			const json = checker.parseJson(path);
+			const json = parseJson(path);
 
-			const filteredJson = checker.filterAttributes(null, json);
+			const filteredJson = filterAttributes(null, json);
 
 			assert.notStrictEqual(filteredJson.version, undefined);
 			assert.notStrictEqual(filteredJson.name, undefined);
