@@ -2,8 +2,8 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import chalk from 'chalk';
-import rimraf from 'rimraf';
+import { supportsColor } from 'chalk';
+import * as rimraf from 'rimraf';
 import * as args from '../lib/args.js';
 import * as checker from '../lib/index.js';
 import pkgJson from '../package.json' with { type: 'json' };
@@ -402,7 +402,7 @@ describe('main tests', () => {
 	describe('should treat license file over custom urls', () => {
 		it('should recognise a custom license at a url', async () => {
 			const output = await initChecker({
-				start: path.join(__dirname, '../node_modules/locale'),
+				start: path.join(__dirname, './fixtures/license-file-only'),
 			});
 			const item = output[Object.keys(output)[0]];
 			assert.equal(item.licenses, 'MIT*');
@@ -469,7 +469,7 @@ describe('main tests', () => {
 	describe('should parse with args', () => {
 		it('should handle undefined', () => {
 			const result = args.setDefaultArguments(undefined);
-			assert.equal(result.color, chalk.supportsColor);
+			assert.equal(result.color, supportsColor ? supportsColor.hasBasic : false);
 			assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
 		});
 
@@ -478,7 +478,7 @@ describe('main tests', () => {
 				color: undefined,
 				start: path.resolve(path.join(__dirname, '../')),
 			});
-			assert.equal(result.color, chalk.supportsColor);
+			assert.equal(result.color, supportsColor ? supportsColor.hasBasic : false);
 			assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
 		});
 

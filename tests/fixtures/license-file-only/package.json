@@ -1,0 +1,5 @@
+{
+	"name": "license-file-only",
+	"description": "a package that has a unreferenced license file",
+	"version": "1.2.3"
+}
