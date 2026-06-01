@@ -658,28 +658,24 @@ describe('main tests', () => {
 		});
 	});
 
-	describe('should only list UNKNOWN or guessed licenses successful', () => {
-		let output;
-		beforeAll(async () => {
-			output = await initChecker({
-				start: path.join(__dirname, '../'),
-				onlyunknown: true,
-			});
+	it('should only list UNKNOWN or guessed licenses successfully so we check if there is no license with a star or UNKNOWN found', async () => {
+		const output = await initChecker({
+			start: path.join(__dirname, './fixtures/license-file-only'),
+			onlyunknown: true,
 		});
 
-		it('so we check if there is no license with a star or UNKNOWN found', () => {
-			let onlyStarsFound = true;
-			Object.keys(output).forEach(item => {
-				if (output[item].licenses && output[item].licenses.indexOf('UNKNOWN') !== -1) {
-					//Okay
-				} else if (output[item].licenses && output[item].licenses.indexOf('*') !== -1) {
-					//Okay
-				} else {
-					onlyStarsFound = false;
-				}
-			});
-			assert.ok(onlyStarsFound);
+		let onlyStarsFound = true;
+		Object.keys(output).forEach(item => {
+			if (output[item].licenses && output[item].licenses.indexOf('UNKNOWN') !== -1) {
+				//Okay
+			} else if (output[item].licenses && output[item].licenses.indexOf('*') !== -1) {
+				//Okay
+			} else {
+				onlyStarsFound = false;
+			}
 		});
+
+		assert.ok(onlyStarsFound);
 	});
 
 	function parseAndInclude(parsePath, licenses, result) {
