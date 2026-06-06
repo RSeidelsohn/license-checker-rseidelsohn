@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import * as args from '../lib/args.js';
 import { runLicenseCheck } from '../lib/index.js';
-import readInstalledPackagesWithArborist from '../lib/readInstalledPackagesWithArborist.js';
+import readInstalledPackages from '../lib/readInstalledPackagesWithArborist.js';
 
 const createTempDirectory = () => fs.mkdtempSync(path.join(fs.realpathSync(tmpdir()), 'license-checker-'));
 
@@ -35,18 +35,6 @@ const writeHiddenLockfile = (root, packages) => {
 	const future = new Date(Date.now() + 10000);
 	fs.utimesSync(hiddenLockfilePath, future, future);
 };
-
-const readInstalledPackages = (folder, options = {}) =>
-	new Promise((resolve, reject) => {
-		readInstalledPackagesWithArborist(folder, options, (error, installedPackages) => {
-			if (error) {
-				reject(error);
-				return;
-			}
-
-			resolve(installedPackages);
-		});
-	});
 
 const createDependencyModeFixture = () => {
 	const root = createTempDirectory();
