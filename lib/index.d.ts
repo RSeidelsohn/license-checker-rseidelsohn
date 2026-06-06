@@ -2,7 +2,7 @@ export type CustomFormatValue = string | boolean | undefined;
 export type CustomFormat = Record<string, CustomFormatValue>;
 
 /**
- * Options struct for the init() function
+ * Options struct for the init() and runLicenseCheck() functions
  */
 export interface InitOpts {
 	/**
@@ -176,6 +176,13 @@ export interface ModuleInfo {
 export interface ModuleInfos {
 	[packageName: string]: ModuleInfo;
 }
+
+/**
+ * Run the license check.
+ *
+ * @param opts Specifies the path to the module to check dependencies of.
+ */
+export function runLicenseCheck(opts: InitOpts): Promise<ModuleInfos>;
 
 /**
  * Run the license check.

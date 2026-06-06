@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import * as args from '../lib/args.js';
-import * as checker from '../lib/index.js';
+import { runLicenseCheck } from '../lib/index.js';
 import readInstalledPackagesWithArborist from '../lib/readInstalledPackagesWithArborist.js';
 
 const createTempDirectory = () => fs.mkdtempSync(path.join(fs.realpathSync(tmpdir()), 'license-checker-'));
@@ -45,18 +45,6 @@ const readInstalledPackages = (folder, options = {}) =>
 			}
 
 			resolve(installedPackages);
-		});
-	});
-
-const initChecker = options =>
-	new Promise((resolve, reject) => {
-		checker.init(options, (error, output) => {
-			if (error) {
-				reject(error);
-				return;
-			}
-
-			resolve(output);
 		});
 	});
 
@@ -242,7 +230,7 @@ describe('readInstalledPackagesWithArborist', () => {
 	});
 });
 
-describe('checker.init with Arborist dependency trees', () => {
+describe('runLicenseCheck with Arborist dependency trees', () => {
 	let root;
 
 	beforeEach(() => {
@@ -254,7 +242,7 @@ describe('checker.init with Arborist dependency trees', () => {
 	});
 
 	it('includes production and development dependencies by default', async () => {
-		const output = await initChecker({ start: root });
+		const output = await runLicenseCheck({ start: root });
 
 		assert.notEqual(output['prod@1.0.0'], undefined);
 		assert.notEqual(output['transitive@1.0.0'], undefined);
@@ -271,14 +259,14 @@ describe('checker.init with Arborist dependency trees', () => {
 			author: 'Jane Doe <jane@example.com>',
 		});
 
-		const output = await initChecker({ json: true, start: root });
+		const output = await runLicenseCheck({ json: true, start: root });
 
 		assert.equal(output['prod@1.0.0'].publisher, 'Jane Doe');
 		assert.equal(output['prod@1.0.0'].email, 'jane@example.com');
 	});
 
 	it('excludes dev-only dependencies in production mode', async () => {
-		const output = await initChecker({ production: true, start: root });
+		const output = await runLicenseCheck({ production: true, start: root });
 
 		assert.notEqual(output['prod@1.0.0'], undefined);
 		assert.notEqual(output['transitive@1.0.0'], undefined);
@@ -286,7 +274,7 @@ describe('checker.init with Arborist dependency trees', () => {
 	});
 
 	it('includes dev-only dependencies and excludes production-only dependencies in development mode', async () => {
-		const output = await initChecker({ development: true, start: root });
+		const output = await runLicenseCheck({ development: true, start: root });
 
 		assert.notEqual(output['fixture-root@1.0.0'], undefined);
 		assert.notEqual(output['dev@1.0.0'], undefined);
@@ -296,7 +284,7 @@ describe('checker.init with Arborist dependency trees', () => {
 	});
 
 	it('keeps only root and direct dependencies at depth 0', async () => {
-		const output = await initChecker({ direct: 0, start: root });
+		const output = await runLicenseCheck({ direct: 0, start: root });
 
 		assert.notEqual(output['fixture-root@1.0.0'], undefined);
 		assert.notEqual(output['prod@1.0.0'], undefined);
@@ -313,21 +301,24 @@ describe('checker.init with Arborist dependency trees', () => {
 	});
 
 	it('omits peer dependencies when nopeer is set', async () => {
-		const output = await initChecker({ nopeer: true, start: root });
+		const output = await runLicenseCheck({ nopeer: true, start: root });
 
 		assert.equal(output['peer@1.0.0'], undefined);
 		assert.notEqual(output['prod@1.0.0'], undefined);
 	});
 
 	it('ignores missing optional dependencies and does not crash on missing required dependencies', async () => {
-		const output = await initChecker({ start: root });
+		const output = await runLicenseCheck({ start: root });
 
 		assert.equal(output['missingOptional@1.0.0'], undefined);
 		assert.equal(output['missingRequired@1.0.0'], undefined);
 		assert.notEqual(output['fixture-root@1.0.0'], undefined);
 	});
 
-	it('passes dependency tree read errors to the callback', async () => {
-		await assert.rejects(initChecker({ start: path.join(root, 'does-not-exist') }), error => error instanceof Error);
+	it('rejects dependency tree read errors', async () => {
+		await assert.rejects(
+			runLicenseCheck({ start: path.join(root, 'does-not-exist') }),
+			error => error instanceof Error
+		);
 	});
 });

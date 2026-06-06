@@ -5,7 +5,7 @@ import path from 'node:path';
 import { supportsColor } from 'chalk';
 import * as rimraf from 'rimraf';
 import * as args from '../lib/args.js';
-import { init } from '../lib/index.js';
+import { runLicenseCheck } from '../lib/index.js';
 import { filterAttributes } from '../lib/util/filterAttributes.js';
 import { asCSV, asFiles, asMarkDown, asPlainVertical, asSummary, asTree, print } from '../lib/util/output.js';
 import { parseJson } from '../lib/util/parseJson.js';
@@ -13,24 +13,14 @@ import pkgJson from '../package.json' with { type: 'json' };
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const initChecker = options =>
-	new Promise((resolve, reject) => {
-		init(options, (error, output) => {
-			if (error) {
-				reject(error);
-				return;
-			}
-
-			resolve(output);
-		});
-	});
-
-const initCheckerRaw = options =>
-	new Promise(resolve => {
-		init(options, (error, output) => {
-			resolve({ error, output });
-		});
-	});
+const runLicenseCheckRaw = async options => {
+	try {
+		const output = await runLicenseCheck(options);
+		return { error: null, output };
+	} catch (error) {
+		return { error, output: {} };
+	}
+};
 
 const getPackageKey = (output, packageName) => {
 	const packageKey = Object.keys(output).find(key => key.startsWith(`${packageName}@`));
@@ -46,19 +36,11 @@ const isSameOrChildPath = (rootPath, currentPath) => {
 };
 
 describe('main tests', () => {
-	it('should load init', () => {
-		assert.equal(typeof init, 'function');
-	});
-
-	it('should load print', () => {
-		assert.equal(typeof print, 'function');
-	});
-
 	describe('should parse local with unknown', () => {
 		let output;
 
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 			});
 		}, 5000);
@@ -92,7 +74,7 @@ describe('main tests', () => {
 				pewpew: '<<Should Never be set>>',
 			};
 
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				customFormat: format,
 			});
@@ -152,7 +134,7 @@ describe('main tests', () => {
 		let output;
 
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				unknown: true,
 			});
@@ -168,9 +150,9 @@ describe('main tests', () => {
 		let output;
 
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
-				direct: 0, // 0 is the parsed value passed to init from license-checker-rseidelsohn if set to true
+				direct: 0, // 0 is the parsed value passed by the CLI if set to true
 			});
 		});
 
@@ -190,7 +172,7 @@ describe('main tests', () => {
 		const tmpFileName = path.join(__dirname, 'tmp_output.json');
 
 		beforeAll(async () => {
-			await initChecker({
+			await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				json: true,
 				out: tmpFileName,
@@ -215,7 +197,7 @@ describe('main tests', () => {
 
 	function parseAndExclude(parsePath, licenses, result) {
 		return async () => {
-			result.output = await initChecker({
+			result.output = await runLicenseCheck({
 				start: path.join(__dirname, parsePath),
 				excludeLicenses: licenses,
 			});
@@ -316,7 +298,7 @@ describe('main tests', () => {
 			config[key] = licenses;
 
 			try {
-				result.output = await initChecker(config);
+				result.output = await runLicenseCheck(config);
 				result.exitCode = exitCode;
 			} finally {
 				process.exit = originalExit;
@@ -384,7 +366,7 @@ describe('main tests', () => {
 	describe('should parse local and handle private modules', () => {
 		let output;
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, './fixtures/privateModule'),
 			});
 		});
@@ -404,7 +386,7 @@ describe('main tests', () => {
 
 	describe('should treat license file over custom urls', () => {
 		it('should recognise a custom license at a url', async () => {
-			const output = await initChecker({
+			const output = await runLicenseCheck({
 				start: path.join(__dirname, './fixtures/license-file-only'),
 			});
 			const item = output[Object.keys(output)[0]];
@@ -415,7 +397,7 @@ describe('main tests', () => {
 	describe('should treat URLs as custom licenses', () => {
 		let output;
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, './fixtures/custom-license-url'),
 			});
 		});
@@ -434,7 +416,7 @@ describe('main tests', () => {
 	describe('should treat file references as custom licenses', () => {
 		let output;
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, './fixtures/custom-license-file'),
 			});
 		});
@@ -451,8 +433,8 @@ describe('main tests', () => {
 	});
 
 	describe('error handler', () => {
-		it('should init without errors', async () => {
-			const { error } = await initCheckerRaw({
+		it('should run without errors', async () => {
+			const { error } = await runLicenseCheckRaw({
 				start: path.join(__dirname, '../'),
 				development: true,
 			});
@@ -460,8 +442,8 @@ describe('main tests', () => {
 			assert.equal(error, null);
 		});
 
-		it('should init with errors (npm packages not found)', async () => {
-			const { error } = await initCheckerRaw({
+		it('should run with errors (npm packages not found)', async () => {
+			const { error } = await runLicenseCheckRaw({
 				start: 'C:\\',
 			});
 
@@ -531,7 +513,7 @@ describe('main tests', () => {
 
 	describe('custom formats', () => {
 		it('should create a custom format using customFormat successfully', async () => {
-			const output = await initChecker({
+			const output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				customFormat: {
 					name: '<<Default Name>>',
@@ -558,7 +540,7 @@ describe('main tests', () => {
 			process.argv.pop();
 			process.argv.pop();
 
-			const filtered = await initChecker(parsed);
+			const filtered = await runLicenseCheck(parsed);
 			const customFormatContent = fs.readFileSync(path.join(__dirname, './../customFormatExample.json'), 'utf8');
 
 			assert.notEqual(customFormatContent, undefined);
@@ -575,7 +557,7 @@ describe('main tests', () => {
 		});
 
 		it('should return data for keys with different names in json vs custom format', async () => {
-			const filtered = await initChecker({
+			const filtered = await runLicenseCheck({
 				start: path.join(__dirname, './fixtures/author'),
 				customFormat: {
 					publisher: '',
@@ -589,7 +571,7 @@ describe('main tests', () => {
 
 	describe('should output the module location', () => {
 		it('as absolute path', async () => {
-			const output = await initChecker({
+			const output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 			});
 
@@ -600,7 +582,7 @@ describe('main tests', () => {
 		});
 
 		it('using only relative paths if the option relativeModulePath is being used', async () => {
-			const output = await initChecker({
+			const output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				relativeModulePath: true,
 			});
@@ -615,7 +597,7 @@ describe('main tests', () => {
 
 	describe('should output the location of the license files', () => {
 		it('as absolute paths', async () => {
-			const output = await initChecker({
+			const output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 			});
 
@@ -629,7 +611,7 @@ describe('main tests', () => {
 		});
 
 		it('as relative paths when using relativeLicensePath', async () => {
-			const filtered = await initChecker({
+			const filtered = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				relativeLicensePath: true,
 			});
@@ -645,7 +627,7 @@ describe('main tests', () => {
 
 	describe('handle copytight statement', () => {
 		it('should output copyright statements when configured in custom format', async () => {
-			const output = await initChecker({
+			const output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				customFormat: {
 					copyright: '', // specify custom format
@@ -662,7 +644,7 @@ describe('main tests', () => {
 	});
 
 	it('should only list UNKNOWN or guessed licenses successfully so we check if there is no license with a star or UNKNOWN found', async () => {
-		const output = await initChecker({
+		const output = await runLicenseCheck({
 			start: path.join(__dirname, './fixtures/license-file-only'),
 			onlyunknown: true,
 		});
@@ -683,7 +665,7 @@ describe('main tests', () => {
 
 	function parseAndInclude(parsePath, licenses, result) {
 		return async () => {
-			result.output = await initChecker({
+			result.output = await runLicenseCheck({
 				start: path.join(__dirname, parsePath),
 				includeLicenses: licenses,
 			});
@@ -713,7 +695,7 @@ describe('main tests', () => {
 	describe('should only list UNKNOWN or guessed licenses with errors (argument missing)', () => {
 		let output;
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, '../'),
 				production: true,
 			});
@@ -819,7 +801,7 @@ describe('main tests', () => {
 		let output;
 
 		beforeAll(async () => {
-			output = await initChecker({
+			output = await runLicenseCheck({
 				start: path.join(__dirname, './fixtures/includeBSD'),
 			});
 		}, 5000);

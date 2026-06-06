@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { describe } from 'node:test';
-import { init } from '../lib/index.js';
+import { runLicenseCheck } from '../lib/index.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -10,29 +10,20 @@ describe('clarifications', () => {
 	const clarifications_path = './fixtures/clarifications';
 	const result = {};
 
-	beforeAll(
-		async () =>
-			new Promise(resolve => {
-				init(
-					{
-						start: path.join(__dirname, clarifications_path),
-						clarificationsFile: path.join(__dirname, '../clarificationExample.json'),
-						customFormat: {
-							licenses: '',
-							publisher: '',
-							email: '',
-							path: '',
-							licenseFile: '',
-							licenseText: '',
-						},
-					},
-					(_err, filtered) => {
-						result.output = filtered;
-						resolve();
-					}
-				);
-			})
-	);
+	beforeAll(async () => {
+		result.output = await runLicenseCheck({
+			start: path.join(__dirname, clarifications_path),
+			clarificationsFile: path.join(__dirname, '../clarificationExample.json'),
+			customFormat: {
+				licenses: '',
+				publisher: '',
+				email: '',
+				path: '',
+				licenseFile: '',
+				licenseText: '',
+			},
+		});
+	});
 
 	it('should replace existing license', () => {
 		const output = result.output['license-checker-rseidelsohn@0.0.0'];
