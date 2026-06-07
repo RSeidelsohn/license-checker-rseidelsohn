@@ -55,6 +55,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.16",
+		"@tsconfig/node24": "24.0.4",
 		"@types/mkdirp": "2.0.0",
 		"@types/node": "24.12.4",
 		"@types/spdx-expression-parse": "4.0.0",
