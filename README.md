@@ -238,10 +238,14 @@ is off by default.
 
 ## <a id="custom-format"></a>Custom format
 
-The `--customPath` option can be used with CSV to specify the columns. Note that the first column, `module_name`, will
+The `--customFormat` option can be used with CSV to specify the columns. Note that the first column, `module_name`, will
 always be used.
 
-When used with JSON format, it will add the specified items to the usual ones.
+When used with JSON format, it will add the specified items to the usual ones. It does not limit JSON output to only
+those items. In particular, `licenses` is core result data and is still emitted even if `customFormat.licenses` is
+`false`.
+
+To limit JSON output to a fixed set of attributes, use `--limitAttributes`.
 
 The available items are the following:
 
@@ -289,7 +293,7 @@ Supported `init` options (alphabetically):
 | `clarificationsFile`          | `string`                                       | Path to a JSON file with package-specific license clarifications.                                                            |
 | `clarificationsMatchAll`      | `boolean`                                      | Fail the run if any clarification entry was not used.                                                                        |
 | `color`                       | `boolean`                                      | Colorize license strings in the returned data where the checker emits colorized license values.                              |
-| `customFormat`                | `Record<string, string \| false \| undefined>` | Custom output fields and default values. Use `false` to omit a default field.                                                |
+| `customFormat`                | `Record<string, string \| false \| undefined>` | Custom output fields and default values.                                                                                     |
 | `customPath`                  | `string`                                       | Path to a JSON file that defines a custom output format.                                                                     |
 | `development`                 | `boolean`                                      | Only include development dependencies.                                                                                       |
 | `direct`                      | `number`                                       | Limit dependency recursion by depth. Use `0` for direct dependencies only.                                                   |
