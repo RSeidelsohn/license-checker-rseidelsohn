@@ -286,6 +286,10 @@ init({ start: '/path/to/start/looking' }, (err, packages) => {
 If an error occurred, the callback receives it as the first parameter. If the checker ran successfully, no error is
 passed, but the second parameter is an object keyed by package name plus version.
 
+Bugfix note: library code no longer terminates the host process for license policy or clarification failures. These
+failures are now reported via rejected `runLicenseCheck` promise / `init` callback error. CLI behavior remains
+unchanged. Programmatic `init` users who previously ignored `err` are responsible for handling these reported errors.
+
 Supported `init` options (alphabetically):
 
 | Option                        | Type                                           | Description                                                                                                                  |

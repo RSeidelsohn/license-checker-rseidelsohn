@@ -33,7 +33,8 @@ describe('clarifications', () => {
 	});
 
 	it('should exit 1 if the checksum does not match', done => {
-		let data = '';
+		let stderrData = '';
+		let stdoutData = '';
 		const license_checker = spawn(
 			'node',
 			[
@@ -49,14 +50,50 @@ describe('clarifications', () => {
 		);
 
 		license_checker.stderr.on('data', stderr => {
-			data += stderr.toString();
+			stderrData += stderr.toString();
+		});
+
+		license_checker.stdout.on('data', stdout => {
+			stdoutData += stdout.toString();
 		});
 
 		license_checker.on('exit', code => {
 			assert.equal(code, 1);
-			assert.equal(data.includes('checksum mismatch'), true);
+			assert.equal(stdoutData, '');
+			assert.equal(stderrData.includes('checksum mismatch'), true);
 			done();
 		});
+	});
+
+	it('should reject if the checksum does not match', async () => {
+		await assert.rejects(
+			runLicenseCheck({
+				start: path.join(__dirname, clarifications_path),
+				clarificationsFile: path.join(__dirname, clarifications_path, 'mismatch/clarification.json'),
+			}),
+			/Clarification checksum mismatch/
+		);
+	});
+
+	it('should reject if a checksum clarification cannot be checked against a license file', async () => {
+		await assert.rejects(
+			runLicenseCheck({
+				start: path.join(__dirname, 'fixtures/noLicenseFile'),
+				clarificationsFile: path.join(__dirname, clarifications_path, 'checksumWithoutLicenseFile.json'),
+			}),
+			/All clarifications must come with a checksum/
+		);
+	});
+
+	it('should reject if clarificationsMatchAll leaves unused clarifications', async () => {
+		await assert.rejects(
+			runLicenseCheck({
+				start: path.join(__dirname, clarifications_path),
+				clarificationsFile: path.join(__dirname, clarifications_path, 'unusedClarification.json'),
+				clarificationsMatchAll: true,
+			}),
+			/Some clarifications \(unused-package@1\.0\.0\) were unused and --clarificationsMatchAll was specified\. Exiting\./
+		);
 	});
 
 	it('should succeed if no checksum is specified', done => {

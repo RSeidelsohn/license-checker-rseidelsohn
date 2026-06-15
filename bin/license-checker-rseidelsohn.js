@@ -13,8 +13,9 @@ exitProcessOrWarnIfNeeded({ unknownArgs, parsedArgs, hasFailingArg });
 
 licenseCheckerMain.init(parsedArgs, (err, foundLicensesJson) => {
 	if (err) {
-		console.error('An error has occurred:');
-		console.error(err);
+		console.error(err.message || err);
+		process.exitCode = 1;
+		return;
 	}
 
 	if (!parsedArgs.out) {
