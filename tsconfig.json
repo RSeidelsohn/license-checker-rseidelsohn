@@ -6,7 +6,8 @@
 		"emitDeclarationOnly": true,
 		"outDir": "dist",
 		"allowJs": true,
-		"allowImportingTsExtensions": true
+		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true
 	},
 	"include": ["bin/**/*", "lib/**/*", "scripts/**/*", "test/**/*"]
 }
