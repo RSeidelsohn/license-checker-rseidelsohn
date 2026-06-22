@@ -23,13 +23,13 @@ const runBin = async (args, opts = {}) => {
 
 describe('bin/license-checker-rseidelsohn', () => {
 	it('should restrict the output to the provided packages', async () => {
-		var restrictedPackages = ['@types/node@24.12.4'];
-		var stdout = await runBin(['--json', '--includePackages', restrictedPackages.join(';')]);
-		assert.deepEqual(Object.keys(JSON.parse(stdout)), restrictedPackages);
+		var includedPackages = ['@types/node@24.13.2'];
+		var stdout = await runBin(['--json', '--includePackages', includedPackages.join(';')]);
+		assert.deepEqual(Object.keys(JSON.parse(stdout)), includedPackages);
 	}, 15e3); // this test sometimes takes a while
 
 	it('should exclude provided excludedPackages from the output', async () => {
-		var excludedPackages = ['@types/node@15.0.1', 'spdx-satisfies@5.0.0', 'y18n@3.2.1'];
+		var excludedPackages = ['@types/node@24.13.2', 'spdx-satisfies@6.0.0'];
 		var stdout = await runBin(['--json', '--excludePackages', excludedPackages.join(';')]);
 
 		var packages = Object.keys(JSON.parse(stdout));
