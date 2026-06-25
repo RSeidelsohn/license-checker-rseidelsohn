@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { text } from 'node:stream/consumers';
+import packageJson from '../package.json' with { type: 'json' };
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn');
@@ -84,6 +85,14 @@ describe('bin/license-checker-rseidelsohn', () => {
 		assert.equal(code, 0);
 		assert.ok(stdout.includes(fixturePackageName));
 		assert.ok(stdout.includes(fixtureLicense));
+	});
+
+	it('should output the package version from the CLI', async () => {
+		const { code, stderr, stdout } = await runBin(['--version']);
+
+		assert.equal(code, 1);
+		assert.equal(stdout, '');
+		assert.equal(stderr.trim(), packageJson.version);
 	});
 
 	it('should exit 1 without stdout if --failOn MIT finds a matching license', async () => {
