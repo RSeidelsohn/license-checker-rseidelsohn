@@ -6,16 +6,22 @@ import { text } from 'node:stream/consumers';
 import { describe, expect, it } from 'vitest';
 import packageJson from '../package.json' with { type: 'json' };
 
+type BinResult = {
+	code: number | null;
+	stderr: string;
+	stdout: string;
+};
+
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn');
+const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn.js');
 const fixturePath = path.join(__dirname, 'fixtures/custom-license-url');
 const repoPath = path.join(__dirname, '../');
 const fixturePackageName = 'custom-license@0.0.0';
 const fixtureLicense = 'Custom: http://example.com/dummy-license';
-const tempPath = name => path.join(tmpdir(), `license-checker-rseidelsohn-${Date.now()}-${name}`);
+const tempPath = (name: string) => path.join(tmpdir(), `license-checker-rseidelsohn-${Date.now()}-${name}`);
 
-const runBin = (args, cwd = fixturePath) =>
-	new Promise((resolve, reject) => {
+const runBin = (args: string[], cwd = fixturePath) =>
+	new Promise<BinResult>((resolve, reject) => {
 		const proc = spawn('node', [binPath, ...args], {
 			cwd,
 			stdio: ['ignore', 'pipe', 'pipe'],

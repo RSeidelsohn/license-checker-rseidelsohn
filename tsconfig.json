@@ -9,5 +9,5 @@
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": true
 	},
-	"include": ["bin/**/*", "lib/**/*", "scripts/**/*", "test/**/*"]
+	"include": ["bin/**/*", "lib/**/*", "scripts/**/*", "tests/**/*"]
 }
