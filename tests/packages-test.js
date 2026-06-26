@@ -1,6 +1,6 @@
-import assert from 'node:assert';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
+import { describe, expect, it } from 'vitest';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -25,7 +25,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 	it('should restrict the output to the provided packages', async () => {
 		var includedPackages = ['@types/node@24.13.2'];
 		var stdout = await runBin(['--json', '--includePackages', includedPackages.join(';')]);
-		assert.deepEqual(Object.keys(JSON.parse(stdout)), includedPackages);
+		expect(Object.keys(JSON.parse(stdout))).toEqual(includedPackages);
 	}, 15e3); // this test sometimes takes a while
 
 	it('should exclude provided excludedPackages from the output', async () => {
@@ -34,7 +34,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 
 		var packages = Object.keys(JSON.parse(stdout));
 		excludedPackages.forEach(pkg => {
-			assert.ok(!packages.includes(pkg));
+			expect(packages).not.toContain(pkg);
 		});
 	});
 
@@ -56,7 +56,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 		});
 
 		// If an illegal package was found, the test fails
-		assert.ok(!illegalPackageFound);
+		expect(illegalPackageFound).toBe(false);
 	});
 
 	it('should combine various types of inclusion and exclusions', async () => {
@@ -93,7 +93,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 		});
 
 		// If an illegal package was found, the test fails
-		assert.ok(!illegalPackageFound);
+		expect(illegalPackageFound).toBe(false);
 	});
 
 	it('should exclude private packages from the output', async () => {
@@ -102,6 +102,6 @@ describe('bin/license-checker-rseidelsohn', () => {
 		});
 
 		var packages = Object.keys(JSON.parse(stdout));
-		assert.equal(packages.length, 0);
+		expect(packages).toHaveLength(0);
 	});
 }, /* timeout */ 8000);

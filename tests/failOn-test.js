@@ -1,6 +1,6 @@
-import assert from 'node:assert';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
+import { describe, expect, it } from 'vitest';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -10,7 +10,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 			cwd: path.join(__dirname, '../'),
 			stdio: 'ignore',
 		}).on('exit', code => {
-			assert.equal(code, 1);
+			expect(code).toBe(1);
 			done();
 		});
 	});
@@ -20,7 +20,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 			cwd: path.join(__dirname, '../'),
 			stdio: 'ignore',
 		}).on('exit', code => {
-			assert.equal(code, 1);
+			expect(code).toBe(1);
 			done();
 		});
 	});
@@ -36,7 +36,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 			stderr += data.toString();
 		});
 		proc.on('close', () => {
-			assert.equal(stderr.indexOf('--failOn argument takes semicolons as delimeters instead of commas') >= 0, true);
+			expect(stderr).toContain('--failOn argument takes semicolons as delimeters instead of commas');
 			done();
 		});
 	});

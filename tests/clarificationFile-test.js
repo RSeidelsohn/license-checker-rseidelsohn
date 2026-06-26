@@ -1,7 +1,6 @@
-import assert from 'node:assert';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { describe } from 'node:test';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { runLicenseCheck } from '../lib/index.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -28,8 +27,8 @@ describe('clarifications', () => {
 	it('should replace existing license', () => {
 		const output = result.output['license-checker-rseidelsohn@0.0.0'];
 
-		assert.equal(output.licenseText, 'Some mild rephrasing of an MIT license');
-		assert.equal(output.licenses, 'MIT');
+		expect(output.licenseText).toBe('Some mild rephrasing of an MIT license');
+		expect(output.licenses).toBe('MIT');
 	});
 
 	it('should exit 1 if the checksum does not match', done => {
@@ -58,40 +57,39 @@ describe('clarifications', () => {
 		});
 
 		license_checker.on('exit', code => {
-			assert.equal(code, 1);
-			assert.equal(stdoutData, '');
-			assert.equal(stderrData.includes('checksum mismatch'), true);
+			expect(code).toBe(1);
+			expect(stdoutData).toBe('');
+			expect(stderrData).toContain('checksum mismatch');
 			done();
 		});
 	});
 
 	it('should reject if the checksum does not match', async () => {
-		await assert.rejects(
+		await expect(
 			runLicenseCheck({
 				start: path.join(__dirname, clarifications_path),
 				clarificationsFile: path.join(__dirname, clarifications_path, 'mismatch/clarification.json'),
-			}),
-			/Clarification checksum mismatch/
-		);
+			})
+		).rejects.toThrow(/Clarification checksum mismatch/);
 	});
 
 	it('should reject if a checksum clarification cannot be checked against a license file', async () => {
-		await assert.rejects(
+		await expect(
 			runLicenseCheck({
 				start: path.join(__dirname, 'fixtures/noLicenseFile'),
 				clarificationsFile: path.join(__dirname, clarifications_path, 'checksumWithoutLicenseFile.json'),
-			}),
-			/All clarifications must come with a checksum/
-		);
+			})
+		).rejects.toThrow(/All clarifications must come with a checksum/);
 	});
 
 	it('should reject if clarificationsMatchAll leaves unused clarifications', async () => {
-		await assert.rejects(
+		await expect(
 			runLicenseCheck({
 				start: path.join(__dirname, clarifications_path),
 				clarificationsFile: path.join(__dirname, clarifications_path, 'unusedClarification.json'),
 				clarificationsMatchAll: true,
-			}),
+			})
+		).rejects.toThrow(
 			/Some clarifications \(unused-package@1\.0\.0\) were unused and --clarificationsMatchAll was specified\. Exiting\./
 		);
 	});
@@ -118,9 +116,9 @@ describe('clarifications', () => {
 		});
 
 		license_checker.on('exit', code => {
-			assert.equal(code, 0);
-			assert.equal(data.includes('MIT'), true);
-			assert.equal(data.includes('MY_IP'), true);
+			expect(code).toBe(0);
+			expect(data).toContain('MIT');
+			expect(data).toContain('MY_IP');
 			done();
 		});
 	});
@@ -149,13 +147,13 @@ describe('clarifications', () => {
 		});
 
 		license_checker.on('exit', code => {
-			assert.equal(code, 0);
-			assert.equal(data.includes('README'), true);
-			assert.equal(data.includes('text text text describing the project'), false);
-			assert.equal(data.includes('# LICENSE'), true);
-			assert.equal(data.includes('Standard MIT license'), true);
-			assert.equal(data.includes('# And one more thing...'), false);
-			assert.equal(data.includes('More text AFTER the license because the real world is difficult :('), false);
+			expect(code).toBe(0);
+			expect(data).toContain('README');
+			expect(data).not.toContain('text text text describing the project');
+			expect(data).toContain('# LICENSE');
+			expect(data).toContain('Standard MIT license');
+			expect(data).not.toContain('# And one more thing...');
+			expect(data).not.toContain('More text AFTER the license because the real world is difficult :(');
 			done();
 		});
 	});
@@ -184,13 +182,13 @@ describe('clarifications', () => {
 		});
 
 		license_checker.on('exit', code => {
-			assert.equal(code, 0);
-			assert.equal(data.includes('README'), true);
-			assert.equal(data.includes('text text text describing the project'), false);
-			assert.equal(data.includes('# LICENSE'), true);
-			assert.equal(data.includes('Standard MIT license'), true);
-			assert.equal(data.includes('# And one more thing...'), true);
-			assert.equal(data.includes('More text AFTER the license because the real world is difficult :('), true);
+			expect(code).toBe(0);
+			expect(data).toContain('README');
+			expect(data).not.toContain('text text text describing the project');
+			expect(data).toContain('# LICENSE');
+			expect(data).toContain('Standard MIT license');
+			expect(data).toContain('# And one more thing...');
+			expect(data).toContain('More text AFTER the license because the real world is difficult :(');
 			done();
 		});
 	});

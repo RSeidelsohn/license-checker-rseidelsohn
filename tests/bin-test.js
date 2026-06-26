@@ -1,9 +1,9 @@
-import assert from 'node:assert';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { text } from 'node:stream/consumers';
+import { describe, expect, it } from 'vitest';
 import packageJson from '../package.json' with { type: 'json' };
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -33,83 +33,82 @@ describe('bin/license-checker-rseidelsohn', () => {
 	it('should exit 0', async () => {
 		const { code } = await runBin([], path.join(__dirname, '../'));
 
-		assert.equal(code, 0);
+		expect(code).toBe(0);
 	});
 
 	it('should output CSV from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin(['--csv']);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.equal(stdout, `"module name","license","repository"\n"${fixturePackageName}","${fixtureLicense}",""\n`);
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(stdout).toBe(`"module name","license","repository"\n"${fixturePackageName}","${fixtureLicense}",""\n`);
 	});
 
 	it('should output JSON from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin(['--json']);
 		const output = JSON.parse(stdout);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.equal(output[fixturePackageName].licenses, fixtureLicense);
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(output[fixturePackageName].licenses).toBe(fixtureLicense);
 	});
 
 	it('should output Markdown from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin(['--markdown']);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.equal(stdout, `- [${fixturePackageName}](undefined) - ${fixtureLicense}\n\n`);
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(stdout).toBe(`- [${fixturePackageName}](undefined) - ${fixtureLicense}\n\n`);
 	});
 
 	it('should output summary from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin(['--summary']);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.match(stdout, new RegExp(`${fixtureLicense.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}: 1`));
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(stdout).toMatch(new RegExp(`${fixtureLicense.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}: 1`));
 	});
 
 	it('should output plain vertical format from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin(['--plainVertical']);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.ok(stdout.startsWith(`custom-license 0.0.0\n${fixtureLicense}\n`));
-		assert.ok(stdout.includes('http://totally.not.a.valid.license.com/banana'));
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(stdout.startsWith(`custom-license 0.0.0\n${fixtureLicense}\n`)).toBe(true);
+		expect(stdout).toContain('http://totally.not.a.valid.license.com/banana');
 	});
 
 	it('should output tree format from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin([]);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.ok(stdout.includes(fixturePackageName));
-		assert.ok(stdout.includes(fixtureLicense));
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(stdout).toContain(fixturePackageName);
+		expect(stdout).toContain(fixtureLicense);
 	});
 
 	it('should output the package version from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin(['--version']);
 
-		assert.equal(code, 1);
-		assert.equal(stdout, '');
-		assert.equal(stderr.trim(), packageJson.version);
+		expect(code).toBe(1);
+		expect(stdout).toBe('');
+		expect(stderr.trim()).toBe(packageJson.version);
 	});
 
 	it('should exit 1 without stdout if --failOn MIT finds a matching license', async () => {
 		const { code, stderr, stdout } = await runBin(['--failOn', 'MIT'], repoPath);
 
-		assert.equal(code, 1);
-		assert.equal(stdout, '');
-		assert.match(stderr, /Found license defined by the --failOn flag: "MIT"\. Exiting\./);
+		expect(code).toBe(1);
+		expect(stdout).toBe('');
+		expect(stderr).toMatch(/Found license defined by the --failOn flag: "MIT"\. Exiting\./);
 	});
 
 	it('should exit 1 without stdout if --onlyAllow rejects a license', async () => {
 		const { code, stderr, stdout } = await runBin(['--onlyAllow', 'MIT']);
 
-		assert.equal(code, 1);
-		assert.equal(stdout, '');
-		assert.match(
-			stderr,
+		expect(code).toBe(1);
+		expect(stdout).toBe('');
+		expect(stderr).toMatch(
 			/Package "custom-license@0\.0\.0" is licensed under "Custom: http:\/\/example\.com\/dummy-license" which is not permitted by the --onlyAllow flag\. Exiting\./
 		);
 	});
@@ -118,10 +117,10 @@ describe('bin/license-checker-rseidelsohn', () => {
 		const outFile = tempPath('policy-error.json');
 		const { code, stderr, stdout } = await runBin(['--json', '--out', outFile, '--onlyAllow', 'MIT']);
 
-		assert.equal(code, 1);
-		assert.equal(stdout, '');
-		assert.match(stderr, /which is not permitted by the --onlyAllow flag\. Exiting\./);
-		assert.equal(fs.existsSync(outFile), false);
+		expect(code).toBe(1);
+		expect(stdout).toBe('');
+		expect(stderr).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
+		expect(fs.existsSync(outFile)).toBe(false);
 	});
 
 	it('should not create --files output when a policy error occurs', async () => {
@@ -131,20 +130,20 @@ describe('bin/license-checker-rseidelsohn', () => {
 			path.join(__dirname, 'fixtures/license-file-only')
 		);
 
-		assert.equal(code, 1);
-		assert.equal(stdout, '');
-		assert.match(stderr, /which is not permitted by the --onlyAllow flag\. Exiting\./);
-		assert.equal(fs.existsSync(outDir), false);
+		expect(code).toBe(1);
+		expect(stdout).toBe('');
+		expect(stderr).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
+		expect(fs.existsSync(outDir)).toBe(false);
 	});
 
 	it('should exit 1 without stdout on dependency read errors', async () => {
 		const missingPath = path.join(__dirname, 'fixtures/does-not-exist');
 		const { code, stderr, stdout } = await runBin(['--start', missingPath], repoPath);
 
-		assert.equal(code, 1);
-		assert.equal(stdout, '');
-		assert.notEqual(stderr, '');
-		assert.equal(stderr.includes(' at '), false);
+		expect(code).toBe(1);
+		expect(stdout).toBe('');
+		expect(stderr).not.toBe('');
+		expect(stderr).not.toContain(' at ');
 	});
 
 	it('should write --out files on success', async () => {
@@ -152,10 +151,10 @@ describe('bin/license-checker-rseidelsohn', () => {
 		const { code, stderr, stdout } = await runBin(['--json', '--out', outFile]);
 		const output = JSON.parse(fs.readFileSync(outFile, 'utf8'));
 
-		assert.equal(stderr, '');
-		assert.equal(stdout, '');
-		assert.equal(code, 0);
-		assert.equal(output[fixturePackageName].licenses, fixtureLicense);
+		expect(stderr).toBe('');
+		expect(stdout).toBe('');
+		expect(code).toBe(0);
+		expect(output[fixturePackageName].licenses).toBe(fixtureLicense);
 		fs.rmSync(outFile);
 	});
 
@@ -164,9 +163,9 @@ describe('bin/license-checker-rseidelsohn', () => {
 		const { code, stderr } = await runBin(['--files', outDir], path.join(__dirname, 'fixtures/license-file-only'));
 		const files = fs.readdirSync(outDir);
 
-		assert.equal(stderr, '');
-		assert.equal(code, 0);
-		assert.equal(files.includes('license-file-only@1.2.3-LICENSE.txt'), true);
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(files).toContain('license-file-only@1.2.3-LICENSE.txt');
 		fs.rmSync(outDir, { recursive: true });
 	});
 }, /* timeout */ 8000);

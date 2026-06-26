@@ -1,25 +1,25 @@
-import assert from 'node:assert';
+import { describe, expect, it } from 'vitest';
 import { licenseFiles } from '../lib/license-files.js';
 
 describe('license files detector', () => {
 	it('should export a function', () => {
-		assert.equal(typeof licenseFiles, 'function');
+		expect(licenseFiles).toBeTypeOf('function');
 	});
 
 	it('no files', () => {
-		assert.deepEqual(licenseFiles([]), []);
+		expect(licenseFiles([])).toEqual([]);
 	});
 
 	it('no license files', () => {
-		assert.deepEqual(licenseFiles(['.gitignore', 'TODO']), []);
+		expect(licenseFiles(['.gitignore', 'TODO'])).toEqual([]);
 	});
 
 	it('one license candidate', () => {
-		assert.deepEqual(licenseFiles(['LICENSE', '.gitignore', 'src']), ['LICENSE']);
+		expect(licenseFiles(['LICENSE', '.gitignore', 'src'])).toEqual(['LICENSE']);
 	});
 
 	it('multiple license candidates detected in the right order', () => {
-		assert.deepEqual(licenseFiles(['COPYING', '.gitignore', 'LICENCE', 'LICENSE', 'src', 'README']), [
+		expect(licenseFiles(['COPYING', '.gitignore', 'LICENCE', 'LICENSE', 'src', 'README'])).toEqual([
 			'LICENSE',
 			'LICENCE',
 			'COPYING',
@@ -28,18 +28,18 @@ describe('license files detector', () => {
 	});
 
 	it('extensions have no effect', () => {
-		assert.deepEqual(licenseFiles(['LICENCE.txt', '.gitignore', 'src']), ['LICENCE.txt']);
+		expect(licenseFiles(['LICENCE.txt', '.gitignore', 'src'])).toEqual(['LICENCE.txt']);
 	});
 
 	it('lower/upper case has no effect', () => {
-		assert.deepEqual(licenseFiles(['LiCeNcE', '.gitignore', 'src']), ['LiCeNcE']);
+		expect(licenseFiles(['LiCeNcE', '.gitignore', 'src'])).toEqual(['LiCeNcE']);
 	});
 
 	it('LICENSE-MIT gets matched', () => {
-		assert.deepEqual(licenseFiles(['LICENSE', '.gitignore', 'LICENSE-MIT', 'src']), ['LICENSE', 'LICENSE-MIT']);
+		expect(licenseFiles(['LICENSE', '.gitignore', 'LICENSE-MIT', 'src'])).toEqual(['LICENSE', 'LICENSE-MIT']);
 	});
 
 	it('only the first LICENSE-* file gets matched', () => {
-		assert.deepEqual(licenseFiles(['license-foobar.txt', '.gitignore', 'LICENSE-MIT']), ['license-foobar.txt']);
+		expect(licenseFiles(['license-foobar.txt', '.gitignore', 'LICENSE-MIT'])).toEqual(['license-foobar.txt']);
 	});
 });

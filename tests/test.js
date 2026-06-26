@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { supportsColor } from 'chalk';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import * as args from '../lib/args.js';
 import { runLicenseCheck } from '../lib/index.js';
 import { getPackageKey } from './test-helpers.ts';
@@ -30,12 +31,12 @@ describe('should write output to files in programmatic usage', () => {
 	});
 
 	it('and the file should contain parseable JSON', () => {
-		assert.ok(fs.existsSync(tmpFileName));
+		expect(fs.existsSync(tmpFileName)).toBe(true);
 
 		const outputTxt = fs.readFileSync(tmpFileName, 'utf8');
 		const outputJson = JSON.parse(outputTxt);
 
-		assert.equal(typeof outputJson, 'object');
+		expect(typeof outputJson).toBe('object');
 	});
 });
 
@@ -61,7 +62,7 @@ describe('should parse local with unknown and excludes', () => {
 				excluded = false;
 			}
 		});
-		assert.ok(excluded);
+		expect(excluded).toBe(true);
 	});
 });
 
@@ -77,7 +78,7 @@ describe('should parse local with excludes containing commas', () => {
 				excluded = false;
 			}
 		});
-		assert.ok(excluded);
+		expect(excluded).toBe(true);
 	});
 });
 
@@ -93,7 +94,7 @@ describe('should parse local with BSD excludes', () => {
 				excluded = false;
 			}
 		});
-		assert.ok(excluded);
+		expect(excluded).toBe(true);
 	});
 });
 
@@ -109,7 +110,7 @@ describe('should parse local with Public Domain excludes', () => {
 				excluded = false;
 			}
 		});
-		assert.ok(excluded);
+		expect(excluded).toBe(true);
 	});
 });
 
@@ -125,7 +126,7 @@ describe('should not exclude Custom if not specified in excludes', () => {
 				excluded = false;
 			}
 		});
-		assert.ok(!excluded);
+		expect(excluded).toBe(false);
 	});
 });
 
@@ -149,7 +150,7 @@ describe('should reject on given list of onlyAllow licenses', () => {
 	beforeAll(parseAndFailOn('onlyAllow', '../', 'MIT; ISC', result));
 
 	it('should reject on non MIT and ISC licensed modules from results', () => {
-		assert.match(result.error.message, /which is not permitted by the --onlyAllow flag\. Exiting\./);
+		expect(result.error.message).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
 	});
 });
 
@@ -158,7 +159,7 @@ describe('should reject on single onlyAllow license', () => {
 	beforeAll(parseAndFailOn('onlyAllow', '../', 'ISC', result));
 
 	it('should reject on non ISC licensed modules from results', () => {
-		assert.match(result.error.message, /which is not permitted by the --onlyAllow flag\. Exiting\./);
+		expect(result.error.message).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
 	});
 });
 
@@ -179,8 +180,8 @@ describe('should not reject on complete list', () => {
 	);
 
 	it('should not reject if list is complete', () => {
-		assert.equal(result.error, null);
-		assert.ok(Object.keys(result.output).length > 0);
+		expect(result.error).toBeNull();
+		expect(Object.keys(result.output).length).toBeGreaterThan(0);
 	});
 });
 
@@ -189,7 +190,7 @@ describe('should reject on given list of failOn licenses', () => {
 	beforeAll(parseAndFailOn('failOn', '../', 'MIT; ISC', result));
 
 	it('should reject on MIT and ISC licensed modules from results', () => {
-		assert.match(result.error.message, /Found license defined by the --failOn flag: "MIT"\. Exiting\./);
+		expect(result.error.message).toMatch(/Found license defined by the --failOn flag: "MIT"\. Exiting\./);
 	});
 });
 
@@ -198,7 +199,7 @@ describe('should reject on single failOn license', () => {
 	beforeAll(parseAndFailOn('failOn', '../', 'ISC', result));
 
 	it('should reject on ISC licensed modules from results', () => {
-		assert.match(result.error.message, /Found license defined by the --failOn flag: "ISC"\. Exiting\./);
+		expect(result.error.message).toMatch(/Found license defined by the --failOn flag: "ISC"\. Exiting\./);
 	});
 });
 
@@ -235,7 +236,7 @@ describe('should parse local and handle private modules', () => {
 			}
 		});
 
-		assert.ok(privateModule);
+		expect(privateModule).toBe(true);
 	});
 });
 
@@ -245,7 +246,7 @@ describe('should treat license file over custom urls', () => {
 			start: path.join(__dirname, './fixtures/license-file-only'),
 		});
 		const item = output[Object.keys(output)[0]];
-		assert.equal(item.licenses, 'MIT*');
+		expect(item.licenses).toBe('MIT*');
 	});
 });
 
@@ -264,7 +265,7 @@ describe('should treat URLs as custom licenses', () => {
 				foundCustomLicense = true;
 			}
 		});
-		assert.ok(foundCustomLicense);
+		expect(foundCustomLicense).toBe(true);
 	});
 });
 
@@ -283,7 +284,7 @@ describe('should treat file references as custom licenses', () => {
 				foundCustomLicense = true;
 			}
 		});
-		assert.ok(foundCustomLicense);
+		expect(foundCustomLicense).toBe(true);
 	});
 });
 
@@ -300,8 +301,8 @@ describe('error handler', () => {
 describe('should parse with args', () => {
 	it('should handle undefined', () => {
 		const result = args.setDefaultArguments(undefined);
-		assert.equal(result.color, supportsColor ? supportsColor.hasBasic : false);
-		assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+		expect(result.color).toBe(supportsColor ? supportsColor.hasBasic : false);
+		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
 	it('should handle color undefined', () => {
@@ -309,8 +310,8 @@ describe('should parse with args', () => {
 			color: undefined,
 			start: path.resolve(path.join(__dirname, '../')),
 		});
-		assert.equal(result.color, supportsColor ? supportsColor.hasBasic : false);
-		assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+		expect(result.color).toBe(supportsColor ? supportsColor.hasBasic : false);
+		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
 	it('should handle direct undefined', () => {
@@ -318,14 +319,14 @@ describe('should parse with args', () => {
 			direct: undefined,
 			start: path.resolve(path.join(__dirname, '../')),
 		});
-		assert.equal(result.direct, Number.POSITIVE_INFINITY);
-		assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+		expect(result.direct).toBe(Number.POSITIVE_INFINITY);
+		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
 	it('should handle direct true', () => {
 		const result = args.setDefaultArguments({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
-		assert.equal(result.direct, Number.POSITIVE_INFINITY);
-		assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+		expect(result.direct).toBe(Number.POSITIVE_INFINITY);
+		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
 	it('should override direct option with depth option', () => {
@@ -334,14 +335,14 @@ describe('should parse with args', () => {
 			depth: '99',
 			start: path.resolve(path.join(__dirname, '../')),
 		});
-		assert.equal(result.direct, 99);
-		assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+		expect(result.direct).toBe(99);
+		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
 	it('should use depth for direct option when direct is not provided', () => {
 		const result = args.setDefaultArguments({ depth: '99', start: path.resolve(path.join(__dirname, '../')) });
-		assert.equal(result.direct, 99);
-		assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+		expect(result.direct).toBe(99);
+		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
 	['json', 'markdown', 'csv', 'summary'].forEach(type => {
@@ -352,7 +353,7 @@ describe('should parse with args', () => {
 			};
 			def[type] = true;
 			const result = args.setDefaultArguments(def);
-			assert.equal(result.start, path.resolve(path.join(__dirname, '../')));
+			expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 		});
 	});
 });
@@ -369,10 +370,10 @@ describe('custom formats', () => {
 		});
 
 		Object.keys(output).forEach(item => {
-			assert.notEqual(output[item].name, undefined);
-			assert.notEqual(output[item].description, undefined);
-			assert.notEqual(output[item].pewpew, undefined);
-			assert.equal(output[item].pewpew, '<<Should Never be set>>');
+			expect(output[item].name).not.toBeUndefined();
+			expect(output[item].description).not.toBeUndefined();
+			expect(output[item].pewpew).not.toBeUndefined();
+			expect(output[item].pewpew).toBe('<<Should Never be set>>');
 		});
 	});
 
@@ -389,15 +390,15 @@ describe('custom formats', () => {
 		const filtered = await runLicenseCheck(parsed);
 		const customFormatContent = fs.readFileSync(path.join(__dirname, './../customFormatExample.json'), 'utf8');
 
-		assert.notEqual(customFormatContent, undefined);
-		assert.notEqual(customFormatContent, null);
+		expect(customFormatContent).not.toBeUndefined();
+		expect(customFormatContent).not.toBeNull();
 
 		const customJson = JSON.parse(customFormatContent);
 
 		//Test dynamically with the file directly
 		Object.keys(filtered).forEach(licenseItem => {
 			Object.keys(customJson).forEach(definedItem => {
-				assert.notEqual(filtered[licenseItem][definedItem], 'undefined');
+				expect(filtered[licenseItem][definedItem]).not.toBe('undefined');
 			});
 		});
 	});
@@ -410,8 +411,8 @@ describe('custom formats', () => {
 			},
 		});
 
-		assert.equal(Object.keys(filtered).length, 1);
-		assert.equal(filtered['license-checker-rseidelsohn@0.0.0'].publisher, 'Roman Seidelsohn');
+		expect(Object.keys(filtered)).toHaveLength(1);
+		expect(filtered['license-checker-rseidelsohn@0.0.0'].publisher).toBe('Roman Seidelsohn');
 	});
 });
 
@@ -423,7 +424,7 @@ describe('should output the module location', () => {
 
 		Object.keys(output).forEach(key => {
 			const expectedPath = path.resolve(path.join(__dirname, '../'));
-			assert.equal(isSameOrChildPath(expectedPath, output[key].path), true);
+			expect(isSameOrChildPath(expectedPath, output[key].path)).toBe(true);
 		});
 	});
 
@@ -436,7 +437,7 @@ describe('should output the module location', () => {
 
 		Object.keys(output).forEach(key => {
 			const outputPath = output[key].path;
-			assert.strictEqual(outputPath.startsWith(rootPath), false, `Output path is not a relative path: ${outputPath}`);
+			expect(outputPath.startsWith(rootPath)).toBe(false);
 		});
 	});
 });
@@ -452,7 +453,7 @@ describe('should output the location of the license files', () => {
 			.filter(dep => dep.licenseFile !== undefined)
 			.forEach(dep => {
 				const expectedPath = path.resolve(path.join(__dirname, '../'));
-				assert.equal(isSameOrChildPath(expectedPath, dep.licenseFile), true);
+				expect(isSameOrChildPath(expectedPath, dep.licenseFile)).toBe(true);
 			});
 	});
 
@@ -466,7 +467,7 @@ describe('should output the location of the license files', () => {
 			.map(key => filtered[key])
 			.filter(dep => dep.licenseFile !== undefined)
 			.forEach(dep => {
-				assert.notEqual(dep.licenseFile.substr(0, 1), '/');
+				expect(dep.licenseFile.substr(0, 1)).not.toBe('/');
 			});
 	});
 });
@@ -485,7 +486,7 @@ describe('handle copytight statement', () => {
 		});
 
 		const abbrevPackageKey = getPackageKey(output, 'abbrev');
-		assert.equal(output[abbrevPackageKey].copyright, 'Copyright (c) Isaac Z. Schlueter and Contributors*');
+		expect(output[abbrevPackageKey].copyright).toBe('Copyright (c) Isaac Z. Schlueter and Contributors*');
 	});
 });
 
@@ -506,7 +507,7 @@ it('should only list UNKNOWN or guessed licenses successfully so we check if the
 		}
 	});
 
-	assert.ok(onlyStarsFound);
+	expect(onlyStarsFound).toBe(true);
 });
 
 function parseAndInclude(parsePath, licenses, result) {
@@ -524,7 +525,7 @@ describe('should list given packages', () => {
 
 	it('should include only BSD', () => {
 		const output = result.output;
-		assert.ok(Object.keys(output).length === 1);
+		expect(Object.keys(output)).toHaveLength(1);
 	});
 });
 
@@ -534,7 +535,7 @@ describe('should not list not given packages', () => {
 
 	it('should not include Apache', () => {
 		const output = result.output;
-		assert.ok(Object.keys(output).length === 0);
+		expect(Object.keys(output)).toHaveLength(0);
 	});
 });
 
@@ -559,6 +560,6 @@ describe('should only list UNKNOWN or guessed licenses with errors (argument mis
 				onlyStarsFound = false;
 			}
 		});
-		assert.equal(onlyStarsFound, false);
+		expect(onlyStarsFound).toBe(false);
 	});
 });
