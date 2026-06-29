@@ -19,7 +19,7 @@
 	"scripts": {
 		"test": "vitest run",
 		"test-dev": "vitest",
-		"check": "biome check",
+		"check": "biome check && tsc",
 		"check-fix": "biome check --write",
 		"check-fix-unsafe": "biome check --write --unsafe",
 		"changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",

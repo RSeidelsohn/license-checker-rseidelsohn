@@ -5,9 +5,11 @@
 		"declaration": true,
 		"emitDeclarationOnly": true,
 		"outDir": "dist",
+		"rootDir": ".",
 		"allowJs": true,
-		"allowImportingTsExtensions": true,
+		"types": ["node"],
 		"verbatimModuleSyntax": true
 	},
-	"include": ["bin/**/*", "lib/**/*", "scripts/**/*", "tests/**/*"]
+	"include": ["lib/**/*", "bin/license-checker-rseidelsohn.js"],
+	"references": [{ "path": "tsconfig.check.json" }]
 }

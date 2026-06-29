@@ -1,8 +1,8 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { runLicenseCheck } from '../lib/index.js';
+import { runLicenseCheck } from '../lib';
 import pkgJson from '../package.json' with { type: 'json' };
-import { hasPackage } from './test-helpers.ts';
+import { hasPackage } from './test-helpers';
 
 describe('runLicenseCheck', () => {
 	it('rejects on onlyAllow errors', async () => {

@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"composite": true,
+		"module": "esnext",
+		"moduleResolution": "bundler"
+	},
+	"include": ["package.json", "lib/**/*", "vitest.config.ts", "scripts/**/*", "tests/**/*"]
+}

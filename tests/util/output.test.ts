@@ -4,8 +4,8 @@ import path from 'node:path';
 import { rimraf } from 'rimraf';
 import { describe, expect, it, vi } from 'vitest';
 import { asCSV, asFiles, asMarkDown, asPlainVertical, asSummary, asTree, print } from '../../lib/util/output.js';
-import { getPackageKey } from '../test-helpers.ts';
-import { normalOutput, withBsd, withCustomFormat } from './output.testdata.ts';
+import { getPackageKey } from '../test-helpers';
+import { normalOutput, withBsd, withCustomFormat } from './output.testdata';
 
 const customFormat = {
 	name: '<<Default Name>>',

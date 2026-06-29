@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import * as args from '../lib/args.js';
-import { runLicenseCheck } from '../lib/index.js';
+import { runLicenseCheck } from '../lib';
+import { setDefaultArguments } from '../lib/args.js';
 import readInstalledPackages from '../lib/readInstalledPackagesWithArborist.js';
 
 type PackageJson = Record<string, unknown>;
@@ -286,7 +286,7 @@ describe('runLicenseCheck with Arborist dependency trees', () => {
 	});
 
 	it('continues to normalize --depth 0 to direct depth 0', () => {
-		const normalizedArguments = args.setDefaultArguments({ depth: '0', start: root });
+		const normalizedArguments = setDefaultArguments({ depth: '0', start: root });
 
 		expect(normalizedArguments.direct).toBe(0);
 	});

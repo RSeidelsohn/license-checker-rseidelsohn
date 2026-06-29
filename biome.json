@@ -91,6 +91,16 @@
 			"formatter": {
 				"indentWidth": 2
 			}
+		},
+		{
+			"includes": ["tests/**/*.ts"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"useImportExtensions": "off"
+					}
+				}
+			}
 		}
 	]
 }
