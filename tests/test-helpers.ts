@@ -4,6 +4,9 @@ import { expect } from 'vitest';
 export const getPackageKey = (output: any, packageName: string) => {
 	const packageKey = Object.keys(output).find(key => key.startsWith(`${packageName}@`));
 	expect(packageKey, `Expected ${packageName} in output`).toBeTruthy();
+	if (!packageKey) {
+		throw new Error(`Expected ${packageName} in output`);
+	}
 	return packageKey;
 };
 

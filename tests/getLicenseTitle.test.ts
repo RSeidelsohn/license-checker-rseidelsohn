@@ -7,7 +7,7 @@ describe('license parser', () => {
 	});
 
 	it('should throw an error when called with a non-string argument', () => {
-		expect(() => getLicenseTitle({})).toThrow(/Must be of type string/);
+		expect(() => getLicenseTitle({} as unknown as string)).toThrow(/Must be of type string/);
 	});
 
 	it('removes newlines from the argument', () => {

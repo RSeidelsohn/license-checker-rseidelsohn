@@ -4,20 +4,55 @@ import { supportsColor } from 'chalk';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import * as args from '../lib/args.js';
 import { runLicenseCheck } from '../lib/index.js';
-import { getPackageKey } from './test-helpers.ts';
+import { getPackageKey } from './test-helpers';
+
+type LicenseCheckItem = {
+	copyright?: string;
+	description?: string;
+	licenseFile?: string;
+	licenses?: string | string[];
+	name?: string;
+	path?: string;
+	pewpew?: string;
+	publisher?: string;
+	[key: string]: unknown;
+};
+
+type LicenseCheckOutput = Record<string, LicenseCheckItem>;
+
+type RunLicenseCheckOptions = {
+	start: string;
+	[key: string]: unknown;
+};
+
+type OutputResult = {
+	output: LicenseCheckOutput;
+};
+
+type PolicyResult = OutputResult & {
+	error: Error | null;
+};
+
+type ArgumentFormat = 'json' | 'markdown' | 'csv' | 'summary';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const isSameOrChildPath = (rootPath, currentPath) => {
+const runLicenseCheckForTest = (options: RunLicenseCheckOptions) =>
+	runLicenseCheck(options as Parameters<typeof runLicenseCheck>[0]) as unknown as Promise<LicenseCheckOutput>;
+
+const isSameOrChildPath = (rootPath: string, currentPath: string) => {
 	const relativePath = path.relative(rootPath, currentPath);
 	return relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
 };
+
+const hasLicenseFile = (dep: LicenseCheckItem): dep is LicenseCheckItem & { licenseFile: string } =>
+	dep.licenseFile !== undefined;
 
 describe('should write output to files in programmatic usage', () => {
 	const tmpFileName = path.join(__dirname, 'tmp_output.json');
 
 	beforeAll(async () => {
-		await runLicenseCheck({
+		await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 			json: true,
 			out: tmpFileName,
@@ -40,9 +75,9 @@ describe('should write output to files in programmatic usage', () => {
 	});
 });
 
-function parseAndExclude(parsePath, licenses, result) {
+function parseAndExclude(parsePath: string, licenses: string, result: OutputResult) {
 	return async () => {
-		result.output = await runLicenseCheck({
+		result.output = await runLicenseCheckForTest({
 			start: path.join(__dirname, parsePath),
 			excludeLicenses: licenses,
 		});
@@ -50,7 +85,7 @@ function parseAndExclude(parsePath, licenses, result) {
 }
 
 describe('should parse local with unknown and excludes', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 
 	beforeAll(parseAndExclude('../', 'MIT, ISC', result));
 
@@ -67,7 +102,7 @@ describe('should parse local with unknown and excludes', () => {
 });
 
 describe('should parse local with excludes containing commas', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 	beforeAll(parseAndExclude('./fixtures/excludeWithComma', 'Apache License\\, Version 2.0', result));
 
 	it('should exclude a license with a comma from the list', () => {
@@ -83,7 +118,7 @@ describe('should parse local with excludes containing commas', () => {
 });
 
 describe('should parse local with BSD excludes', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 	beforeAll(parseAndExclude('./fixtures/excludeBSD', 'BSD', result));
 
 	it('should exclude BSD-3-Clause', () => {
@@ -99,7 +134,7 @@ describe('should parse local with BSD excludes', () => {
 });
 
 describe('should parse local with Public Domain excludes', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 	beforeAll(parseAndExclude('./fixtures/excludePublicDomain', 'Public Domain', result));
 
 	it('should exclude Public Domain', () => {
@@ -115,7 +150,7 @@ describe('should parse local with Public Domain excludes', () => {
 });
 
 describe('should not exclude Custom if not specified in excludes', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 	beforeAll(parseAndExclude('./fixtures/custom-license-file', 'MIT', result));
 
 	it('should exclude Public Domain', () => {
@@ -130,41 +165,40 @@ describe('should not exclude Custom if not specified in excludes', () => {
 	});
 });
 
-function parseAndFailOn(key, parsePath, licenses, result) {
+function parseAndFailOn(key: 'failOn' | 'onlyAllow', parsePath: string, licenses: string, result: PolicyResult) {
 	return async () => {
-		const config = { start: path.join(__dirname, parsePath) };
-		config[key] = licenses;
+		const config = { start: path.join(__dirname, parsePath), [key]: licenses };
 
 		try {
-			result.output = await runLicenseCheck(config);
+			result.output = await runLicenseCheckForTest(config);
 			result.error = null;
 		} catch (error) {
 			result.output = {};
-			result.error = error;
+			result.error = error instanceof Error ? error : new Error(String(error));
 		}
 	};
 }
 
 describe('should reject on given list of onlyAllow licenses', () => {
-	const result = {};
+	const result: PolicyResult = { error: null, output: {} };
 	beforeAll(parseAndFailOn('onlyAllow', '../', 'MIT; ISC', result));
 
 	it('should reject on non MIT and ISC licensed modules from results', () => {
-		expect(result.error.message).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
+		expect(result.error?.message).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
 	});
 });
 
 describe('should reject on single onlyAllow license', () => {
-	const result = {};
+	const result: PolicyResult = { error: null, output: {} };
 	beforeAll(parseAndFailOn('onlyAllow', '../', 'ISC', result));
 
 	it('should reject on non ISC licensed modules from results', () => {
-		expect(result.error.message).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
+		expect(result.error?.message).toMatch(/which is not permitted by the --onlyAllow flag\. Exiting\./);
 	});
 });
 
 describe('should not reject on complete list', () => {
-	const result = {};
+	const result: PolicyResult = { error: null, output: {} };
 	beforeAll(
 		parseAndFailOn(
 			'onlyAllow',
@@ -186,43 +220,43 @@ describe('should not reject on complete list', () => {
 });
 
 describe('should reject on given list of failOn licenses', () => {
-	const result = {};
+	const result: PolicyResult = { error: null, output: {} };
 	beforeAll(parseAndFailOn('failOn', '../', 'MIT; ISC', result));
 
 	it('should reject on MIT and ISC licensed modules from results', () => {
-		expect(result.error.message).toMatch(/Found license defined by the --failOn flag: "MIT"\. Exiting\./);
+		expect(result.error?.message).toMatch(/Found license defined by the --failOn flag: "MIT"\. Exiting\./);
 	});
 });
 
 describe('should reject on single failOn license', () => {
-	const result = {};
+	const result: PolicyResult = { error: null, output: {} };
 	beforeAll(parseAndFailOn('failOn', '../', 'ISC', result));
 
 	it('should reject on ISC licensed modules from results', () => {
-		expect(result.error.message).toMatch(/Found license defined by the --failOn flag: "ISC"\. Exiting\./);
+		expect(result.error?.message).toMatch(/Found license defined by the --failOn flag: "ISC"\. Exiting\./);
 	});
 });
 
 describe('init policy errors', () => {
 	it('returns onlyAllow errors through the callback without exiting', async () => {
 		const options = { start: path.join(__dirname, '../'), onlyAllow: 'ISC' };
-		await expect(runLicenseCheck(options)).rejects.toThrow(
+		await expect(runLicenseCheckForTest(options)).rejects.toThrow(
 			/which is not permitted by the --onlyAllow flag\. Exiting\./
 		);
 	});
 
 	it('returns failOn errors through the callback without exiting', async () => {
 		const options = { start: path.join(__dirname, '../'), failOn: 'ISC' };
-		await expect(runLicenseCheck(options)).rejects.toThrow(
+		await expect(runLicenseCheckForTest(options)).rejects.toThrow(
 			/Found license defined by the --failOn flag: "ISC"\. Exiting\./
 		);
 	});
 });
 
 describe('should parse local and handle private modules', () => {
-	let output;
+	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheck({
+		output = await runLicenseCheckForTest({
 			start: path.join(__dirname, './fixtures/privateModule'),
 		});
 	});
@@ -242,7 +276,7 @@ describe('should parse local and handle private modules', () => {
 
 describe('should treat license file over custom urls', () => {
 	it('should recognise a custom license at a url', async () => {
-		const output = await runLicenseCheck({
+		const output = await runLicenseCheckForTest({
 			start: path.join(__dirname, './fixtures/license-file-only'),
 		});
 		const item = output[Object.keys(output)[0]];
@@ -251,9 +285,9 @@ describe('should treat license file over custom urls', () => {
 });
 
 describe('should treat URLs as custom licenses', () => {
-	let output;
+	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheck({
+		output = await runLicenseCheckForTest({
 			start: path.join(__dirname, './fixtures/custom-license-url'),
 		});
 	});
@@ -270,9 +304,9 @@ describe('should treat URLs as custom licenses', () => {
 });
 
 describe('should treat file references as custom licenses', () => {
-	let output;
+	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheck({
+		output = await runLicenseCheckForTest({
 			start: path.join(__dirname, './fixtures/custom-license-file'),
 		});
 	});
@@ -290,11 +324,13 @@ describe('should treat file references as custom licenses', () => {
 
 describe('error handler', () => {
 	it('should run without errors', async () => {
-		await expect(runLicenseCheck({ start: path.join(__dirname, '../'), development: true })).resolves.not.toThrow();
+		await expect(
+			runLicenseCheckForTest({ start: path.join(__dirname, '../'), development: true })
+		).resolves.not.toThrow();
 	});
 
 	it('should run with errors (npm packages not found)', async () => {
-		await expect(runLicenseCheck({ start: 'C:\\' })).rejects.toThrow();
+		await expect(runLicenseCheckForTest({ start: 'C:\\' })).rejects.toThrow();
 	});
 });
 
@@ -345,9 +381,9 @@ describe('should parse with args', () => {
 		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
 	});
 
-	['json', 'markdown', 'csv', 'summary'].forEach(type => {
+	(['json', 'markdown', 'csv', 'summary'] as const).forEach((type: ArgumentFormat) => {
 		it(`should disable color on ${type}`, () => {
-			const def = {
+			const def: { color: undefined; start: string } & Partial<Record<ArgumentFormat, boolean>> = {
 				color: undefined,
 				start: path.resolve(path.join(__dirname, '../')),
 			};
@@ -360,7 +396,7 @@ describe('should parse with args', () => {
 
 describe('custom formats', () => {
 	it('should create a custom format using customFormat successfully', async () => {
-		const output = await runLicenseCheck({
+		const output = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 			customFormat: {
 				name: '<<Default Name>>',
@@ -387,7 +423,7 @@ describe('custom formats', () => {
 		process.argv.pop();
 		process.argv.pop();
 
-		const filtered = await runLicenseCheck(parsed);
+		const filtered = await runLicenseCheckForTest(parsed);
 		const customFormatContent = fs.readFileSync(path.join(__dirname, './../customFormatExample.json'), 'utf8');
 
 		expect(customFormatContent).not.toBeUndefined();
@@ -395,7 +431,7 @@ describe('custom formats', () => {
 
 		const customJson = JSON.parse(customFormatContent);
 
-		//Test dynamically with the file directly
+		// Test dynamically with the file directly
 		Object.keys(filtered).forEach(licenseItem => {
 			Object.keys(customJson).forEach(definedItem => {
 				expect(filtered[licenseItem][definedItem]).not.toBe('undefined');
@@ -404,7 +440,7 @@ describe('custom formats', () => {
 	});
 
 	it('should return data for keys with different names in json vs custom format', async () => {
-		const filtered = await runLicenseCheck({
+		const filtered = await runLicenseCheckForTest({
 			start: path.join(__dirname, './fixtures/author'),
 			customFormat: {
 				publisher: '',
@@ -418,25 +454,25 @@ describe('custom formats', () => {
 
 describe('should output the module location', () => {
 	it('as absolute path', async () => {
-		const output = await runLicenseCheck({
+		const output = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 		});
 
 		Object.keys(output).forEach(key => {
 			const expectedPath = path.resolve(path.join(__dirname, '../'));
-			expect(isSameOrChildPath(expectedPath, output[key].path)).toBe(true);
+			expect(isSameOrChildPath(expectedPath, output[key].path ?? '')).toBe(true);
 		});
 	});
 
 	it('using only relative paths if the option relativeModulePath is being used', async () => {
-		const output = await runLicenseCheck({
+		const output = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 			relativeModulePath: true,
 		});
 		const rootPath = path.join(__dirname, '../');
 
 		Object.keys(output).forEach(key => {
-			const outputPath = output[key].path;
+			const outputPath = output[key].path ?? '';
 			expect(outputPath.startsWith(rootPath)).toBe(false);
 		});
 	});
@@ -444,13 +480,13 @@ describe('should output the module location', () => {
 
 describe('should output the location of the license files', () => {
 	it('as absolute paths', async () => {
-		const output = await runLicenseCheck({
+		const output = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 		});
 
 		Object.keys(output)
 			.map(key => output[key])
-			.filter(dep => dep.licenseFile !== undefined)
+			.filter(hasLicenseFile)
 			.forEach(dep => {
 				const expectedPath = path.resolve(path.join(__dirname, '../'));
 				expect(isSameOrChildPath(expectedPath, dep.licenseFile)).toBe(true);
@@ -458,23 +494,23 @@ describe('should output the location of the license files', () => {
 	});
 
 	it('as relative paths when using relativeLicensePath', async () => {
-		const filtered = await runLicenseCheck({
+		const filtered = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 			relativeLicensePath: true,
 		});
 
 		Object.keys(filtered)
 			.map(key => filtered[key])
-			.filter(dep => dep.licenseFile !== undefined)
+			.filter(hasLicenseFile)
 			.forEach(dep => {
-				expect(dep.licenseFile.substr(0, 1)).not.toBe('/');
+				expect(dep.licenseFile.substring(0, 1)).not.toBe('/');
 			});
 	});
 });
 
 describe('handle copytight statement', () => {
 	it('should output copyright statements when configured in custom format', async () => {
-		const output = await runLicenseCheck({
+		const output = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 			customFormat: {
 				copyright: '', // specify custom format
@@ -491,7 +527,7 @@ describe('handle copytight statement', () => {
 });
 
 it('should only list UNKNOWN or guessed licenses successfully so we check if there is no license with a star or UNKNOWN found', async () => {
-	const output = await runLicenseCheck({
+	const output = await runLicenseCheckForTest({
 		start: path.join(__dirname, './fixtures/license-file-only'),
 		onlyunknown: true,
 	});
@@ -510,9 +546,9 @@ it('should only list UNKNOWN or guessed licenses successfully so we check if the
 	expect(onlyStarsFound).toBe(true);
 });
 
-function parseAndInclude(parsePath, licenses, result) {
+function parseAndInclude(parsePath: string, licenses: string, result: OutputResult) {
 	return async () => {
-		result.output = await runLicenseCheck({
+		result.output = await runLicenseCheckForTest({
 			start: path.join(__dirname, parsePath),
 			includeLicenses: licenses,
 		});
@@ -520,7 +556,7 @@ function parseAndInclude(parsePath, licenses, result) {
 }
 
 describe('should list given packages', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 	beforeAll(parseAndInclude('./fixtures/includeBSD', 'BSD', result));
 
 	it('should include only BSD', () => {
@@ -530,7 +566,7 @@ describe('should list given packages', () => {
 });
 
 describe('should not list not given packages', () => {
-	const result = {};
+	const result: OutputResult = { output: {} };
 	beforeAll(parseAndInclude('./fixtures/includeApache', 'BSD', result));
 
 	it('should not include Apache', () => {
@@ -540,9 +576,9 @@ describe('should not list not given packages', () => {
 });
 
 describe('should only list UNKNOWN or guessed licenses with errors (argument missing)', () => {
-	let output;
+	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheck({
+		output = await runLicenseCheckForTest({
 			start: path.join(__dirname, '../'),
 			production: true,
 		});
