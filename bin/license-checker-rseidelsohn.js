@@ -1,29 +1,28 @@
 #!/usr/bin/env node
-import * as args from '../lib/args.js';
-import { exitProcessOrWarnIfNeeded } from '../lib/exitProcessOrWarnIfNeeded.js';
-import * as licenseCheckerMain from '../lib/index.js';
-import * as helpers from '../lib/licenseCheckerHelpers.js';
 
-const parsedArgs = args.getNormalizedArguments();
+import { getNormalizedArguments, knownOptions } from '../lib/args.js';
+import { exitProcessOrWarnIfNeeded } from '../lib/exitProcessOrWarnIfNeeded.js';
+import { runLicenseCheck } from '../lib/index.js';
+import { colorizeOutput, getFormattedOutput, shouldColorizeOutput } from '../lib/licenseCheckerHelpers.js';
+
+const parsedArgs = getNormalizedArguments();
 const hasFailingArg = parsedArgs.failOn || parsedArgs.onlyAllow;
-const kownOptions = Object.keys(args.knownOptions);
-const unknownArgs = Object.keys(parsedArgs).filter(arg => !kownOptions.includes(arg));
+const known = Object.keys(knownOptions);
+const unknownArgs = Object.keys(parsedArgs).filter(arg => !known.includes(arg));
 
 exitProcessOrWarnIfNeeded({ unknownArgs, parsedArgs, hasFailingArg });
 
-licenseCheckerMain.init(parsedArgs, (err, foundLicensesJson) => {
-	if (err) {
-		console.error(err.message || err);
-		process.exitCode = 1;
-		return;
-	}
-
+try {
+	const foundLicensesJson = await runLicenseCheck(parsedArgs);
 	if (!parsedArgs.out) {
-		if (helpers.shouldColorizeOutput(parsedArgs)) {
-			helpers.colorizeOutput(foundLicensesJson);
+		if (shouldColorizeOutput(parsedArgs)) {
+			colorizeOutput(foundLicensesJson);
 		}
 
-		const formattedOutput = helpers.getFormattedOutput(foundLicensesJson, parsedArgs);
+		const formattedOutput = getFormattedOutput(foundLicensesJson, parsedArgs);
 		console.log(formattedOutput);
 	}
-});
+} catch (error) {
+	console.error(error.message ?? error);
+	process.exitCode = 1;
+}
