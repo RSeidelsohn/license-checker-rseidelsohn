@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { rimraf } from 'rimraf';
 import { describe, expect, it, vi } from 'vitest';
-import { asCSV, asFiles, asMarkDown, asPlainVertical, asSummary, asTree, print } from '../../lib/util/output.js';
+import { asCSV, asFiles, asMarkDown, asPlainVertical, asSummary, asTree } from '../../lib/util/output.js';
 import { getPackageKey } from '../test-helpers';
 import { normalOutput, withBsd, withCustomFormat } from './output.testdata';
 
@@ -81,17 +81,6 @@ describe('asPlainVertical', () => {
 	it('with BSD output', () => {
 		const data = asPlainVertical(withBsd);
 		expect(data).toContain('bsd-3-module 0.0.0\nBSD-3-Clause');
-	});
-});
-
-describe('print', () => {
-	it('should not return anything but print a tree to to console.log', () => {
-		let logOutput = '';
-		vi.spyOn(console, 'log').mockImplementation(arg => {
-			logOutput += arg;
-		});
-		print([{}]);
-		expect(logOutput).toContain('└─');
 	});
 });
 
