@@ -1,4 +1,37 @@
+import { spawn } from 'node:child_process';
+import path from 'node:path';
+import { text } from 'node:stream/consumers';
+import { fileURLToPath } from 'node:url';
 import { expect } from 'vitest';
+
+export type BinResult = {
+	code: number | null;
+	stderr: string;
+	stdout: string;
+};
+
+export type RunBinOptions = {
+	cwd?: string;
+};
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn.js');
+const repoPath = path.join(__dirname, '../');
+
+export const runBin = (args: string[], options: RunBinOptions = {}) =>
+	new Promise<BinResult>((resolve, reject) => {
+		const proc = spawn('node', [binPath, ...args], {
+			cwd: options.cwd ?? repoPath,
+			stdio: ['ignore', 'pipe', 'pipe'],
+		});
+		const stdout = text(proc.stdout);
+		const stderr = text(proc.stderr);
+
+		proc.on('error', reject);
+		proc.on('close', async code => {
+			resolve({ code, stderr: await stderr, stdout: await stdout });
+		});
+	});
 
 // biome-ignore lint/suspicious/noExplicitAny: JSON not typed correctly yet
 export const getPackageKey = (output: any, packageName: string) => {

@@ -1,14 +1,7 @@
-import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { text } from 'node:stream/consumers';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { runLicenseCheck } from '../lib';
-
-type BinResult = {
-	code: number | null;
-	stderr: string;
-	stdout: string;
-};
+import { runBin } from './test-helpers';
 
 type LicenseCheckOutput = Record<string, { licenses?: string | string[]; licenseText?: string }>;
 
@@ -18,26 +11,9 @@ type RunLicenseCheckOptions = {
 };
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn.js');
-const repoPath = path.join(__dirname, '../');
 
 const runLicenseCheckForTest = (options: RunLicenseCheckOptions) =>
 	runLicenseCheck(options as Parameters<typeof runLicenseCheck>[0]) as unknown as Promise<LicenseCheckOutput>;
-
-const runBin = (args: string[]) =>
-	new Promise<BinResult>((resolve, reject) => {
-		const proc = spawn('node', [binPath, ...args], {
-			cwd: repoPath,
-			stdio: ['ignore', 'pipe', 'pipe'],
-		});
-		const stdout = text(proc.stdout);
-		const stderr = text(proc.stderr);
-
-		proc.on('error', reject);
-		proc.on('close', async code => {
-			resolve({ code, stderr: await stderr, stdout: await stdout });
-		});
-	});
 
 describe('clarifications', () => {
 	const clarificationsPath = './fixtures/clarifications';

@@ -1,36 +1,8 @@
-import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { text } from 'node:stream/consumers';
 import { describe, expect, it } from 'vitest';
-
-type BinResult = {
-	code: number | null;
-	stderr: string;
-	stdout: string;
-};
-
-type RunBinOptions = {
-	cwd?: string;
-};
+import { runBin } from './test-helpers';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn.js');
-const repoPath = path.join(__dirname, '../');
-
-const runBin = (args: string[], opts: RunBinOptions = {}) =>
-	new Promise<BinResult>((resolve, reject) => {
-		const proc = spawn('node', [binPath, ...args], {
-			cwd: opts.cwd ?? repoPath,
-			stdio: ['ignore', 'pipe', 'pipe'],
-		});
-		const stdout = text(proc.stdout);
-		const stderr = text(proc.stderr);
-
-		proc.on('error', reject);
-		proc.on('close', async code => {
-			resolve({ code, stderr: await stderr, stdout: await stdout });
-		});
-	});
 
 describe('bin/license-checker-rseidelsohn', () => {
 	it('should restrict the output to the provided packages', async () => {
