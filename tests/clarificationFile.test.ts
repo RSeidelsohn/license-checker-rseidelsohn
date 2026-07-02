@@ -3,26 +3,19 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { runLicenseCheck } from '../lib';
 import { runBin } from './test-helpers';
 
-type LicenseCheckOutput = Record<string, { licenses?: string | string[]; licenseText?: string }>;
+type LicenseCheckOutput = Awaited<ReturnType<typeof runLicenseCheck>>;
 
-type RunLicenseCheckOptions = {
-	start: string;
-	[key: string]: unknown;
-};
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-const runLicenseCheckForTest = (options: RunLicenseCheckOptions) =>
-	runLicenseCheck(options as Parameters<typeof runLicenseCheck>[0]) as unknown as Promise<LicenseCheckOutput>;
+const fixturesPath = path.join(import.meta.dirname, 'fixtures');
+const clarificationsPath = path.join(fixturesPath, 'clarifications');
+const clarificationExamplePath = path.join(import.meta.dirname, '../clarificationExample.json');
 
 describe('clarifications', () => {
-	const clarificationsPath = './fixtures/clarifications';
 	const result: { output: LicenseCheckOutput } = { output: {} };
 
 	beforeAll(async () => {
-		result.output = await runLicenseCheckForTest({
-			start: path.join(__dirname, clarificationsPath),
-			clarificationsFile: path.join(__dirname, '../clarificationExample.json'),
+		result.output = await runLicenseCheck({
+			start: clarificationsPath,
+			clarificationsFile: clarificationExamplePath,
 			customFormat: { licenses: '', publisher: '', email: '', path: '', licenseFile: '', licenseText: '' },
 		});
 	});
@@ -37,9 +30,9 @@ describe('clarifications', () => {
 	it('should exit 1 if the checksum does not match', async () => {
 		const { code, stderr, stdout } = await runBin([
 			'--start',
-			path.join(__dirname, clarificationsPath),
+			clarificationsPath,
 			'--clarificationsFile',
-			path.join(__dirname, clarificationsPath, 'mismatch/clarification.json'),
+			path.join(clarificationsPath, 'mismatch/clarification.json'),
 		]);
 
 		expect(code).toBe(1);
@@ -49,27 +42,27 @@ describe('clarifications', () => {
 
 	it('should reject if the checksum does not match', async () => {
 		await expect(
-			runLicenseCheckForTest({
-				start: path.join(__dirname, clarificationsPath),
-				clarificationsFile: path.join(__dirname, clarificationsPath, 'mismatch/clarification.json'),
+			runLicenseCheck({
+				start: clarificationsPath,
+				clarificationsFile: path.join(clarificationsPath, 'mismatch/clarification.json'),
 			})
 		).rejects.toThrow(/Clarification checksum mismatch/);
 	});
 
 	it('should reject if a checksum clarification cannot be checked against a license file', async () => {
 		await expect(
-			runLicenseCheckForTest({
-				start: path.join(__dirname, 'fixtures/noLicenseFile'),
-				clarificationsFile: path.join(__dirname, clarificationsPath, 'checksumWithoutLicenseFile.json'),
+			runLicenseCheck({
+				start: path.join(fixturesPath, 'noLicenseFile'),
+				clarificationsFile: path.join(clarificationsPath, 'checksumWithoutLicenseFile.json'),
 			})
 		).rejects.toThrow(/All clarifications must come with a checksum/);
 	});
 
 	it('should reject if clarificationsMatchAll leaves unused clarifications', async () => {
 		await expect(
-			runLicenseCheckForTest({
-				start: path.join(__dirname, clarificationsPath),
-				clarificationsFile: path.join(__dirname, clarificationsPath, 'unusedClarification.json'),
+			runLicenseCheck({
+				start: clarificationsPath,
+				clarificationsFile: path.join(clarificationsPath, 'unusedClarification.json'),
 				clarificationsMatchAll: true,
 			})
 		).rejects.toThrow(
@@ -80,9 +73,9 @@ describe('clarifications', () => {
 	it('should succeed if no checksum is specified', async () => {
 		const { code, stdout } = await runBin([
 			'--start',
-			path.join(__dirname, clarificationsPath),
+			clarificationsPath,
 			'--clarificationsFile',
-			path.join(__dirname, clarificationsPath, 'example/noChecksum.json'),
+			path.join(clarificationsPath, 'example/noChecksum.json'),
 		]);
 
 		expect(code).toBe(0);
@@ -93,11 +86,11 @@ describe('clarifications', () => {
 	it('should snip the embedded license out of the README', async () => {
 		const { code, stdout } = await runBin([
 			'--start',
-			path.join(__dirname, clarificationsPath),
+			clarificationsPath,
 			'--clarificationsFile',
-			path.join(__dirname, clarificationsPath, 'weirdStart/clarification.json'),
+			path.join(clarificationsPath, 'weirdStart/clarification.json'),
 			'--customPath',
-			path.join(__dirname, clarificationsPath, 'weirdStart/customFormat.json'),
+			path.join(clarificationsPath, 'weirdStart/customFormat.json'),
 		]);
 
 		expect(code).toBe(0);
@@ -112,11 +105,11 @@ describe('clarifications', () => {
 	it('should snip the embedded license in the README to the end.', async () => {
 		const { code, stdout } = await runBin([
 			'--start',
-			path.join(__dirname, clarificationsPath),
+			clarificationsPath,
 			'--clarificationsFile',
-			path.join(__dirname, clarificationsPath, 'weirdStart/startOnlyClarification.json'),
+			path.join(clarificationsPath, 'weirdStart/startOnlyClarification.json'),
 			'--customPath',
-			path.join(__dirname, clarificationsPath, 'weirdStart/customFormat.json'),
+			path.join(clarificationsPath, 'weirdStart/customFormat.json'),
 		]);
 
 		expect(code).toBe(0);

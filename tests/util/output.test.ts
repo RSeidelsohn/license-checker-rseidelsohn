@@ -12,6 +12,7 @@ const customFormat = {
 	description: '<<Default Description>>',
 	pewpew: '<<Should Never be set>>',
 };
+const licensePath = path.resolve(import.meta.dirname, '../..', 'LICENSE');
 
 describe('asCSV', () => {
 	it('with normal output', () => {
@@ -101,7 +102,7 @@ describe('asFiles', () => {
 		const out = path.join(tmpdir(), 'lc');
 		asFiles(
 			{
-				foo: { licenses: 'MIT', repository: '/path/to/foo', licenseFile: path.join(__dirname, '../../LICENSE') },
+				foo: { licenses: 'MIT', repository: '/path/to/foo', licenseFile: licensePath },
 				bar: { licenses: 'MIT' },
 			},
 			out

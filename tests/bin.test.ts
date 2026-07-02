@@ -5,16 +5,17 @@ import { describe, expect, it } from 'vitest';
 import packageJson from '../package.json' with { type: 'json' };
 import { runBin } from './test-helpers';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const fixturePath = path.join(__dirname, 'fixtures/custom-license-url');
-const repoPath = path.join(__dirname, '../');
+const repoPath = path.resolve(import.meta.dirname, '..');
+const fixturesPath = path.join(import.meta.dirname, 'fixtures');
+const fixturePath = path.join(fixturesPath, 'custom-license-url');
+const licenseFileOnlyPath = path.join(fixturesPath, 'license-file-only');
 const fixturePackageName = 'custom-license@0.0.0';
 const fixtureLicense = 'Custom: http://example.com/dummy-license';
 const tempPath = (name: string) => path.join(tmpdir(), `license-checker-rseidelsohn-${Date.now()}-${name}`);
 
-describe('bin/license-checker-rseidelsohn', () => {
+describe('license checker bin', () => {
 	it('should exit 0', async () => {
-		const { code } = await runBin([], { cwd: path.join(__dirname, '../') });
+		const { code } = await runBin([], { cwd: repoPath });
 
 		expect(code).toBe(0);
 	});
@@ -78,12 +79,20 @@ describe('bin/license-checker-rseidelsohn', () => {
 		expect(stderr.trim()).toBe(packageJson.version);
 	});
 
-	it('should exit 1 without stdout if --failOn MIT finds a matching license', async () => {
-		const { code, stderr, stdout } = await runBin(['--failOn', 'MIT'], { cwd: repoPath });
+	describe('the --failOn parameter', () => {
+		it('should exit 1 without stdout if --failOn MIT finds a matching license', async () => {
+			const { code, stderr, stdout } = await runBin(['--failOn', 'MIT'], { cwd: repoPath });
 
-		expect(code).toBe(1);
-		expect(stdout).toBe('');
-		expect(stderr).toMatch(/Found license defined by the --failOn flag: "MIT"\. Exiting\./);
+			expect(code).toBe(1);
+			expect(stdout).toBe('');
+			expect(stderr).toMatch(/Found license defined by the --failOn flag: "MIT"\. Exiting\./);
+		});
+
+		it('should give a warning about commas in the --failOn value', async () => {
+			const { stderr } = await runBin(['--failOn', 'MIT,ISC']);
+
+			expect(stderr).toContain('--failOn argument takes semicolons as delimeters instead of commas');
+		});
 	});
 
 	it('should exit 1 without stdout if --onlyAllow rejects a license', async () => {
@@ -111,7 +120,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 	it('should not create --files output when a policy error occurs', async () => {
 		const outDir = tempPath('policy-error-files');
 		const { code, stderr, stdout } = await runBin(['--files', outDir, '--onlyAllow', 'ISC'], {
-			cwd: path.join(__dirname, 'fixtures/license-file-only'),
+			cwd: licenseFileOnlyPath,
 		});
 
 		expect(code).toBe(1);
@@ -121,7 +130,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 	});
 
 	it('should exit 1 without stdout on dependency read errors', async () => {
-		const missingPath = path.join(__dirname, 'fixtures/does-not-exist');
+		const missingPath = path.join(fixturesPath, 'does-not-exist');
 		const { code, stderr, stdout } = await runBin(['--start', missingPath], { cwd: repoPath });
 
 		expect(code).toBe(1);
@@ -145,7 +154,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 	it('should write --files output on success', async () => {
 		const outDir = tempPath('files');
 		const { code, stderr } = await runBin(['--files', outDir], {
-			cwd: path.join(__dirname, 'fixtures/license-file-only'),
+			cwd: licenseFileOnlyPath,
 		});
 		const files = fs.readdirSync(outDir);
 

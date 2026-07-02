@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { supportsColor } from 'chalk';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import * as args from '../lib/args.js';
-import { runLicenseCheck } from '../lib/index.js';
+import { runLicenseCheck } from '../lib';
+import { getNormalizedArguments, setDefaultArguments } from '../lib/args.js';
 import { getPackageKey } from './test-helpers';
 
 type LicenseCheckItem = {
@@ -18,12 +18,7 @@ type LicenseCheckItem = {
 	[key: string]: unknown;
 };
 
-type LicenseCheckOutput = Record<string, LicenseCheckItem>;
-
-type RunLicenseCheckOptions = {
-	start: string;
-	[key: string]: unknown;
-};
+type LicenseCheckOutput = Awaited<ReturnType<typeof runLicenseCheck>>;
 
 type OutputResult = {
 	output: LicenseCheckOutput;
@@ -35,12 +30,15 @@ type PolicyResult = OutputResult & {
 
 type ArgumentFormat = 'json' | 'markdown' | 'csv' | 'summary';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const repoPath = path.resolve(import.meta.dirname, '..');
+const fixturesPath = path.join(import.meta.dirname, 'fixtures');
+const customFormatExamplePath = path.join(repoPath, 'customFormatExample.json');
+const resolveTestPath = (relativePath: string) => path.resolve(import.meta.dirname, relativePath);
 
-const runLicenseCheckForTest = (options: RunLicenseCheckOptions) =>
-	runLicenseCheck(options as Parameters<typeof runLicenseCheck>[0]) as unknown as Promise<LicenseCheckOutput>;
-
-const isSameOrChildPath = (rootPath: string, currentPath: string) => {
+const isSameOrChildPath = (rootPath: string, currentPath: string | undefined) => {
+	if (!currentPath) {
+		return false;
+	}
 	const relativePath = path.relative(rootPath, currentPath);
 	return relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
 };
@@ -49,11 +47,11 @@ const hasLicenseFile = (dep: LicenseCheckItem): dep is LicenseCheckItem & { lice
 	dep.licenseFile !== undefined;
 
 describe('should write output to files in programmatic usage', () => {
-	const tmpFileName = path.join(__dirname, 'tmp_output.json');
+	const tmpFileName = path.join(import.meta.dirname, 'tmp_output.json');
 
 	beforeAll(async () => {
-		await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		await runLicenseCheck({
+			start: repoPath,
 			json: true,
 			out: tmpFileName,
 		});
@@ -77,8 +75,8 @@ describe('should write output to files in programmatic usage', () => {
 
 function parseAndExclude(parsePath: string, licenses: string, result: OutputResult) {
 	return async () => {
-		result.output = await runLicenseCheckForTest({
-			start: path.join(__dirname, parsePath),
+		result.output = await runLicenseCheck({
+			start: resolveTestPath(parsePath),
 			excludeLicenses: licenses,
 		});
 	};
@@ -167,10 +165,10 @@ describe('should not exclude Custom if not specified in excludes', () => {
 
 function parseAndFailOn(key: 'failOn' | 'onlyAllow', parsePath: string, licenses: string, result: PolicyResult) {
 	return async () => {
-		const config = { start: path.join(__dirname, parsePath), [key]: licenses };
+		const config = { start: resolveTestPath(parsePath), [key]: licenses };
 
 		try {
-			result.output = await runLicenseCheckForTest(config);
+			result.output = await runLicenseCheck(config);
 			result.error = null;
 		} catch (error) {
 			result.output = {};
@@ -239,15 +237,15 @@ describe('should reject on single failOn license', () => {
 
 describe('init policy errors', () => {
 	it('returns onlyAllow errors through the callback without exiting', async () => {
-		const options = { start: path.join(__dirname, '../'), onlyAllow: 'ISC' };
-		await expect(runLicenseCheckForTest(options)).rejects.toThrow(
+		const options = { start: repoPath, onlyAllow: 'ISC' };
+		await expect(runLicenseCheck(options)).rejects.toThrow(
 			/which is not permitted by the --onlyAllow flag\. Exiting\./
 		);
 	});
 
 	it('returns failOn errors through the callback without exiting', async () => {
-		const options = { start: path.join(__dirname, '../'), failOn: 'ISC' };
-		await expect(runLicenseCheckForTest(options)).rejects.toThrow(
+		const options = { start: repoPath, failOn: 'ISC' };
+		await expect(runLicenseCheck(options)).rejects.toThrow(
 			/Found license defined by the --failOn flag: "ISC"\. Exiting\./
 		);
 	});
@@ -256,8 +254,8 @@ describe('init policy errors', () => {
 describe('should parse local and handle private modules', () => {
 	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheckForTest({
-			start: path.join(__dirname, './fixtures/privateModule'),
+		output = await runLicenseCheck({
+			start: path.join(fixturesPath, 'privateModule'),
 		});
 	});
 
@@ -276,8 +274,8 @@ describe('should parse local and handle private modules', () => {
 
 describe('should treat license file over custom urls', () => {
 	it('should recognise a custom license at a url', async () => {
-		const output = await runLicenseCheckForTest({
-			start: path.join(__dirname, './fixtures/license-file-only'),
+		const output = await runLicenseCheck({
+			start: path.join(fixturesPath, 'license-file-only'),
 		});
 		const item = output[Object.keys(output)[0]];
 		expect(item.licenses).toBe('MIT*');
@@ -287,8 +285,8 @@ describe('should treat license file over custom urls', () => {
 describe('should treat URLs as custom licenses', () => {
 	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheckForTest({
-			start: path.join(__dirname, './fixtures/custom-license-url'),
+		output = await runLicenseCheck({
+			start: path.join(fixturesPath, 'custom-license-url'),
 		});
 	});
 
@@ -306,8 +304,8 @@ describe('should treat URLs as custom licenses', () => {
 describe('should treat file references as custom licenses', () => {
 	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheckForTest({
-			start: path.join(__dirname, './fixtures/custom-license-file'),
+		output = await runLicenseCheck({
+			start: path.join(fixturesPath, 'custom-license-file'),
 		});
 	});
 
@@ -324,80 +322,78 @@ describe('should treat file references as custom licenses', () => {
 
 describe('error handler', () => {
 	it('should run without errors', async () => {
-		await expect(
-			runLicenseCheckForTest({ start: path.join(__dirname, '../'), development: true })
-		).resolves.not.toThrow();
+		await expect(runLicenseCheck({ start: repoPath, development: true })).resolves.not.toThrow();
 	});
 
 	it('should run with errors (npm packages not found)', async () => {
-		await expect(runLicenseCheckForTest({ start: 'C:\\' })).rejects.toThrow();
+		await expect(runLicenseCheck({ start: 'C:\\' })).rejects.toThrow();
 	});
 });
 
-describe('should parse with args', () => {
+describe('setDefaultArguments', () => {
 	it('should handle undefined', () => {
-		const result = args.setDefaultArguments(undefined);
+		const result = setDefaultArguments(undefined);
 		expect(result.color).toBe(supportsColor ? supportsColor.hasBasic : false);
-		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+		expect(result.start).toBe(repoPath);
 	});
 
 	it('should handle color undefined', () => {
-		const result = args.setDefaultArguments({
+		const result = setDefaultArguments({
 			color: undefined,
-			start: path.resolve(path.join(__dirname, '../')),
+			start: repoPath,
 		});
 		expect(result.color).toBe(supportsColor ? supportsColor.hasBasic : false);
-		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+		expect(result.start).toBe(repoPath);
 	});
 
 	it('should handle direct undefined', () => {
-		const result = args.setDefaultArguments({
+		const result = setDefaultArguments({
 			direct: undefined,
-			start: path.resolve(path.join(__dirname, '../')),
+			start: repoPath,
 		});
 		expect(result.direct).toBe(Number.POSITIVE_INFINITY);
-		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+		expect(result.start).toBe(repoPath);
 	});
 
 	it('should handle direct true', () => {
-		const result = args.setDefaultArguments({ direct: true, start: path.resolve(path.join(__dirname, '../')) });
+		const result = setDefaultArguments({ direct: true, start: repoPath });
 		expect(result.direct).toBe(Number.POSITIVE_INFINITY);
-		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+		expect(result.start).toBe(repoPath);
 	});
 
 	it('should override direct option with depth option', () => {
-		const result = args.setDefaultArguments({
+		const result = setDefaultArguments({
 			direct: '9',
 			depth: '99',
-			start: path.resolve(path.join(__dirname, '../')),
+			start: repoPath,
 		});
 		expect(result.direct).toBe(99);
-		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+		expect(result.start).toBe(repoPath);
 	});
 
 	it('should use depth for direct option when direct is not provided', () => {
-		const result = args.setDefaultArguments({ depth: '99', start: path.resolve(path.join(__dirname, '../')) });
+		const result = setDefaultArguments({ depth: '99', start: repoPath });
 		expect(result.direct).toBe(99);
-		expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+		expect(result.start).toBe(repoPath);
 	});
 
 	(['json', 'markdown', 'csv', 'summary'] as const).forEach((type: ArgumentFormat) => {
 		it(`should disable color on ${type}`, () => {
 			const def: { color: undefined; start: string } & Partial<Record<ArgumentFormat, boolean>> = {
 				color: undefined,
-				start: path.resolve(path.join(__dirname, '../')),
+				start: repoPath,
 			};
 			def[type] = true;
-			const result = args.setDefaultArguments(def);
-			expect(result.start).toBe(path.resolve(path.join(__dirname, '../')));
+			const result = setDefaultArguments(def);
+			expect(result.start).toBe(repoPath);
 		});
 	});
 });
 
 describe('custom formats', () => {
 	it('should create a custom format using customFormat successfully', async () => {
-		const output = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		const output = await runLicenseCheck({
+			start: repoPath,
 			customFormat: {
 				name: '<<Default Name>>',
 				description: '<<Default Description>>',
@@ -417,14 +413,14 @@ describe('custom formats', () => {
 		process.argv.push('--customPath');
 		process.argv.push('./customFormatExample.json');
 
-		const parsed = args.getNormalizedArguments();
-		parsed.start = path.join(__dirname, '../');
+		const parsed = getNormalizedArguments();
+		parsed.start = repoPath;
 
 		process.argv.pop();
 		process.argv.pop();
 
-		const filtered = await runLicenseCheckForTest(parsed);
-		const customFormatContent = fs.readFileSync(path.join(__dirname, './../customFormatExample.json'), 'utf8');
+		const filtered = await runLicenseCheck(parsed);
+		const customFormatContent = fs.readFileSync(customFormatExamplePath, 'utf8');
 
 		expect(customFormatContent).not.toBeUndefined();
 		expect(customFormatContent).not.toBeNull();
@@ -440,8 +436,8 @@ describe('custom formats', () => {
 	});
 
 	it('should return data for keys with different names in json vs custom format', async () => {
-		const filtered = await runLicenseCheckForTest({
-			start: path.join(__dirname, './fixtures/author'),
+		const filtered = await runLicenseCheck({
+			start: path.join(fixturesPath, 'author'),
 			customFormat: {
 				publisher: '',
 			},
@@ -454,48 +450,45 @@ describe('custom formats', () => {
 
 describe('should output the module location', () => {
 	it('as absolute path', async () => {
-		const output = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		const output = await runLicenseCheck({
+			start: repoPath,
 		});
 
 		Object.keys(output).forEach(key => {
-			const expectedPath = path.resolve(path.join(__dirname, '../'));
-			expect(isSameOrChildPath(expectedPath, output[key].path ?? '')).toBe(true);
+			expect(isSameOrChildPath(repoPath, output[key].path ?? '')).toBe(true);
 		});
 	});
 
 	it('using only relative paths if the option relativeModulePath is being used', async () => {
-		const output = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		const output = await runLicenseCheck({
+			start: repoPath,
 			relativeModulePath: true,
 		});
-		const rootPath = path.join(__dirname, '../');
 
 		Object.keys(output).forEach(key => {
 			const outputPath = output[key].path ?? '';
-			expect(outputPath.startsWith(rootPath)).toBe(false);
+			expect(outputPath.startsWith(repoPath)).toBe(false);
 		});
 	});
 });
 
 describe('should output the location of the license files', () => {
 	it('as absolute paths', async () => {
-		const output = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		const output = await runLicenseCheck({
+			start: repoPath,
 		});
 
 		Object.keys(output)
 			.map(key => output[key])
 			.filter(hasLicenseFile)
 			.forEach(dep => {
-				const expectedPath = path.resolve(path.join(__dirname, '../'));
-				expect(isSameOrChildPath(expectedPath, dep.licenseFile)).toBe(true);
+				expect(isSameOrChildPath(repoPath, dep.licenseFile)).toBe(true);
 			});
 	});
 
 	it('as relative paths when using relativeLicensePath', async () => {
-		const filtered = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		const filtered = await runLicenseCheck({
+			start: repoPath,
 			relativeLicensePath: true,
 		});
 
@@ -503,15 +496,15 @@ describe('should output the location of the license files', () => {
 			.map(key => filtered[key])
 			.filter(hasLicenseFile)
 			.forEach(dep => {
-				expect(dep.licenseFile.substring(0, 1)).not.toBe('/');
+				expect(dep.licenseFile?.substring(0, 1)).not.toBe('/');
 			});
 	});
 });
 
 describe('handle copytight statement', () => {
 	it('should output copyright statements when configured in custom format', async () => {
-		const output = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		const output = await runLicenseCheck({
+			start: repoPath,
 			customFormat: {
 				copyright: '', // specify custom format
 				email: false,
@@ -527,8 +520,8 @@ describe('handle copytight statement', () => {
 });
 
 it('should only list UNKNOWN or guessed licenses successfully so we check if there is no license with a star or UNKNOWN found', async () => {
-	const output = await runLicenseCheckForTest({
-		start: path.join(__dirname, './fixtures/license-file-only'),
+	const output = await runLicenseCheck({
+		start: path.join(fixturesPath, 'license-file-only'),
 		onlyunknown: true,
 	});
 
@@ -548,8 +541,8 @@ it('should only list UNKNOWN or guessed licenses successfully so we check if the
 
 function parseAndInclude(parsePath: string, licenses: string, result: OutputResult) {
 	return async () => {
-		result.output = await runLicenseCheckForTest({
-			start: path.join(__dirname, parsePath),
+		result.output = await runLicenseCheck({
+			start: resolveTestPath(parsePath),
 			includeLicenses: licenses,
 		});
 	};
@@ -578,8 +571,8 @@ describe('should not list not given packages', () => {
 describe('should only list UNKNOWN or guessed licenses with errors (argument missing)', () => {
 	let output: LicenseCheckOutput;
 	beforeAll(async () => {
-		output = await runLicenseCheckForTest({
-			start: path.join(__dirname, '../'),
+		output = await runLicenseCheck({
+			start: repoPath,
 			production: true,
 		});
 	});

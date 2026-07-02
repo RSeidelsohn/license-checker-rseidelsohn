@@ -1,7 +1,6 @@
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { text } from 'node:stream/consumers';
-import { fileURLToPath } from 'node:url';
 import { expect } from 'vitest';
 
 export type BinResult = {
@@ -14,9 +13,8 @@ export type RunBinOptions = {
 	cwd?: string;
 };
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const binPath = path.join(__dirname, '../bin/license-checker-rseidelsohn.js');
-const repoPath = path.join(__dirname, '../');
+const repoPath = path.resolve(import.meta.dirname, '..');
+const binPath = path.join(repoPath, 'bin/license-checker-rseidelsohn.js');
 
 export const runBin = (args: string[], options: RunBinOptions = {}) =>
 	new Promise<BinResult>((resolve, reject) => {

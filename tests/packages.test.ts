@@ -2,7 +2,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { runBin } from './test-helpers';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const fixturesPath = path.join(import.meta.dirname, 'fixtures');
 
 describe('bin/license-checker-rseidelsohn', () => {
 	it('should restrict the output to the provided packages', async () => {
@@ -90,7 +90,7 @@ describe('bin/license-checker-rseidelsohn', () => {
 
 	it('should exclude private packages from the output', async () => {
 		const { code, stderr, stdout } = await runBin(['--json', '--excludePrivatePackages'], {
-			cwd: path.join(__dirname, 'fixtures', 'privateModule'),
+			cwd: path.join(fixturesPath, 'privateModule'),
 		});
 		const packages = Object.keys(JSON.parse(stdout));
 
