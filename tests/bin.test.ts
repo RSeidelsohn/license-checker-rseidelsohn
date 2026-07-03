@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { stripVTControlCharacters } from 'node:util';
 import { describe, expect, it } from 'vitest';
 import packageJson from '../package.json' with { type: 'json' };
 import { runBin } from './test-helpers';
@@ -64,11 +65,22 @@ describe('license checker bin', () => {
 
 	it('should output tree format from the CLI', async () => {
 		const { code, stderr, stdout } = await runBin([], { cwd: fixturePath });
+		const plainStdout = stripVTControlCharacters(stdout);
 
 		expect(stderr).toBe('');
 		expect(code).toBe(0);
-		expect(stdout).toContain(fixturePackageName);
-		expect(stdout).toContain(fixtureLicense);
+		expect(plainStdout).toContain(fixturePackageName);
+		expect(plainStdout).toContain(fixtureLicense);
+	});
+
+	it('should output colorized tree format from the CLI', async () => {
+		const { code, stderr, stdout } = await runBin(['--color'], { cwd: fixturePath });
+		const plainStdout = stripVTControlCharacters(stdout);
+
+		expect(stderr).toBe('');
+		expect(code).toBe(0);
+		expect(plainStdout).toContain(fixturePackageName);
+		expect(plainStdout).toContain(fixtureLicense);
 	});
 
 	it('should output the package version from the CLI', async () => {
