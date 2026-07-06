@@ -14,12 +14,12 @@
 	"main": "./lib/index.js",
 	"types": "./dist/lib/index.d.ts",
 	"bin": {
-		"license-checker-rseidelsohn": "./bin/license-checker-rseidelsohn.js"
+		"license-checker-rseidelsohn": "./lib/cli.js"
 	},
 	"scripts": {
 		"test": "vitest run",
 		"test-dev": "vitest",
-		"check": "biome check && tsc",
+		"check": "biome check && tsc -b",
 		"check-fix": "biome check --write",
 		"check-fix-unsafe": "biome check --write --unsafe",
 		"changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
@@ -34,7 +34,6 @@
 		"url": "https://github.com/RSeidelsohn/license-checker-rseidelsohn.git"
 	},
 	"files": [
-		"bin",
 		"lib",
 		"CHANGELOG.md",
 		"SECURITY.md",

@@ -123,8 +123,8 @@ Take a look at the detailed [changelog](CHANGELOG.md) or at the
 ## <a id="all-options-in-alphabetical-order"></a>CLI options
 
 The following options are command-line flags for the `license-checker-rseidelsohn` executable. Some of the same
-behavior is also available through the programmatic `init` API. See [Programmatic API](#importing) for the supported
-`init` options and their types.
+behavior is also available through the programmatic `runLicenseCheck` API. See [Programmatic API](#importing) for the
+supported `runLicenseCheck` options and their types.
 
 - `--angularCli` is just a synonym for `--plainVertical`
 - `--clarificationsFile [filepath]` A file that describe the license clarifications for each package. See
@@ -132,6 +132,7 @@ behavior is also available through the programmatic `init` API. See [Programmati
   clarified. The clarifications file can also be used to specify a subregion of a package's license file (instead of
   reading the entire file)
 - `--clarificationsMatchAll [boolean]` This optional new feature is still lacking a description - to be done
+- `--color` colorize terminal tree output
 - `--csv` output in csv format
 - `--csvComponentPrefix` prefix column for component in csv format
 - `--customPath` to add a custom Format file in JSON
@@ -147,6 +148,7 @@ behavior is also available through the programmatic `init` API. See [Programmati
 - `--excludePrivatePackages` restrict output to not include any package marked as private
 - `--failOn [list]` fail (exit with code 1) on the first occurrence of the licenses of the semicolon-separated list
 - `--files [path]` copy all license files to path and rename them to `module-name`@`version`-LICENSE.txt
+- `--help` (`-h`) The text you are reading right now :)
 - `--includeLicenses [list]` include only modules which licenses are in the comma-separated list from the output
 - `--includePackages [list]` restrict output to the packages (either "package@fullversion" or "package@majorversion" or
   only "package") in the semicolon-separated list
@@ -164,9 +166,7 @@ behavior is also available through the programmatic `init` API. See [Programmati
 - `--start [filepath]` path of the initial JSON to look for
 - `--summary` output a summary of the license usage
 - `--unknown` report guessed licenses as unknown licenses
-
-- `--version` The current version
-- `--help` The text you are reading right now :)
+- `--version` (`-v`) The current version
 
 ## <a id="exclusions"></a>Exclusions
 
@@ -238,8 +238,8 @@ is off by default.
 
 ## <a id="custom-format"></a>Custom format
 
-The `--customFormat` option can be used with CSV to specify the columns. Note that the first column, `module_name`, will
-always be used.
+A custom format can be provided on the CLI with `--customPath`, or programmatically with `customFormat`. It can be used
+with CSV to specify the columns. Note that the first column, `module_name`, will always be used.
 
 When used with JSON format, it will add the specified items to the usual ones. It does not limit JSON output to only
 those items. In particular, `licenses` is core result data and is still emitted even if `customFormat.licenses` is
@@ -269,34 +269,32 @@ work well with Markdown lists.
 
 ## <a id="importing"></a>Programmatic API
 
-The only documented programmatic entrypoint is `init(opts, callback)`.
+The documented programmatic entrypoint is `runLicenseCheck(opts)`.
 
 ```js
-import { init } from 'license-checker-rseidelsohn';
+import { runLicenseCheck } from 'license-checker-rseidelsohn';
 
-init({ start: '/path/to/start/looking' }, (err, packages) => {
-	if (err) {
-		// Handle error
-	} else {
-		// The sorted package data as an Object
-	}
-});
+const packages = await runLicenseCheck({ start: '/path/to/start/looking' });
+
+// The sorted package data as an Object
+console.log(packages);
 ```
 
-If an error occurred, the callback receives it as the first parameter. If the checker ran successfully, no error is
-passed, but the second parameter is an object keyed by package name plus version.
+If an error occurred, the returned promise rejects. If the checker ran successfully, the promise resolves to an object
+keyed by package name plus version.
 
 Bugfix note: library code no longer terminates the host process for license policy or clarification failures. These
-failures are now reported via rejected `runLicenseCheck` promise / `init` callback error. CLI behavior remains
-unchanged. Programmatic `init` users who previously ignored `err` are responsible for handling these reported errors.
+failures are now reported via rejected `runLicenseCheck` promise. CLI behavior remains unchanged.
 
-Supported `init` options (alphabetically):
+Supported `runLicenseCheck` options (alphabetically):
 
 | Option                        | Type                                           | Description                                                                                                                  |
 |-------------------------------|------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
 | `clarificationsFile`          | `string`                                       | Path to a JSON file with package-specific license clarifications.                                                            |
 | `clarificationsMatchAll`      | `boolean`                                      | Fail the run if any clarification entry was not used.                                                                        |
 | `color`                       | `boolean`                                      | Colorize license strings in the returned data where the checker emits colorized license values.                              |
+| `csv`                         | `boolean`                                      | Format file output as CSV when `out` is set.                                                                                 |
+| `csvComponentPrefix`          | `string`                                       | Add a component prefix column to CSV output.                                                                                 |
 | `customFormat`                | `Record<string, string \| false \| undefined>` | Custom output fields and default values.                                                                                     |
 | `customPath`                  | `string`                                       | Path to a JSON file that defines a custom output format.                                                                     |
 | `development`                 | `boolean`                                      | Only include development dependencies.                                                                                       |
@@ -306,20 +304,22 @@ Supported `init` options (alphabetically):
 | `excludePackagesStartingWith` | `string`                                       | Semicolon-separated list of package-name prefixes to exclude.                                                                |
 | `excludePrivatePackages`      | `boolean`                                      | Exclude packages marked as private.                                                                                          |
 | `failOn`                      | `string`                                       | Semicolon-separated list of licenses that should fail the run when found.                                                    |
+| `files`                       | `string`                                       | Copy detected license files to the given directory.                                                                          |
 | `includeLicenses`             | `string`                                       | Comma-separated list of licenses to include.                                                                                 |
 | `includePackages`             | `string`                                       | Semicolon-separated list of packages to include. Entries can be `package`, `package@majorversion`, or `package@fullversion`. |
+| `json`                        | `boolean`                                      | Format file output as JSON when `out` is set.                                                                                |
 | `nopeer`                      | `boolean`                                      | Skip peer dependencies.                                                                                                      |
 | `onlyAllow`                   | `string`                                       | Semicolon-separated list of licenses that are allowed.                                                                       |
 | `onlyunknown`                 | `boolean`                                      | Only include packages with unknown or guessed licenses.                                                                      |
+| `out`                         | `string`                                       | Write formatted output to a file.                                                                                            |
 | `production`                  | `boolean`                                      | Only include production dependencies.                                                                                        |
 | `relativeLicensePath`         | `boolean`                                      | Return license file paths relative to the scanned package path.                                                              |
 | `relativeModulePath`          | `boolean`                                      | Return module paths relative to the scanned package path.                                                                    |
 | `start`                       | `string`                                       | Path to start checking dependencies from.                                                                                    |
 | `unknown`                     | `boolean`                                      | Report guessed licenses as unknown licenses.                                                                                 |
 
-The following command-line flags control CLI output, formatting, or process behavior only and are not part of the `init`
-options: `--angularCli`, `--csv`, `--csvComponentPrefix`, `--files`, `--help`, `--json`, `--limitAttributes`,
-`--markdown`, `--out`, `--plainVertical`, `--summary`, and `--version`.
+The following command-line flags control CLI process behavior only and are not part of the documented programmatic API
+options: `--help` and `--version`.
 
 ## <a id="debugging"></a>Debugging
 

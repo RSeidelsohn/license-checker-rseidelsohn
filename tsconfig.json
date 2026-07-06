@@ -10,6 +10,6 @@
 		"types": ["node"],
 		"verbatimModuleSyntax": true
 	},
-	"include": ["lib/**/*", "bin/license-checker-rseidelsohn.js"],
+	"include": ["lib/**/*"],
 	"references": [{ "path": "tsconfig.check.json" }]
 }

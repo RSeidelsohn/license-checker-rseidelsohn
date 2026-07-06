@@ -14,7 +14,7 @@ export type RunBinOptions = {
 };
 
 const repoPath = path.resolve(import.meta.dirname, '..');
-const binPath = path.join(repoPath, 'bin/license-checker-rseidelsohn.js');
+const binPath = path.join(repoPath, 'lib/cli.js');
 
 export const runBin = (args: string[], options: RunBinOptions = {}) =>
 	new Promise<BinResult>((resolve, reject) => {
