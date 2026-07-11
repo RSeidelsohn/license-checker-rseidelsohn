@@ -1,5 +1,46 @@
 ## Change Log
 
+## 6.0.0-rc.1
+
+This is the release candidate for the "last version" of this tool. We're planning to create a new package under a nicer
+name that'll be the successor to this one. Right now, we're trying not to add new features, but consolidate the codebase
+and dev setup.
+
+The `6.0.0` will be released soon once we received some feedback and did some additional testing. We want to make the
+transition to `6.0.0` (and the new package) as smooth as possible for everyone (users and contributors alike). So please
+do feel free to test this RC version and send feedback if you run into any issues!
+
+**🔨Breaking changes**
+- CLI entry point moved from `bin/license-checker-rseidelsohn.js` to `lib/cli.js`.
+- `init` function from `lib/index.js` is now deprecated in favor of the new promise-based `runLicenseCheck` function.
+- Public exports from `lib/index.js` have been reduced to the intended ones.
+- TypeScript definitions for public types are now in `dist/index.d.ts`. The old .d.ts file was slightly incorrect and has been fixed now.
+- _Slightly_ changed (fixed) the behavior regarding calls to `process.exit` - both in the CLI and when being called programmatically.
+
+**🐥 New features**
+- Promise-based programmatic entry point `runLicenseCheck` to simplify usage.
+- Better (and actually correct) TypeScript definitions.
+
+**🧹 Housekeeping / internal stuff**
+- Cleaned up project structure, build tooling, test setup, etc.
+- Prepare for full migration to TypeScript.
+- Clean up / reduce dependencies.
+
+**🪾Notable commits**
+
+- [d0046f0](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/d0046f0151c00dff0ac70faa0d4deac03fe48196) feat!: updated file/directory structure (@defaude)
+- [11949c7](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/11949c71d73fa2e10f9070a55648833ce8225737) fix: use package version for CLI output (@ekkoitac)
+- [6275732](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/62757325cc33718e8c635789d2d05ce7c0e4ee6e) feat!: move process.exit calls into CLI-only code (@defaude)
+- [7ed90a3](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/7ed90a31e9338608b3c026e66349c91df122df0f) fix: output options other than --json now work again (@defaude)
+- [bb7de6e](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/bb7de6eb5cff44c965d58bd636329f50b390c9aa) feat: remove hand-written .d.ts file in favor of one that's generated from the code (@defaude)
+- [70e8810](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/70e8810b778d1a08de04f480c84fa2f8d972fa27) fix: align type definitions with implementation (@defaude)
+
+### v5.0.1 (2026/05/27 14:15 +00:00)
+- [2f83a3b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/2f83a3bd92e6bd1c8513b1a8a2234ab5a59a7330) 5.0.1 (@defaude)
+- [3ec070f](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/3ec070fc186b36d4159b0c0bb3a1569fb7ade112) chore: update changelog (@defaude)
+- [8f43b56](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/8f43b567d7e0d41681734fa7ffa788fe36f0b592) fix: more fixes to restore the original behavior of read-installed-packages (@defaude)
+- [fb88dc6](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/fb88dc6113d392b9cb105ed9c52394c2b9c08811) fix: properly parse dependency license information from package.json files (@defaude)
+
 ### v5.0.0 (2026/05/27 06:00 +00:00)
 - [5b60e4b](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/5b60e4be95d2bd7e14a0f33b9cb8d50b7d2a22c9) 5.0.0 (@defaude)
 - [b1e2616](https://github.com/RSeidelsohn/license-checker-rseidelsohn/commit/b1e2616d3d62eaedbe38caba3fbef3dfead10e6b) chore: drop read-installed-packages dep (@defaude)
