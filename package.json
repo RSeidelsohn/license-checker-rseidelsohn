@@ -22,7 +22,6 @@
 		"check": "biome check && tsc -b",
 		"check-fix": "biome check --write",
 		"check-fix-unsafe": "biome check --write --unsafe",
-		"changes": "github-changes -o RSeidelsohn -r license-checker-rseidelsohn",
 		"contrib": "node ./scripts/contrib.js"
 	},
 	"homepage": "https://github.com/RSeidelsohn/license-checker-rseidelsohn#readme",
@@ -57,7 +56,6 @@
 		"@tsconfig/node24": "24.0.4",
 		"@types/node": "24.13.2",
 		"@types/spdx-expression-parse": "4.0.0",
-		"github-changes": "^2.0.3",
 		"rimraf": "6.1.3",
 		"typescript": "6.0.3",
 		"vitest": "4.1.9"
