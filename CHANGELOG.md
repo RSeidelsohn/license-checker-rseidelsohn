@@ -14,7 +14,7 @@ do feel free to test this RC version and send feedback if you run into any issue
 - CLI entry point moved from `bin/license-checker-rseidelsohn.js` to `lib/cli.js`.
 - `init` function from `lib/index.js` is now deprecated in favor of the new promise-based `runLicenseCheck` function.
 - Public exports from `lib/index.js` have been reduced to the intended ones.
-- TypeScript definitions for public types are now in `dist/index.d.ts`. The old .d.ts file was slightly incorrect and has been fixed now.
+- TypeScript definitions for public types are now in `dist/lib/index.d.ts`. The old .d.ts file was slightly incorrect and has been fixed now.
 - _Slightly_ changed (fixed) the behavior regarding calls to `process.exit` - both in the CLI and when being called programmatically.
 
 **🐥 New features**
