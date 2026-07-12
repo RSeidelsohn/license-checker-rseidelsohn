@@ -11,15 +11,25 @@ transition to `6.0.0` (and the new package) as smooth as possible for everyone (
 do feel free to test this RC version and send feedback if you run into any issues!
 
 **🔨Breaking changes**
-- CLI entry point moved from `bin/license-checker-rseidelsohn.js` to `lib/cli.js`.
+- The CLI implementation moved from `bin/license-checker-rseidelsohn.js` to `lib/cli.js`. Invoking the package through
+  its installed `license-checker-rseidelsohn` executable remains supported.
 - `init` function from `lib/index.js` is now deprecated in favor of the new promise-based `runLicenseCheck` function.
-- Public exports from `lib/index.js` have been reduced to the intended ones.
-- TypeScript definitions for public types are now in `dist/lib/index.d.ts`. The old .d.ts file was slightly incorrect and has been fixed now.
-- _Slightly_ changed (fixed) the behavior regarding calls to `process.exit` - both in the CLI and when being called programmatically.
+- The public exports of `lib/index.js` have been reduced to `init` and `runLicenseCheck`. Previously exported internal
+  formatting and helper functions are no longer exported.
+- Programmatic license-policy and clarification failures no longer terminate the host process. `runLicenseCheck` now
+  rejects its promise, while the deprecated `init` API reports the error through its callback. The CLI continues to exit
+  with a non-zero status for these failures.
+- Generated TypeScript declarations are now provided at `dist/lib/index.d.ts`, replacing the outdated, handwritten,
+  slightly incorrect declarations.
 
 **🐥 New features**
 - Promise-based programmatic entry point `runLicenseCheck` to simplify usage.
 - Better (and actually correct) TypeScript definitions.
+
+**🐛 Bug fixes**
+
+- Restored CLI output formats other than JSON, including CSV, Markdown, summary, plain-vertical and tree output.
+- `--version` now reports the version from `package.json` instead of a stale hard-coded version.
 
 **🧹 Housekeeping / internal stuff**
 - Cleaned up project structure, build tooling, test setup, etc.
