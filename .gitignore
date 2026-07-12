@@ -17,3 +17,4 @@ CVS/
 dist/
 node_modules/
 tmp/
+.envrc
