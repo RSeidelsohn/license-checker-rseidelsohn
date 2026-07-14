@@ -5,8 +5,10 @@
 # NPM License Checker
 
 ## Table of Contents
--   [A message from the maintainer](#a-message-from-the-maintainer)
+-   [TL;DR](#tldr)
+-   [The way forward](#way-forward)
 -   [Introduction](#introduction)
+-   [Description](#description)
 -   [Changes](#changes)
 -   [CLI options](#all-options-in-alphabetical-order)
 -   [Exclusions](#exclusions)
@@ -18,46 +20,37 @@
 -   [How Licenses are Found](#how-licenses-are-found)
 -   [Related information sources on the internet](#related-information-sources-on-the-internet)
 
-
-## <a id="a-message-from-the-maintainer"></a>A message from the maintainer
-
-Folks, I love and honor open software (the latter not as much as I should), and therefore I am a little ashamed of the
-lack of regular care I give to this project. My family (two still young kids and a wife working full-time just as me)
-plus my hobbies (reading - currently I read the great book "Coders at work" and plan to work my way through "Structure
-and interpretation of computer programs", a book many great and experienced coders say is kind of a must-read - and
-homebrewing) take their toll. And then there's the time I need for procrastination as well. You get the picture.
-
-I took over this project from another guy who initially built it, because he did not respond to any PRs or emails for
-years and I needed a feature that was not available. And I thought there are enough people out there that should profit
-from what I do, so I forked the `license-checker` under the now pretty clumsy name `license-checker-rseidelsohn` - here
-we are.
-
-I am always happy when I see PR's being created by other coders out there or if someone writes me an email - no matter
-what it might be about. Just the feeling that this tool and what I do with it does not only live in the void is already
-amazing to me. This being said, I am really looking for more people that want to contribute, so feel free if you want to
-be added as maintainers.
-
-But also, I am now working for Springer Nature since mid of February, and this awesome employer (I can only and
-absolutely recommend working for Springer Nature, and I get no advantages whatsoever through this message - they don't
-even know about it!) gives their devs a 10% Friday every 2nd Friday, where the devs are not disturbed by any meetings
-and are free to work on whatever they wish (preferrably anything that helps improve their skills and/or the codebase),
-and I plan to take this open source project and maintain it during that time. So I would like to give you hope that the
-updates will come more frequently and in better quality.
-
-Berlin, 1st of April 2023.
-
 ## <a id="introduction"></a>Introduction
 
-_This is a fork of davglass'
-[license-checker v.25.0.1](https://github.com/davglass/license-checker/releases/tag/v25.0.1) - Since that code doesn't
-seem to be updated regularly, I created this fork for being able to adding new features and fixing bugs._
+### ⚠️ Deprecation notice ⚠️
+
+**`6.0.0` is the final release of `license-checker-rseidelsohn`**.
+
+We're moving everything over to [@lizenz/checker](https://www.npmjs.com/package/@lizenz/checker). Its initial `1.0.0`
+is a 100% compatible drop-in replacement. Further development, updates, and features will happen there, as well.
+
+### 🤔 But why?
+
+This (admittedly oddly-named) package started as a fork of Dav Glass' "O.G."
+[license-checker](https://www.npmjs.com/package/license-checker) as the original hasn't been maintained for quite some
+time. The goal was to keep it up to date, to fix bugs and maybe to add a few new features here and there. Then reality
+kicked in, and this package has been sitting somewhat stale for a while, too 😅. There are other forks out there, as
+well. Most are pretty stale. Some have seen some activity. But overall, the landscape is a bit complicated right now.
+
+We decided to fix this:
+
+- create new GitHub & npm orgs so that not one single person has to be responsible going forward
+- make it easier for contributors, maintainers and owners to join (and leave)
+- deprecated this package here, while linking to a fresh new package, utilizing npm scopes and the aforementioned orgs
+- continue development over there, hopefully encouraging other forks to join, as well
+
+### Changes to the original
 
 _I changed the original `exclude` argument to `excludeLicenses` in order to prevent confusion and better align it with
 the `excludePackages` argument. Also, the argument `includeLicenses` has been added for listing only packages that
 include the licenses listed._
 
-**Please notice:** Version 1.2.2 is the last version working fine on node v12. From Version 2 on, you will need at least
-Node v14 to run this NPM license checker. Thanks to @daniel-schulz for pointing this out!
+## <a id="description"></a>Description
 
 Ever needed to see all the license info for a module and its dependencies?
 
