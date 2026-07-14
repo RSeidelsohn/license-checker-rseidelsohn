@@ -5,8 +5,6 @@
 # NPM License Checker
 
 ## Table of Contents
--   [TL;DR](#tldr)
--   [The way forward](#way-forward)
 -   [Introduction](#introduction)
 -   [Description](#description)
 -   [Changes](#changes)
