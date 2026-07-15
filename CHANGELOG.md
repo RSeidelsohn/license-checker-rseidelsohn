@@ -8,7 +8,8 @@ and dev setup.
 
 The `6.0.0` will be released soon once we received some feedback and did some additional testing. We want to make the
 transition to `6.0.0` (and the new package) as smooth as possible for everyone (users and contributors alike). So please
-do feel free to test this RC version and send feedback if you run into any issues!
+do feel free to test this RC version and the new package over at
+[@lizenz/checker](https://github.com/lizenz-tooling/checker) - and send feedback if you run into any issues!
 
 **🔨Breaking changes**
 - The CLI implementation moved from `bin/license-checker-rseidelsohn.js` to `lib/cli.js`. Invoking the package through
