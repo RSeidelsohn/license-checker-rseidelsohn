@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { colorizeOutput, getFormattedOutput, shouldColorizeOutput } from '../../lib/output/format-output.js';
 
@@ -28,5 +29,14 @@ describe('getFormattedOutput', () => {
 		);
 
 		expect(JSON.parse(formatted)).toEqual({ 'foo@1.0.0': { licenses: 'MIT' } });
+	});
+
+	it('points generated SPDX license text at its output file', () => {
+		const formatted = getFormattedOutput(
+			{ 'foo@1.0.0': { licenses: 'MIT', licenseText: 'Canonical MIT license text' } },
+			{ files: 'licenses', json: true }
+		);
+
+		expect(JSON.parse(formatted)['foo@1.0.0'].licenseFile).toBe(path.join('licenses', 'foo@1.0.0-LICENSE.txt'));
 	});
 });

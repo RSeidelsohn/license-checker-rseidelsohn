@@ -48,6 +48,7 @@
 		"semver": "7.8.5",
 		"spdx-correct": "^3.2.0",
 		"spdx-expression-parse": "^4.0.0",
+		"spdx-license-list": "^6.12.0",
 		"spdx-satisfies": "^6.0.0",
 		"treeify": "^1.1.0"
 	},

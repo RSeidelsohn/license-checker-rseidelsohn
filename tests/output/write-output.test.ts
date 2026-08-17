@@ -1,4 +1,4 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { rimraf } from 'rimraf';
@@ -33,6 +33,17 @@ describe('writeIndividualLicenseFilesToDir', () => {
 
 		const [licenseFile] = await readdir(path.join(out, '@scope'));
 		expect(licenseFile).toBe('foo@1.0.0-LICENSE.txt');
+		await rimraf(out);
+	});
+
+	it('should write canonical license text when no license file exists', async () => {
+		const out = path.join(tmpdir(), 'lc-spdx');
+		await writeIndividualLicenseFilesToDir(out, {
+			'foo@1.0.0': { licenses: 'MIT', licenseText: 'Canonical MIT license text' },
+		});
+
+		const writtenText = await readFile(path.join(out, 'foo@1.0.0-LICENSE.txt'), 'utf8');
+		expect(writtenText).toBe('Canonical MIT license text');
 		await rimraf(out);
 	});
 });
