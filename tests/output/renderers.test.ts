@@ -40,6 +40,14 @@ describe('asPlainVertical', () => {
 		const data = asPlainVertical(withBsd);
 		expect(data).toContain('bsd-3-module 0.0.0\nBSD-3-Clause');
 	});
+
+	it('uses canonical license text when no license file exists', () => {
+		const data = asPlainVertical({
+			'foo@1.0.0': { licenses: 'MIT', licenseText: 'Canonical MIT license text' },
+		});
+
+		expect(data).toContain('foo 1.0.0\nMIT\nCanonical MIT license text');
+	});
 });
 
 describe('asTree', () => {
